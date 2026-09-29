@@ -1,0 +1,6 @@
+{
+  "name": "M.A.D Studio — Contemporary Architecture & Spaces",
+  "description": "Premium architectural studio website for M.A.D Studio. Crafting spaces, building experiences across residential, hospitality, and commercial architecture.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
