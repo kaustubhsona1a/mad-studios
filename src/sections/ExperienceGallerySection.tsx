@@ -70,7 +70,7 @@ export const ExperienceGallerySection: React.FC = () => {
   const moments = activeProjectTab === 'casa-sylva' ? sylvaMoments : airaniMoments;
 
   return (
-    <section id="experience" className="relative w-full bg-[#120407] text-[#F7F3EB] py-20 sm:py-28 border-b border-[#DFC18D]/25">
+    <section id="experience" className="relative w-full bg-[#3E1D23] text-[#F7F2EC] py-20 sm:py-28 border-b border-[#C5A06B]/25">
       {/* Background Architectural Blueprint Grid */}
       <div 
         className="absolute inset-0 opacity-15 pointer-events-none"
@@ -83,27 +83,27 @@ export const ExperienceGallerySection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 space-y-12 relative z-10">
         
         {/* Editorial Section Header */}
-        <div className="border-b border-[#DFC18D]/30 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="border-b border-[#C5A06B]/30 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <span className="font-mono-tech text-xs tracking-[0.25em] text-[#DFC18D] uppercase block mb-1 font-semibold">
+            <span className="font-mono-tech text-xs tracking-[0.25em] text-[#C5A06B] uppercase block mb-1 font-semibold">
               REAL LIVING SPACES · NATURAL LIGHT
             </span>
-            <h2 className="font-serif-display text-4xl sm:text-5xl lg:text-6xl text-[#DFC18D] uppercase tracking-wide">
+            <h2 className="font-serif-display text-4xl sm:text-5xl lg:text-6xl text-[#C5A06B] uppercase tracking-wide">
               EXPERIENCE
             </h2>
-            <p className="font-serif-editorial italic text-base text-[#D4C8BC] mt-1">
+            <p className="font-serif-editorial italic text-base text-[#D8C7B5] mt-1">
               Moments of bright daylight, honest textures, and comfortable living spaces.
             </p>
           </div>
 
           {/* Clean Project Switcher (Zero Page Numbers) */}
-          <div className="flex items-center space-x-2 bg-[#1C060C] p-1.5 border border-[#DFC18D]/35 shadow-md">
+          <div className="flex items-center space-x-2 bg-[#48232B] p-1.5 border border-[#C5A06B]/35 shadow-md">
             <button
               onClick={() => setActiveProjectTab('casa-sylva')}
               className={`px-4 py-1.5 text-xs font-mono-tech tracking-wider uppercase transition-all cursor-pointer ${
                 activeProjectTab === 'casa-sylva'
-                  ? 'bg-[#581424] text-[#DFC18D] font-bold border border-[#DFC18D]/50 shadow-sm'
-                  : 'text-[#F7F3EB]/70 hover:text-[#DFC18D]'
+                  ? 'bg-[#542A33] text-[#C5A06B] font-bold border border-[#C5A06B]/50 shadow-sm'
+                  : 'text-[#F7F2EC]/70 hover:text-[#C5A06B]'
               }`}
             >
               CASA SYLVA
@@ -112,8 +112,8 @@ export const ExperienceGallerySection: React.FC = () => {
               onClick={() => setActiveProjectTab('airani-mane')}
               className={`px-4 py-1.5 text-xs font-mono-tech tracking-wider uppercase transition-all cursor-pointer ${
                 activeProjectTab === 'airani-mane'
-                  ? 'bg-[#581424] text-[#DFC18D] font-bold border border-[#DFC18D]/50 shadow-sm'
-                  : 'text-[#F7F3EB]/70 hover:text-[#DFC18D]'
+                  ? 'bg-[#542A33] text-[#C5A06B] font-bold border border-[#C5A06B]/50 shadow-sm'
+                  : 'text-[#F7F2EC]/70 hover:text-[#C5A06B]'
               }`}
             >
               AIRANI MANE
@@ -130,27 +130,27 @@ export const ExperienceGallerySection: React.FC = () => {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-8 bg-[#1C060C] border-2 border-[#DFC18D]/35 flex flex-col overflow-hidden group shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+            className="lg:col-span-8 bg-[#48232B] border-2 border-[#C5A06B]/35 flex flex-col overflow-hidden group shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
           >
-            <div className="relative aspect-[16/10] overflow-hidden bg-[#160509]">
+            <div className="relative aspect-[16/10] overflow-hidden bg-[#33151A]">
               <ArchitecturalVisual
                 src={moments[0].img}
                 alt={moments[0].title}
                 aspectRatio="aspect-[16/10]"
                 className="group-hover:scale-105 transition-transform duration-700 ease-out"
               />
-              <div className="absolute top-3 left-3 px-3 py-1 bg-[#140407]/90 border border-[#DFC18D]/40 text-[10px] font-mono-tech text-[#DFC18D] uppercase tracking-wider font-semibold backdrop-blur-xs">
+              <div className="absolute top-3 left-3 px-3 py-1 bg-[#33151A]/90 border border-[#C5A06B]/40 text-[10px] font-mono-tech text-[#C5A06B] uppercase tracking-wider font-semibold backdrop-blur-xs">
                 {moments[0].tag}
               </div>
             </div>
-            <div className="p-6 sm:p-8 bg-[#180509] border-t border-[#DFC18D]/25">
-              <span className="font-serif-editorial italic text-xs text-[#DFC18D] block font-medium">
+            <div className="p-6 sm:p-8 bg-[#33151A] border-t border-[#C5A06B]/25">
+              <span className="font-serif-editorial italic text-xs text-[#C5A06B] block font-medium">
                 {moments[0].subtitle}
               </span>
               <h3 className="font-serif-display text-xl sm:text-2xl text-white uppercase tracking-wide mt-1 font-semibold">
                 {moments[0].title}
               </h3>
-              <p className="font-sans text-xs sm:text-sm text-[#D4C8BC] mt-2 leading-relaxed">
+              <p className="font-sans text-xs sm:text-sm text-[#D8C7B5] mt-2 leading-relaxed">
                 {moments[0].desc}
               </p>
             </div>
@@ -162,27 +162,27 @@ export const ExperienceGallerySection: React.FC = () => {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="lg:col-span-4 bg-[#1C060C] border-2 border-[#DFC18D]/35 flex flex-col justify-between overflow-hidden group shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+            className="lg:col-span-4 bg-[#48232B] border-2 border-[#C5A06B]/35 flex flex-col justify-between overflow-hidden group shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
           >
-            <div className="relative aspect-[4/3] lg:aspect-[3/4] overflow-hidden bg-[#160509]">
+            <div className="relative aspect-[4/3] lg:aspect-[3/4] overflow-hidden bg-[#33151A]">
               <ArchitecturalVisual
                 src={moments[1].img}
                 alt={moments[1].title}
                 aspectRatio="aspect-auto"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
-              <div className="absolute top-3 left-3 px-3 py-1 bg-[#140407]/90 border border-[#DFC18D]/40 text-[10px] font-mono-tech text-[#DFC18D] uppercase tracking-wider font-semibold backdrop-blur-xs">
+              <div className="absolute top-3 left-3 px-3 py-1 bg-[#33151A]/90 border border-[#C5A06B]/40 text-[10px] font-mono-tech text-[#C5A06B] uppercase tracking-wider font-semibold backdrop-blur-xs">
                 {moments[1].tag}
               </div>
             </div>
-            <div className="p-6 bg-[#180509] border-t border-[#DFC18D]/25">
-              <span className="font-serif-editorial italic text-xs text-[#DFC18D] block font-medium">
+            <div className="p-6 bg-[#33151A] border-t border-[#C5A06B]/25">
+              <span className="font-serif-editorial italic text-xs text-[#C5A06B] block font-medium">
                 {moments[1].subtitle}
               </span>
               <h3 className="font-serif-display text-lg sm:text-xl text-white uppercase tracking-wide mt-1 font-semibold">
                 {moments[1].title}
               </h3>
-              <p className="font-sans text-xs text-[#D4C8BC] mt-2 leading-relaxed">
+              <p className="font-sans text-xs text-[#D8C7B5] mt-2 leading-relaxed">
                 {moments[1].desc}
               </p>
             </div>
@@ -195,27 +195,27 @@ export const ExperienceGallerySection: React.FC = () => {
           {moments.slice(2, 4).map((moment, idx) => (
             <div 
               key={idx}
-              className="bg-[#1C060C] border border-[#DFC18D]/30 overflow-hidden flex flex-col sm:flex-row group hover:border-[#DFC18D] transition-all shadow-md"
+              className="bg-[#48232B] border border-[#C5A06B]/30 overflow-hidden flex flex-col sm:flex-row group hover:border-[#C5A06B] transition-all shadow-md"
             >
-              <div className="sm:w-1/2 aspect-[16/10] sm:aspect-auto relative overflow-hidden bg-[#160509]">
+              <div className="sm:w-1/2 aspect-[16/10] sm:aspect-auto relative overflow-hidden bg-[#33151A]">
                 <ArchitecturalVisual
                   src={moment.img}
                   alt={moment.title}
                   aspectRatio="aspect-auto"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#140407]/90 border border-[#DFC18D]/30 text-[9px] font-mono-tech text-[#DFC18D] uppercase">
+                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#33151A]/90 border border-[#C5A06B]/30 text-[9px] font-mono-tech text-[#C5A06B] uppercase">
                   {moment.tag}
                 </div>
               </div>
-              <div className="sm:w-1/2 p-5 sm:p-6 flex flex-col justify-center space-y-2 bg-[#180509]">
-                <span className="font-serif-editorial italic text-xs text-[#DFC18D]">
+              <div className="sm:w-1/2 p-5 sm:p-6 flex flex-col justify-center space-y-2 bg-[#33151A]">
+                <span className="font-serif-editorial italic text-xs text-[#C5A06B]">
                   {moment.subtitle}
                 </span>
                 <h4 className="font-serif-display text-base text-white uppercase font-bold">
                   {moment.title}
                 </h4>
-                <p className="font-sans text-xs text-[#D4C8BC] leading-relaxed">
+                <p className="font-sans text-xs text-[#D8C7B5] leading-relaxed">
                   {moment.desc}
                 </p>
               </div>

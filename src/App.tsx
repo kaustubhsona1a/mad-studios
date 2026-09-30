@@ -23,7 +23,7 @@ export function App() {
   const featuredCasaSylva = PROJECTS_DATA.find(p => p.id === 'casa-sylva') || PROJECTS_DATA[0];
 
   return (
-    <div className="min-h-screen bg-[#120407] text-[#F7F3EB] selection:bg-[#5E1A2B] selection:text-[#DFC18D] relative antialiased">
+    <div className="min-h-screen bg-[#3E1D23] text-[#F7F2EC] selection:bg-[#5E2B35] selection:text-[#EBD2AC] relative antialiased">
       {/* Brand Intro Screen (dismisses instantly on swipe up, tap, or scroll) */}
       {isLoading && (
         <PageLoader onComplete={() => setIsLoading(false)} />

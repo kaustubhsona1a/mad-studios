@@ -27,18 +27,18 @@ export const AboutSection: React.FC = () => {
   ];
 
   return (
-    <section id="about" className="relative w-full bg-[#120407] text-[#F7F3EB] py-16 sm:py-20 border-b border-[#DFC18D]/20">
+    <section id="about" className="relative w-full bg-[#3E1D23] text-[#F7F2EC] py-16 sm:py-20 border-b border-[#C5A06B]/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="max-w-3xl space-y-3 mb-10">
-          <span className="font-mono-tech text-xs tracking-[0.25em] text-[#DFC18D] uppercase font-semibold block">
+          <span className="font-mono-tech text-xs tracking-[0.25em] text-[#C5A06B] uppercase font-semibold block">
             OUR PHILOSOPHY
           </span>
-          <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-[#DFC18D] uppercase tracking-wide leading-tight">
+          <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-[#C5A06B] uppercase tracking-wide leading-tight">
             Rooted in Context, <span className="text-white">Crafted for Life.</span>
           </h2>
-          <p className="font-sans text-sm sm:text-base text-[#D4C8BC] leading-relaxed font-light">
+          <p className="font-sans text-sm sm:text-base text-[#D8C7B5] leading-relaxed font-light">
             We believe architecture is far more than building walls—it is the art of shaping daily life. Rather than following trends, we design private homes and tropical retreats that respond honestly to climate, stay cool naturally, and endure through generations.
           </p>
         </div>
@@ -54,15 +54,15 @@ export const AboutSection: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: idx * 0.08 }}
-                className="p-5 bg-[#1C060C] border border-[#DFC18D]/30 hover:border-[#DFC18D] transition-colors space-y-2 group shadow-sm"
+                className="p-5 bg-[#4A242C] border border-[#C5A06B]/30 hover:border-[#C5A06B] transition-colors space-y-2 group shadow-sm"
               >
-                <div className="flex items-center space-x-2 text-[#DFC18D]">
+                <div className="flex items-center space-x-2 text-[#C5A06B]">
                   <Icon size={16} />
-                  <span className="font-serif-display text-sm text-white uppercase font-bold tracking-wider group-hover:text-[#DFC18D] transition-colors">
+                  <span className="font-serif-display text-sm text-white uppercase font-bold tracking-wider group-hover:text-[#C5A06B] transition-colors">
                     {pillar.title}
                   </span>
                 </div>
-                <p className="font-sans text-xs text-[#D4C8BC] leading-relaxed">
+                <p className="font-sans text-xs text-[#D8C7B5] leading-relaxed">
                   {pillar.desc}
                 </p>
               </motion.div>

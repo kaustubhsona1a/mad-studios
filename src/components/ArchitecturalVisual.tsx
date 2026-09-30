@@ -120,15 +120,15 @@ export const ArchitecturalVisual: React.FC<ArchitecturalVisualProps> = ({
   const imageAlt = alt || caption || registryItem.title;
 
   return (
-    <div className={`relative w-full overflow-hidden bg-[#18060A] group ${aspectRatio} ${className}`}>
+    <div className={`relative w-full overflow-hidden bg-[#33151A] group ${aspectRatio} ${className}`}>
       {/* Background Subtle Gradient & Grid Placeholder */}
       <div 
-        className="absolute inset-0 bg-gradient-to-br from-[#2A0A12] via-[#1A050B] to-[#100305] pointer-events-none"
+        className="absolute inset-0 bg-gradient-to-br from-[#3E1D23] via-[#33151A] to-[#2E1217] pointer-events-none"
       />
       <div 
         className="absolute inset-0 opacity-15 pointer-events-none"
         style={{
-          backgroundImage: 'linear-gradient(rgba(223, 193, 141, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(223, 193, 141, 0.15) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(rgba(197, 160, 107, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(197, 160, 107, 0.15) 1px, transparent 1px)',
           backgroundSize: '32px 32px'
         }}
       />
@@ -148,27 +148,27 @@ export const ArchitecturalVisual: React.FC<ArchitecturalVisualProps> = ({
         />
       ) : (
         /* Zero-Broken-Image Policy Fallback */
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#250810]">
-          <div className="w-12 h-12 rounded-full border border-[#DFC18D]/40 flex items-center justify-center text-[#DFC18D] mb-3">
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#33151A]">
+          <div className="w-12 h-12 rounded-full border border-[#C5A06B]/40 flex items-center justify-center text-[#C5A06B] mb-3">
             <ImageIcon size={20} />
           </div>
-          <span className="font-serif-display text-xs text-[#DFC18D] tracking-widest uppercase">
+          <span className="font-serif-display text-xs text-[#C5A06B] tracking-widest uppercase">
             {registryItem.title}
           </span>
-          <span className="text-[10px] font-sans text-[#F7F3EB]/70 tracking-wider mt-1">
+          <span className="text-[10px] font-sans text-[#F7F2EC]/70 tracking-wider mt-1">
             {registryItem.location}
           </span>
         </div>
       )}
 
       {/* Subtle Bottom Scrim for Title Legibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#100305]/70 via-transparent to-transparent pointer-events-none transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#2E1217]/80 via-transparent to-transparent pointer-events-none transition-opacity duration-300" />
 
       {/* Optional Caption Overlay */}
       {caption && (
-        <div className="absolute bottom-2 left-2 right-2 px-3 py-1.5 bg-[#140407]/90 border border-[#DFC18D]/30 backdrop-blur-xs flex items-center justify-between text-[11px] font-sans text-[#F7F3EB]">
+        <div className="absolute bottom-2 left-2 right-2 px-3 py-1.5 bg-[#33151A]/90 border border-[#C5A06B]/30 backdrop-blur-xs flex items-center justify-between text-[11px] font-sans text-[#F7F2EC]">
           <span className="truncate">{caption}</span>
-          <Maximize2 size={12} className="text-[#DFC18D] shrink-0 ml-2" />
+          <Maximize2 size={12} className="text-[#C5A06B] shrink-0 ml-2" />
         </div>
       )}
     </div>

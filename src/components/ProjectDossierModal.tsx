@@ -57,12 +57,12 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex flex-col items-center select-none">
       {/* Top Floating Dossier Navigation Bar */}
-      <header className="sticky top-0 z-40 w-full bg-[#140407]/95 backdrop-blur-md border-b border-[#DFC18D]/35 px-4 md:px-8 py-3.5 flex items-center justify-between shadow-2xl">
+      <header className="sticky top-0 z-40 w-full bg-[#2E1217]/95 backdrop-blur-md border-b border-[#C5A06B]/35 px-4 md:px-8 py-3.5 flex items-center justify-between shadow-2xl">
         <div className="flex items-center space-x-4">
           <MadLogo size="sm" variant="gold" />
-          <div className="hidden sm:block h-6 w-[1px] bg-[#DFC18D]/30" />
+          <div className="hidden sm:block h-6 w-[1px] bg-[#C5A06B]/30" />
           <div className="hidden sm:block">
-            <span className="font-mono-tech text-[10px] tracking-[0.25em] text-[#DFC18D] uppercase block font-semibold">
+            <span className="font-mono-tech text-[10px] tracking-[0.25em] text-[#C5A06B] uppercase block font-semibold">
               PROJECT CASE STUDY
             </span>
             <span className="font-serif-display text-sm text-white tracking-wider uppercase font-bold">
@@ -72,11 +72,11 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
         </div>
 
         {/* Section Tabs inside dossier */}
-        <div className="hidden md:flex items-center space-x-1 bg-[#20050B] p-1 border border-[#DFC18D]/30">
+        <div className="hidden md:flex items-center space-x-1 bg-[#33151A] p-1 border border-[#C5A06B]/30">
           <button
             onClick={() => setActiveTab('overview')}
             className={`px-3 py-1 text-xs tracking-wider font-mono-tech uppercase transition-colors cursor-pointer ${
-              activeTab === 'overview' ? 'bg-[#581424] text-[#DFC18D] font-bold border border-[#DFC18D]/40' : 'text-[#D4C8BC] hover:text-[#DFC18D]'
+              activeTab === 'overview' ? 'bg-[#542A33] text-[#C5A06B] font-bold border border-[#C5A06B]/40' : 'text-[#D8C7B5] hover:text-[#C5A06B]'
             }`}
           >
             Overview
@@ -84,7 +84,7 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
           <button
             onClick={() => setActiveTab('plans')}
             className={`px-3 py-1 text-xs tracking-wider font-mono-tech uppercase transition-colors cursor-pointer ${
-              activeTab === 'plans' ? 'bg-[#581424] text-[#DFC18D] font-bold border border-[#DFC18D]/40' : 'text-[#D4C8BC] hover:text-[#DFC18D]'
+              activeTab === 'plans' ? 'bg-[#542A33] text-[#C5A06B] font-bold border border-[#C5A06B]/40' : 'text-[#D8C7B5] hover:text-[#C5A06B]'
             }`}
           >
             Floor Plans
@@ -92,7 +92,7 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
           <button
             onClick={() => setActiveTab('concept')}
             className={`px-3 py-1 text-xs tracking-wider font-mono-tech uppercase transition-colors cursor-pointer ${
-              activeTab === 'concept' ? 'bg-[#581424] text-[#DFC18D] font-bold border border-[#DFC18D]/40' : 'text-[#D4C8BC] hover:text-[#DFC18D]'
+              activeTab === 'concept' ? 'bg-[#542A33] text-[#C5A06B] font-bold border border-[#C5A06B]/40' : 'text-[#D8C7B5] hover:text-[#C5A06B]'
             }`}
           >
             Design Concept
@@ -100,7 +100,7 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
           <button
             onClick={() => setActiveTab('materials')}
             className={`px-3 py-1 text-xs tracking-wider font-mono-tech uppercase transition-colors cursor-pointer ${
-              activeTab === 'materials' ? 'bg-[#581424] text-[#DFC18D] font-bold border border-[#DFC18D]/40' : 'text-[#D4C8BC] hover:text-[#DFC18D]'
+              activeTab === 'materials' ? 'bg-[#542A33] text-[#C5A06B] font-bold border border-[#C5A06B]/40' : 'text-[#D8C7B5] hover:text-[#C5A06B]'
             }`}
           >
             Materials
@@ -109,7 +109,7 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
             <button
               onClick={() => setActiveTab('experience')}
               className={`px-3 py-1 text-xs tracking-wider font-mono-tech uppercase transition-colors cursor-pointer ${
-                activeTab === 'experience' ? 'bg-[#581424] text-[#DFC18D] font-bold border border-[#DFC18D]/40' : 'text-[#D4C8BC] hover:text-[#DFC18D]'
+                activeTab === 'experience' ? 'bg-[#542A33] text-[#C5A06B] font-bold border border-[#C5A06B]/40' : 'text-[#D8C7B5] hover:text-[#C5A06B]'
               }`}
             >
               Gallery ({dossier.experienceImages.length})
@@ -121,21 +121,21 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
         <div className="flex items-center space-x-2">
           <button
             onClick={() => onSelectProject(prevProject)}
-            className="p-1.5 text-[#DFC18D] hover:text-white hover:bg-[#380E18] border border-[#DFC18D]/30 transition-colors cursor-pointer"
+            className="p-1.5 text-[#C5A06B] hover:text-white hover:bg-[#542A33] border border-[#C5A06B]/30 transition-colors cursor-pointer"
             title={`Previous: ${prevProject.title}`}
           >
             <ArrowLeft size={16} />
           </button>
           <button
             onClick={() => onSelectProject(nextProject)}
-            className="p-1.5 text-[#DFC18D] hover:text-white hover:bg-[#380E18] border border-[#DFC18D]/30 transition-colors cursor-pointer"
+            className="p-1.5 text-[#C5A06B] hover:text-white hover:bg-[#542A33] border border-[#C5A06B]/30 transition-colors cursor-pointer"
             title={`Next: ${nextProject.title}`}
           >
             <ArrowRight size={16} />
           </button>
           <button
             onClick={onClose}
-            className="p-1.5 text-white hover:text-[#DFC18D] hover:bg-[#581424] border border-[#DFC18D]/40 transition-colors ml-2 cursor-pointer"
+            className="p-1.5 text-white hover:text-[#C5A06B] hover:bg-[#542A33] border border-[#C5A06B]/40 transition-colors ml-2 cursor-pointer"
             title="Close Case Study"
           >
             <X size={20} />
@@ -144,22 +144,22 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
       </header>
 
       {/* Main Dossier Content Canvas */}
-      <main className="w-full max-w-6xl px-4 sm:px-8 py-8 md:py-12 space-y-12 bg-[#180509] text-[#F7F3EB] shadow-2xl my-6 border border-[#DFC18D]/35">
+      <main className="w-full max-w-6xl px-4 sm:px-8 py-8 md:py-12 space-y-12 bg-[#3E1D23] text-[#F7F2EC] shadow-2xl my-6 border border-[#C5A06B]/35">
         {/* Dossier Header Lockup */}
-        <div className="text-center space-y-2 border-b border-[#DFC18D]/25 pb-6">
-          <span className="font-mono-tech text-xs tracking-[0.3em] text-[#DFC18D] uppercase block font-semibold">
+        <div className="text-center space-y-2 border-b border-[#C5A06B]/25 pb-6">
+          <span className="font-mono-tech text-xs tracking-[0.3em] text-[#C5A06B] uppercase block font-semibold">
             PROJECT CASE STUDY
           </span>
-          <h1 className="font-serif-display text-4xl sm:text-5xl md:text-6xl text-[#DFC18D] tracking-wider uppercase font-semibold">
+          <h1 className="font-serif-display text-4xl sm:text-5xl md:text-6xl text-[#C5A06B] tracking-wider uppercase font-semibold">
             {project.title}
           </h1>
-          <span className="font-mono-tech text-xs md:text-sm tracking-[0.2em] text-[#D4C8BC] uppercase block font-medium">
+          <span className="font-mono-tech text-xs md:text-sm tracking-[0.2em] text-[#D8C7B5] uppercase block font-medium">
             {dossier.statusTag}
           </span>
         </div>
 
         {/* Hero Real Property Photo */}
-        <div className="w-full border-2 border-[#DFC18D]/35 shadow-2xl overflow-hidden bg-[#140407]">
+        <div className="w-full border-2 border-[#C5A06B]/35 shadow-2xl overflow-hidden bg-[#2E1217]">
           <ArchitecturalVisual 
             src={project.imageUrl}
             alt={project.title}
@@ -171,16 +171,16 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
         {/* 2-Column Dossier Spread: Left Specs Strip, Right Narrative & Stage */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Architectural Specifications Strip in Velvet Burgundy */}
-          <div className="lg:col-span-4 bg-[#22070E] border border-[#DFC18D]/35 p-6 space-y-5 shadow-lg">
-            <h3 className="font-mono-tech text-xs tracking-[0.2em] text-[#DFC18D] uppercase pb-2 border-b border-[#DFC18D]/25 font-bold">
+          <div className="lg:col-span-4 bg-[#22070E] border border-[#C5A06B]/35 p-6 space-y-5 shadow-lg">
+            <h3 className="font-mono-tech text-xs tracking-[0.2em] text-[#C5A06B] uppercase pb-2 border-b border-[#C5A06B]/25 font-bold">
               PROJECT FACTS & SPECS
             </h3>
 
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
-                <MapPin size={18} className="text-[#DFC18D] mt-0.5 shrink-0" />
+                <MapPin size={18} className="text-[#C5A06B] mt-0.5 shrink-0" />
                 <div>
-                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#DFC18D]/80 uppercase block font-semibold">
+                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase block font-semibold">
                     Location
                   </span>
                   <span className="text-sm font-sans font-medium text-white">
@@ -190,9 +190,9 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
               </div>
 
               <div className="flex items-start space-x-3">
-                <Home size={18} className="text-[#DFC18D] mt-0.5 shrink-0" />
+                <Home size={18} className="text-[#C5A06B] mt-0.5 shrink-0" />
                 <div>
-                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#DFC18D]/80 uppercase block font-semibold">
+                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase block font-semibold">
                     Typology
                   </span>
                   <span className="text-sm font-sans font-medium text-white">
@@ -202,9 +202,9 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
               </div>
 
               <div className="flex items-start space-x-3">
-                <Layers size={18} className="text-[#DFC18D] mt-0.5 shrink-0" />
+                <Layers size={18} className="text-[#C5A06B] mt-0.5 shrink-0" />
                 <div>
-                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#DFC18D]/80 uppercase block font-semibold">
+                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase block font-semibold">
                     Configuration
                   </span>
                   <span className="text-sm font-sans font-medium text-white">
@@ -214,9 +214,9 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
               </div>
 
               <div className="flex items-start space-x-3">
-                <Maximize size={18} className="text-[#DFC18D] mt-0.5 shrink-0" />
+                <Maximize size={18} className="text-[#C5A06B] mt-0.5 shrink-0" />
                 <div>
-                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#DFC18D]/80 uppercase block font-semibold">
+                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase block font-semibold">
                     Area Metrics
                   </span>
                   {dossier.plotArea && (
@@ -225,7 +225,7 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
                     </span>
                   )}
                   {dossier.builtUpArea && (
-                    <span className="text-xs font-mono-tech text-[#D4C8BC] block">
+                    <span className="text-xs font-mono-tech text-[#D8C7B5] block">
                       Built-Up: {dossier.builtUpArea}
                     </span>
                   )}
@@ -235,7 +235,7 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
                     </span>
                   )}
                   {dossier.carpetArea && (
-                    <span className="text-xs font-mono-tech text-[#D4C8BC] block">
+                    <span className="text-xs font-mono-tech text-[#D8C7B5] block">
                       Carpet Area: {dossier.carpetArea}
                     </span>
                   )}
@@ -243,9 +243,9 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
               </div>
 
               <div className="flex items-start space-x-3">
-                <Calendar size={18} className="text-[#DFC18D] mt-0.5 shrink-0" />
+                <Calendar size={18} className="text-[#C5A06B] mt-0.5 shrink-0" />
                 <div>
-                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#DFC18D]/80 uppercase block font-semibold">
+                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase block font-semibold">
                     Project Timeline
                   </span>
                   <span className="text-sm font-sans font-medium text-white">
@@ -255,27 +255,27 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
               </div>
 
               <div className="flex items-start space-x-3">
-                <CheckCircle2 size={18} className="text-[#DFC18D] mt-0.5 shrink-0" />
+                <CheckCircle2 size={18} className="text-[#C5A06B] mt-0.5 shrink-0" />
                 <div>
-                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#DFC18D]/80 uppercase block font-semibold">
+                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase block font-semibold">
                     Site Status
                   </span>
-                  <span className="text-sm font-mono-tech text-[#DFC18D] font-bold">
+                  <span className="text-sm font-mono-tech text-[#C5A06B] font-bold">
                     {dossier.status}
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-start space-x-3 pt-2 border-t border-[#DFC18D]/25">
-                <Briefcase size={18} className="text-[#DFC18D] mt-0.5 shrink-0" />
+              <div className="flex items-start space-x-3 pt-2 border-t border-[#C5A06B]/25">
+                <Briefcase size={18} className="text-[#C5A06B] mt-0.5 shrink-0" />
                 <div>
-                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#DFC18D]/80 uppercase block mb-1 font-semibold">
+                  <span className="text-[10px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase block mb-1 font-semibold">
                     Scope of Work
                   </span>
                   <ul className="space-y-1">
                     {dossier.scopeOfWork.map((sc, i) => (
-                      <li key={i} className="text-xs text-[#D4C8BC] flex items-center space-x-1.5 font-sans">
-                        <span className="w-1.5 h-1.5 bg-[#DFC18D] inline-block shrink-0" />
+                      <li key={i} className="text-xs text-[#D8C7B5] flex items-center space-x-1.5 font-sans">
+                        <span className="w-1.5 h-1.5 bg-[#C5A06B] inline-block shrink-0" />
                         <span>{sc}</span>
                       </li>
                     ))}
@@ -287,8 +287,8 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
 
           {/* Right Column: Narrative & Current Stage */}
           <div className="lg:col-span-8 space-y-6">
-            <div className="bg-[#22070E] border border-[#DFC18D]/35 p-6 md:p-8 space-y-3 shadow-lg">
-              <span className="font-mono-tech text-xs tracking-[0.2em] text-[#DFC18D] uppercase block font-semibold">
+            <div className="bg-[#22070E] border border-[#C5A06B]/35 p-6 md:p-8 space-y-3 shadow-lg">
+              <span className="font-mono-tech text-xs tracking-[0.2em] text-[#C5A06B] uppercase block font-semibold">
                 DESIGN NARRATIVE
               </span>
               <p className="font-serif-editorial text-lg md:text-xl text-white leading-relaxed italic">
@@ -297,28 +297,28 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
             </div>
 
             {/* Current Stage Box */}
-            <div className="bg-[#1C060C] border border-[#DFC18D]/30 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="bg-[#3E1D23] border border-[#C5A06B]/30 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <span className="text-[11px] font-mono-tech tracking-[0.2em] text-[#DFC18D] uppercase font-bold block">
+                <span className="text-[11px] font-mono-tech tracking-[0.2em] text-[#C5A06B] uppercase font-bold block">
                   Current Stage on Site
                 </span>
                 <p className="text-sm font-sans font-semibold text-white mt-1">
                   {dossier.status}
                 </p>
                 {dossier.currentStageNote && (
-                  <p className="text-xs text-[#D4C8BC] mt-1 font-sans">
+                  <p className="text-xs text-[#D8C7B5] mt-1 font-sans">
                     {dossier.currentStageNote}
                   </p>
                 )}
               </div>
-              <div className="px-3.5 py-1.5 border border-[#DFC18D] bg-[#2E0A12] text-[11px] font-mono-tech text-[#DFC18D] uppercase tracking-wider font-semibold shrink-0">
+              <div className="px-3.5 py-1.5 border border-[#C5A06B] bg-[#48232B] text-[11px] font-mono-tech text-[#C5A06B] uppercase tracking-wider font-semibold shrink-0">
                 ACTIVE SITE RECORD
               </div>
             </div>
 
             {/* Dossier Quote Block */}
-            <div className="border-l-3 border-[#DFC18D] pl-5 py-3 bg-[#24070F] border-y border-r border-[#DFC18D]/20">
-              <div className="flex items-center space-x-2 text-[#DFC18D] mb-1">
+            <div className="border-l-3 border-[#C5A06B] pl-5 py-3 bg-[#33151A] border-y border-r border-[#C5A06B]/20">
+              <div className="flex items-center space-x-2 text-[#C5A06B] mb-1">
                 <QuoteIcon size={16} />
                 <span className="text-[11px] font-mono-tech tracking-[0.18em] uppercase font-semibold">Studio Philosophy</span>
               </div>
@@ -366,43 +366,43 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
 
         {/* Experience Section */}
         {dossier.experienceImages && (
-          <section id="experience" className="space-y-6 pt-4 border-t border-[#DFC18D]/25">
+          <section id="experience" className="space-y-6 pt-4 border-t border-[#C5A06B]/25">
             <div className="text-center space-y-1">
-              <span className="font-mono-tech text-xs tracking-[0.25em] text-[#DFC18D] uppercase block font-semibold">
+              <span className="font-mono-tech text-xs tracking-[0.25em] text-[#C5A06B] uppercase block font-semibold">
                 ARCHITECTURAL PHOTOGRAPHY
               </span>
               <h2 className="font-serif-display text-3xl md:text-4xl text-white uppercase font-medium">
                 Experience Gallery
               </h2>
-              <p className="font-serif-editorial italic text-sm text-[#D4C8BC]">
+              <p className="font-serif-editorial italic text-sm text-[#D8C7B5]">
                 Moments of natural illumination, textured materials, and living spaces.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {dossier.experienceImages.map((exp, idx) => (
-                <div key={idx} className="bg-[#1C060C] border border-[#DFC18D]/30 overflow-hidden flex flex-col group hover:border-[#DFC18D] transition-colors shadow-lg">
-                  <div className="relative aspect-[4/3] overflow-hidden bg-[#160509]">
+                <div key={idx} className="bg-[#3E1D23] border border-[#C5A06B]/30 overflow-hidden flex flex-col group hover:border-[#C5A06B] transition-colors shadow-lg">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-[#33151A]">
                     <ArchitecturalVisual 
                       src={project.imageUrl}
                       alt={exp.title}
                       aspectRatio="aspect-[4/3]" 
                     />
-                    <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#140407]/90 border border-[#DFC18D]/40 text-[10px] font-mono-tech text-[#DFC18D] uppercase tracking-wider">
+                    <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#2E1217]/90 border border-[#C5A06B]/40 text-[10px] font-mono-tech text-[#C5A06B] uppercase tracking-wider">
                       {exp.tag}
                     </div>
                   </div>
-                  <div className="p-4 flex-1 flex flex-col justify-between bg-[#180509]">
+                  <div className="p-4 flex-1 flex flex-col justify-between bg-[#3E1D23]">
                     <div>
-                      <h4 className="font-serif-display text-base text-white uppercase tracking-wide group-hover:text-[#DFC18D] transition-colors font-medium">
+                      <h4 className="font-serif-display text-base text-white uppercase tracking-wide group-hover:text-[#C5A06B] transition-colors font-medium">
                         {exp.title}
                       </h4>
                       {exp.subtitle && (
-                        <span className="text-xs font-serif-editorial italic text-[#DFC18D] block mb-1.5">
+                        <span className="text-xs font-serif-editorial italic text-[#C5A06B] block mb-1.5">
                           {exp.subtitle}
                         </span>
                       )}
-                      <p className="font-sans text-xs text-[#D4C8BC] leading-relaxed">
+                      <p className="font-sans text-xs text-[#D8C7B5] leading-relaxed">
                         {exp.caption}
                       </p>
                     </div>
@@ -414,10 +414,10 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
         )}
 
         {/* Dossier Footer & Navigation */}
-        <div className="pt-8 border-t border-[#DFC18D]/25 flex flex-wrap items-center justify-between gap-4">
+        <div className="pt-8 border-t border-[#C5A06B]/25 flex flex-wrap items-center justify-between gap-4">
           <button
             onClick={() => onSelectProject(prevProject)}
-            className="flex items-center space-x-2 text-xs font-mono-tech tracking-wider text-[#DFC18D] uppercase hover:text-white transition-colors font-semibold cursor-pointer"
+            className="flex items-center space-x-2 text-xs font-mono-tech tracking-wider text-[#C5A06B] uppercase hover:text-white transition-colors font-semibold cursor-pointer"
           >
             <ArrowLeft size={16} />
             <span>Prev: {prevProject.title}</span>
@@ -425,14 +425,14 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
           
           <button
             onClick={onClose}
-            className="px-6 py-2.5 bg-[#581424] text-[#F7F3EB] border border-[#DFC18D] hover:bg-[#6E1C2E] font-serif-display text-xs uppercase tracking-[0.2em] transition-all cursor-pointer font-semibold shadow-lg"
+            className="px-6 py-2.5 bg-[#542A33] text-[#F7F2EC] border border-[#C5A06B] hover:bg-[#6E1C2E] font-serif-display text-xs uppercase tracking-[0.2em] transition-all cursor-pointer font-semibold shadow-lg"
           >
             Close Case Study
           </button>
 
           <button
             onClick={() => onSelectProject(nextProject)}
-            className="flex items-center space-x-2 text-xs font-mono-tech tracking-wider text-[#DFC18D] uppercase hover:text-white transition-colors font-semibold cursor-pointer"
+            className="flex items-center space-x-2 text-xs font-mono-tech tracking-wider text-[#C5A06B] uppercase hover:text-white transition-colors font-semibold cursor-pointer"
           >
             <span>Next: {nextProject.title}</span>
             <ArrowRight size={16} />

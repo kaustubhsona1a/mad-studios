@@ -9,7 +9,7 @@ interface MadLogoProps {
 export const MadLogo: React.FC<MadLogoProps> = ({
   className = '',
   size = 'md',
-  variant = 'dark'
+  variant = 'gold'
 }) => {
   const dimensions = {
     sm: { textMain: 'text-xs sm:text-sm', textSub: 'text-[8px] sm:text-[9px]', px: 'px-3 py-1' },
@@ -21,11 +21,11 @@ export const MadLogo: React.FC<MadLogoProps> = ({
   if (variant === 'maroon-badge') {
     return (
       <div className={`inline-flex flex-col items-center select-none ${className}`}>
-        <div className={`relative ${dimensions.px} bg-[#54141E] flex flex-col items-center justify-center border-2 border-[#B88E48] rounded-lg shadow-sm transition-all duration-300 hover:border-[#DFC18D]`}>
-          <span className={`font-serif-display font-semibold ${dimensions.textMain} text-[#DFC18D] tracking-widest leading-tight`}>
+        <div className={`relative ${dimensions.px} bg-[#33151A] flex flex-col items-center justify-center border-2 border-[#C5A06B] shadow-sm transition-all duration-300 hover:border-[#D4B07B]`}>
+          <span className={`font-serif-display font-semibold ${dimensions.textMain} text-[#C5A06B] tracking-widest leading-tight`}>
             M.A.D
           </span>
-          <span className={`font-sans font-medium ${dimensions.textSub} text-[#DFC18D] tracking-[0.28em] uppercase opacity-95`}>
+          <span className={`font-sans font-medium ${dimensions.textSub} text-[#F7F2EC] tracking-[0.28em] uppercase opacity-95`}>
             STUDIO
           </span>
         </div>
@@ -34,29 +34,29 @@ export const MadLogo: React.FC<MadLogoProps> = ({
   }
 
   const borderClass = {
-    dark: 'border-[#54141E] bg-[#FAF7F2] hover:border-[#B88E48]',
-    maroon: 'border-[#8E2838] bg-[#FAF7F2] hover:border-[#54141E]',
-    gold: 'border-[#B88E48] bg-[#54141E] hover:border-[#DFC18D]',
-    cream: 'border-[#FAF7F2]/80 bg-black/40 hover:border-[#FAF7F2]'
+    dark: 'border-[#C5A06B] bg-[#33151A] hover:border-[#D4B07B]',
+    maroon: 'border-[#C5A06B] bg-[#48232B] hover:border-[#D4B07B]',
+    gold: 'border-[#C5A06B] bg-[#33151A] hover:border-[#D4B07B]',
+    cream: 'border-[#F7F2EC]/80 bg-[#3E1D23] hover:border-[#F7F2EC]'
   }[variant];
 
   const mainColor = {
-    dark: 'text-[#54141E]',
-    maroon: 'text-[#8E2838]',
-    gold: 'text-[#DFC18D]',
-    cream: 'text-[#FAF7F2]'
+    dark: 'text-[#C5A06B]',
+    maroon: 'text-[#C5A06B]',
+    gold: 'text-[#C5A06B]',
+    cream: 'text-[#F7F2EC]'
   }[variant];
 
   const subColor = {
-    dark: 'text-[#B88E48]',
-    maroon: 'text-[#54141E]',
-    gold: 'text-[#DFC18D]/90',
-    cream: 'text-[#FAF7F2]/90'
+    dark: 'text-[#D8C7B5]',
+    maroon: 'text-[#D8C7B5]',
+    gold: 'text-[#F7F2EC]/90',
+    cream: 'text-[#F7F2EC]/90'
   }[variant];
 
   return (
     <div className={`inline-flex flex-col items-center select-none ${className}`}>
-      <div className={`relative ${dimensions.px} flex flex-col items-center justify-center border-2 ${borderClass} rounded-lg transition-all duration-300 shadow-xs`}>
+      <div className={`relative ${dimensions.px} flex flex-col items-center justify-center border ${borderClass} transition-all duration-300 shadow-xs`}>
         <span className={`font-serif-display font-semibold ${dimensions.textMain} ${mainColor} tracking-widest leading-tight`}>
           M.A.D
         </span>

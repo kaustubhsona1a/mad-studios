@@ -75,7 +75,7 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ onComplete }) => {
     <aside
       aria-label="Welcome to M.A.D Studio"
       onClick={dismiss}
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#100305] text-[#F7F3EB] select-none transition-all duration-300 ease-out cursor-pointer ${
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#3E1D23] text-[#F7F2EC] select-none transition-all duration-300 ease-out cursor-pointer ${
         isExiting
           ? '-translate-y-full opacity-0 pointer-events-none'
           : 'translate-y-0 opacity-100'
@@ -85,46 +85,46 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ onComplete }) => {
       <div 
         className="absolute inset-0 opacity-15 pointer-events-none"
         style={{
-          backgroundImage: 'linear-gradient(rgba(223, 193, 141, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(223, 193, 141, 0.12) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(rgba(197, 160, 107, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(197, 160, 107, 0.12) 1px, transparent 1px)',
           backgroundSize: '48px 48px'
         }}
       />
 
       {/* Atmospheric Subtle Radial Burgundy Glow */}
-      <div className="absolute inset-0 bg-radial from-[#4A101C]/50 via-[#1A050B]/80 to-[#100305] pointer-events-none" />
+      <div className="absolute inset-0 bg-radial from-[#542A33]/50 via-[#33151A]/80 to-[#3E1D23] pointer-events-none" />
 
       {/* Center Studio Identity */}
       <div className="relative z-10 flex flex-col items-center max-w-md w-full px-6 text-center space-y-6">
         
         {/* Core Luxury M.A.D Emblem */}
-        <div className="px-8 py-5 bg-[#20050B] border-2 border-[#DFC18D] rounded-sm shadow-[0_0_40px_rgba(110,26,44,0.6)] flex flex-col items-center justify-center">
-          <span className="font-serif-display text-4xl sm:text-5xl font-bold tracking-[0.25em] text-[#DFC18D] leading-none">
+        <div className="px-8 py-5 bg-[#33151A] border-2 border-[#C5A06B] rounded-sm shadow-[0_0_40px_rgba(84,42,51,0.6)] flex flex-col items-center justify-center">
+          <span className="font-serif-display text-4xl sm:text-5xl font-bold tracking-[0.25em] text-[#C5A06B] leading-none">
             M.A.D
           </span>
-          <span className="text-[10px] font-sans tracking-[0.45em] text-[#F7F3EB] uppercase mt-2.5 font-semibold">
+          <span className="text-[10px] font-sans tracking-[0.45em] text-[#F7F2EC] uppercase mt-2.5 font-semibold">
             STUDIO
           </span>
         </div>
 
         {/* Studio Subtitle */}
         <div className="space-y-1.5 text-center">
-          <h2 className="font-serif-editorial italic text-2xl sm:text-3xl text-[#DFC18D] tracking-wide">
+          <h2 className="font-serif-editorial italic text-2xl sm:text-3xl text-[#C5A06B] tracking-wide">
             Crafting Spaces. Building Experiences.
           </h2>
-          <p className="font-sans text-xs text-[#D4C8BC] uppercase tracking-[0.25em]">
+          <p className="font-sans text-xs text-[#D8C7B5] uppercase tracking-[0.25em]">
             Architecture · Interiors · Landscapes
           </p>
         </div>
 
         {/* Minimal Gold Hairline Indicator */}
         <div className="w-28 h-[1.5px] bg-[#2E0911] overflow-hidden rounded-full">
-          <div className="w-full h-full bg-[#DFC18D] animate-draw-line" />
+          <div className="w-full h-full bg-[#C5A06B] animate-draw-line" />
         </div>
 
         {/* Swipe Up or Tap to Enter Action */}
-        <div className="pt-6 flex flex-col items-center space-y-2 text-[#DFC18D]">
+        <div className="pt-6 flex flex-col items-center space-y-2 text-[#C5A06B]">
           <ArrowUp size={18} className="animate-bounce" />
-          <span className="text-xs font-sans tracking-[0.25em] uppercase font-semibold text-[#DFC18D]">
+          <span className="text-xs font-sans tracking-[0.25em] uppercase font-semibold text-[#C5A06B]">
             Swipe up or tap to enter
           </span>
         </div>

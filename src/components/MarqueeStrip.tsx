@@ -25,10 +25,10 @@ export const MarqueeStrip: React.FC<MarqueeStripProps> = ({
 
   return (
     <div
-      className={`w-full overflow-hidden border-y py-3 select-none flex items-center ${
+      className={`w-full overflow-hidden border-y py-3.5 select-none flex items-center ${
         variant === 'burgundy'
-          ? 'bg-[#180509] border-[#DFC18D]/25 text-[#DFC18D]'
-          : 'bg-[#280911] border-[#DFC18D]/40 text-[#F7F3EB]'
+          ? 'bg-[#33151A] border-[#C5A06B]/25 text-[#C5A06B]'
+          : 'bg-[#482229] border-[#C5A06B]/40 text-[#F7F2EC]'
       }`}
     >
       <div
@@ -44,7 +44,7 @@ export const MarqueeStrip: React.FC<MarqueeStripProps> = ({
             <span className="font-serif-display text-xs font-semibold tracking-[0.22em] uppercase">
               {item}
             </span>
-            <span className="w-1.5 h-1.5 rotate-45 border border-[#DFC18D]/60 shrink-0" />
+            <span className="w-1.5 h-1.5 rotate-45 border border-[#C5A06B]/60 shrink-0" />
           </div>
         ))}
       </div>

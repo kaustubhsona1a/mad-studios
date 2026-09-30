@@ -2,18 +2,18 @@
 
 @layer base {
   :root {
-    --color-burgundy-950: #0E0305;
-    --color-burgundy-900: #140508;
-    --color-burgundy-850: #1C070C;
-    --color-burgundy-800: #260A10;
-    --color-burgundy-700: #380E18;
-    --color-burgundy-600: #4E1422;
-    --color-burgundy-500: #681B2E;
-    --color-gold-light: #F4E2BE;
-    --color-gold: #DFC18D;
-    --color-gold-dark: #B88E48;
-    --color-ivory: #F7F3EB;
-    --color-paper: #EFE9DF;
+    --color-burgundy-950: #260E12;
+    --color-burgundy-900: #321419;
+    --color-burgundy-850: #3A1920;
+    --color-burgundy-800: #3E1D23; /* Exact matte burgundy base from PDF */
+    --color-burgundy-700: #4A242C;
+    --color-burgundy-600: #542A33;
+    --color-burgundy-500: #62323D;
+    --color-gold-light: #EBD2AC;
+    --color-gold: #C5A06B;
+    --color-gold-dark: #9E7A4A;
+    --color-ivory: #F7F2EC;
+    --color-sand: #D8C7B5;
   }
 
   html {
@@ -23,8 +23,8 @@
   }
 
   body {
-    background-color: #140508;
-    color: #F7F3EB;
+    background-color: #3E1D23; /* Exact matte burgundy from PDF */
+    color: #F7F2EC;
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     overflow-x: clip;
     max-width: 100%;
@@ -35,6 +35,7 @@
   #root {
     overflow-x: clip;
     max-width: 100%;
+    background-color: #3E1D23;
   }
 
   button, a, [role="button"] {
@@ -48,17 +49,17 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #0E0305;
+    background: #2E1217;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #380E18;
-    border: 1px solid rgba(223, 193, 141, 0.35);
+    background: #542A33;
+    border: 1px solid rgba(197, 160, 107, 0.4);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #4E1422;
-    border-color: #DFC18D;
+    background: #62323D;
+    border-color: #C5A06B;
   }
 }
 
@@ -78,15 +79,15 @@
 /* Subtle Architectural Grid Canvas */
 .architectural-grid-dark {
   background-image: 
-    linear-gradient(rgba(223, 193, 141, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(223, 193, 141, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(197, 160, 107, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(197, 160, 107, 0.04) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
 .architectural-grid-fine {
   background-image: 
-    linear-gradient(rgba(223, 193, 141, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(223, 193, 141, 0.07) 1px, transparent 1px);
+    linear-gradient(rgba(197, 160, 107, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(197, 160, 107, 0.07) 1px, transparent 1px);
   background-size: 16px 16px;
 }
 

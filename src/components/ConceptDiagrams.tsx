@@ -12,40 +12,40 @@ export const ConceptDiagrams: React.FC<ConceptDiagramsProps> = ({
   projectId
 }) => {
   return (
-    <div className="w-full bg-white border border-[#D8C7B0] p-6 shadow-xs">
-      <div className="flex flex-wrap items-center justify-between border-b border-[#EAE2D5] pb-3 mb-5 gap-2">
+    <div className="w-full bg-[#3E1D23] border border-[#C5A06B]/40 p-6 shadow-2xl text-[#F7F2EC]">
+      <div className="flex flex-wrap items-center justify-between border-b border-[#C5A06B]/25 pb-3 mb-5 gap-2">
         <div className="flex items-center space-x-2">
-          <span className="font-serif-display text-sm tracking-wider text-[#8E2838] uppercase font-bold">
-            Design Ideas & Structure
+          <span className="font-serif-display text-sm tracking-wider text-[#C5A06B] uppercase font-bold">
+            Design Morphology & Structure
           </span>
-          <span className="text-xs text-[#D8C7B0]">·</span>
-          <span className="font-sans text-xs text-[#523B33] tracking-wider uppercase font-medium">
+          <span className="text-xs text-[#C5A06B]/40">·</span>
+          <span className="font-sans text-xs text-[#D8C7B5] tracking-wider uppercase font-medium">
             {title}
           </span>
         </div>
-        <span className="text-[11px] font-sans tracking-wider text-[#8E2838] uppercase font-semibold">
+        <span className="text-[11px] font-mono-tech tracking-wider text-[#C5A06B] uppercase font-semibold">
           Architectural Concept
         </span>
       </div>
 
       {/* Special Visual Formula Banner for Casa Sylva */}
       {projectId === 'casa-sylva' && (
-        <div className="mb-6 bg-[#FAF7F2] border border-[#D8C7B0] p-4 text-center">
-          <span className="text-[11px] font-sans tracking-[0.2em] text-[#8E2838] uppercase block mb-3 font-bold">
+        <div className="mb-6 bg-[#33151A] border border-[#C5A06B]/30 p-4 text-center">
+          <span className="text-[11px] font-mono-tech tracking-[0.2em] text-[#C5A06B] uppercase block mb-3 font-bold">
             Building Composition Formula
           </span>
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-sans text-[#2A0C12]">
-            <span className="px-2.5 py-1 bg-white border border-[#D8C7B0] font-medium">Gable Roof</span>
-            <span className="text-[#8E2838] font-bold">+</span>
-            <span className="px-2.5 py-1 bg-white border border-[#D8C7B0] font-medium">Stone Block</span>
-            <span className="text-[#8E2838] font-bold">+</span>
-            <span className="px-2.5 py-1 bg-white border border-[#D8C7B0] font-medium">Wooden Screen</span>
-            <span className="text-[#8E2838] font-bold">+</span>
-            <span className="px-2.5 py-1 bg-white border border-[#D8C7B0] font-medium">Upper Floor Box</span>
-            <span className="text-[#8E2838] font-bold">+</span>
-            <span className="px-2.5 py-1 bg-white border border-[#D8C7B0] font-medium">Stone Base Plinth</span>
-            <span className="text-[#8E2838] font-bold">=</span>
-            <span className="px-3 py-1 bg-[#3E131A] text-white border border-[#3E131A] font-bold tracking-widest uppercase">CASA SYLVA</span>
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs font-mono-tech text-[#F7F2EC]">
+            <span className="px-2.5 py-1 bg-[#48232B] border border-[#C5A06B]/40 font-medium">Gable Roof</span>
+            <span className="text-[#C5A06B] font-bold">+</span>
+            <span className="px-2.5 py-1 bg-[#48232B] border border-[#C5A06B]/40 font-medium">Stone Block</span>
+            <span className="text-[#C5A06B] font-bold">+</span>
+            <span className="px-2.5 py-1 bg-[#48232B] border border-[#C5A06B]/40 font-medium">Wooden Screen</span>
+            <span className="text-[#C5A06B] font-bold">+</span>
+            <span className="px-2.5 py-1 bg-[#48232B] border border-[#C5A06B]/40 font-medium">Upper Floor Box</span>
+            <span className="text-[#C5A06B] font-bold">+</span>
+            <span className="px-2.5 py-1 bg-[#48232B] border border-[#C5A06B]/40 font-medium">Stone Base Plinth</span>
+            <span className="text-[#C5A06B] font-bold">=</span>
+            <span className="px-3 py-1 bg-[#542A33] text-[#C5A06B] border border-[#C5A06B] font-bold tracking-widest uppercase">CASA SYLVA</span>
           </div>
         </div>
       )}
@@ -55,20 +55,20 @@ export const ConceptDiagrams: React.FC<ConceptDiagramsProps> = ({
         {points.map((pt, i) => (
           <div
             key={i}
-            className="p-5 bg-[#FAF7F2] border border-[#EAE2D5] hover:border-[#8E2838] transition-colors flex flex-col justify-between group shadow-xs"
+            className="p-5 bg-[#48232B] border border-[#C5A06B]/25 hover:border-[#C5A06B] transition-colors flex flex-col justify-between group shadow-sm"
           >
             <div>
               <div className="flex items-center justify-between mb-3">
-                <span className="font-mono text-xs text-[#8E2838] font-bold tracking-wider">
+                <span className="font-mono-tech text-xs text-[#C5A06B] font-bold tracking-wider">
                   0{i + 1}
                 </span>
-                <span className="h-[1px] flex-1 mx-3 bg-[#D8C7B0]/60 group-hover:bg-[#8E2838]/40 transition-colors" />
-                <span className="w-1.5 h-1.5 bg-[#8E2838] rounded-full" />
+                <span className="h-[1px] flex-1 mx-3 bg-[#C5A06B]/30 group-hover:bg-[#C5A06B]/60 transition-colors" />
+                <span className="w-1.5 h-1.5 bg-[#C5A06B] rounded-full" />
               </div>
-              <h5 className="font-serif-display text-sm text-[#2A0C12] uppercase tracking-wide group-hover:text-[#8E2838] transition-colors mb-2 font-bold">
+              <h5 className="font-serif-display text-sm text-white uppercase tracking-wide group-hover:text-[#C5A06B] transition-colors mb-2 font-bold">
                 {pt.title}
               </h5>
-              <p className="font-sans text-xs text-[#4A3D36] leading-relaxed">
+              <p className="font-sans text-xs text-[#D8C7B5] leading-relaxed font-light">
                 {pt.desc}
               </p>
             </div>
