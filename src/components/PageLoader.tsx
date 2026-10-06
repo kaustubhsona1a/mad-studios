@@ -108,7 +108,7 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ onComplete }) => {
 
         {/* Studio Subtitle */}
         <div className="space-y-1.5 text-center">
-          <h2 className="font-serif-editorial italic text-2xl sm:text-3xl text-[#C5A06B] tracking-wide">
+          <h2 className="font-serif-display text-2xl sm:text-3xl text-[#C5A06B] tracking-wide font-normal uppercase">
             Crafting Spaces. Building Experiences.
           </h2>
           <p className="font-sans text-xs text-[#D8C7B5] uppercase tracking-[0.25em]">

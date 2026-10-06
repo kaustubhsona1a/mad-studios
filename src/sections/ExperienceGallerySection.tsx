@@ -91,7 +91,7 @@ export const ExperienceGallerySection: React.FC = () => {
             <h2 className="font-serif-display text-4xl sm:text-5xl lg:text-6xl text-[#C5A06B] uppercase tracking-wide">
               EXPERIENCE
             </h2>
-            <p className="font-serif-editorial italic text-base text-[#D8C7B5] mt-1">
+            <p className="font-sans text-base text-[#D8C7B5] mt-1 font-light">
               Moments of bright daylight, honest textures, and comfortable living spaces.
             </p>
           </div>
@@ -144,7 +144,7 @@ export const ExperienceGallerySection: React.FC = () => {
               </div>
             </div>
             <div className="p-6 sm:p-8 bg-[#33151A] border-t border-[#C5A06B]/25">
-              <span className="font-serif-editorial italic text-xs text-[#C5A06B] block font-medium">
+              <span className="text-xs text-[#C5A06B] block font-medium">
                 {moments[0].subtitle}
               </span>
               <h3 className="font-serif-display text-xl sm:text-2xl text-white uppercase tracking-wide mt-1 font-semibold">
@@ -176,7 +176,7 @@ export const ExperienceGallerySection: React.FC = () => {
               </div>
             </div>
             <div className="p-6 bg-[#33151A] border-t border-[#C5A06B]/25">
-              <span className="font-serif-editorial italic text-xs text-[#C5A06B] block font-medium">
+              <span className="text-xs text-[#C5A06B] block font-medium">
                 {moments[1].subtitle}
               </span>
               <h3 className="font-serif-display text-lg sm:text-xl text-white uppercase tracking-wide mt-1 font-semibold">
@@ -209,7 +209,7 @@ export const ExperienceGallerySection: React.FC = () => {
                 </div>
               </div>
               <div className="sm:w-1/2 p-5 sm:p-6 flex flex-col justify-center space-y-2 bg-[#33151A]">
-                <span className="font-serif-editorial italic text-xs text-[#C5A06B]">
+                <span className="text-xs text-[#C5A06B] font-medium">
                   {moment.subtitle}
                 </span>
                 <h4 className="font-serif-display text-base text-white uppercase font-bold">

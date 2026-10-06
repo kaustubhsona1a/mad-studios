@@ -77,7 +77,7 @@ export const MaterialPaletteViewer: React.FC<MaterialPaletteViewerProps> = ({
               </p>
             </div>
           ) : (
-            <p className="text-xs text-[#D8C7B5] italic font-serif-editorial">
+            <p className="text-xs text-[#D8C7B5] font-sans font-light">
               Click any material swatch above to see how it is used in the project.
             </p>
           )}

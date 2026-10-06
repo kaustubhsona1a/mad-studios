@@ -199,7 +199,7 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
               <h4 className="font-serif-display text-xl text-white uppercase font-bold mt-0.5">
                 {currentLevel.label}
               </h4>
-              <p className="font-serif-editorial italic text-xs text-[#D8C7B5]">
+              <p className="font-sans text-xs text-[#D8C7B5] font-light">
                 {currentLevel.sublabel}
               </p>
               <div className="mt-2 text-xs font-mono-tech text-[#C5A06B] border-b border-[#C5A06B]/25 pb-2 font-semibold">

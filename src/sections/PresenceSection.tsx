@@ -5,7 +5,7 @@ import { PresenceMap } from '../components/PresenceMap';
 
 export const PresenceSection: React.FC = () => {
   return (
-    <section id="presence" className="relative w-full bg-[#3E1D23] text-[#F7F2EC] py-16 sm:py-20 border-b border-[#C5A06B]/20">
+    <section id="presence" className="relative w-full bg-transparent text-[#F7F2EC] py-16 sm:py-20 border-b border-white/[0.08]">
       {/* Background Architectural Blueprint Grid */}
       <div 
         className="absolute inset-0 opacity-10 pointer-events-none"
@@ -26,15 +26,15 @@ export const PresenceSection: React.FC = () => {
           className="border-b border-[#C5A06B]/25 pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2"
         >
           <div>
-            <span className="font-mono-tech text-xs tracking-[0.25em] text-[#C5A06B] uppercase block mb-1 font-semibold">
-              NATIONAL REACH
-            </span>
-            <h2 className="font-serif-display text-3xl sm:text-4xl text-[#C5A06B] uppercase tracking-wide">
-              WHERE WE BUILD
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full liquid-glass-pill text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold mb-2">
+              <span>LOCATIONS · 06</span>
+            </div>
+            <h2 className="font-serif-display text-3xl sm:text-4xl text-white uppercase tracking-wide">
+              Where We Build
             </h2>
           </div>
-          <span className="text-xs font-mono-tech text-[#D8C7B5] uppercase tracking-wider">
-            MUMBAI · GOA · LONAVALA · BENGALURU
+          <span className="text-xs font-sans text-[#D8C7B5] uppercase tracking-wider">
+            Mumbai · Goa · Lonavala · Bengaluru
           </span>
         </motion.div>
 
@@ -49,9 +49,11 @@ export const PresenceSection: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="border border-[#C5A06B]/30 bg-[#48232B] p-6 sm:p-8 shadow-xl"
+          className="liquid-glass-card rounded-2xl border border-white/12 p-6 sm:p-8 shadow-2xl relative overflow-hidden"
         >
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-[#C5A06B]/20">
+          {/* Top specular reflection line */}
+          <div className="absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/25 to-transparent pointer-events-none" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
             {PRESENCE_STATS.map((stat, idx) => (
               <div key={idx} className={`${idx !== 0 ? 'sm:pl-6' : ''} pt-3 sm:pt-0 flex flex-col justify-between group`}>
                 <div>

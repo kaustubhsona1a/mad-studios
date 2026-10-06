@@ -19,53 +19,56 @@ export function App() {
   const [selectedDossierProject, setSelectedDossierProject] = useState<Project | null>(null);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
 
-  // Featured Project: Casa Sylva (Siolim, Goa)
-  const featuredCasaSylva = PROJECTS_DATA.find(p => p.id === 'casa-sylva') || PROJECTS_DATA[0];
-
   return (
-    <div className="min-h-screen bg-[#3E1D23] text-[#F7F2EC] selection:bg-[#5E2B35] selection:text-[#EBD2AC] relative antialiased">
-      {/* Brand Intro Screen (dismisses instantly on swipe up, tap, or scroll) */}
+    <div className="min-h-screen text-[#F7F2EC] selection:bg-[#5E2B35] selection:text-[#EBD2AC] relative antialiased overflow-x-hidden bg-[#3E1D23]">
+
+      {/* Brand Intro Screen */}
       {isLoading && (
         <PageLoader onComplete={() => setIsLoading(false)} />
       )}
 
-      {/* Fixed Navigation */}
+      {/* Floating Liquid Glass Navigation Bar */}
       <Navbar
         onOpenConsultation={() => setIsConsultationOpen(true)}
       />
 
-      {/* 01: Hero Section (Brand Introduction) */}
-      <HeroSection
-        onOpenConsultation={() => setIsConsultationOpen(true)}
-      />
+      {/* Main Content Area Layered Above Full Background Image */}
+      <main className="relative z-10">
+        {/* 01: Hero Section */}
+        <HeroSection
+          onOpenConsultation={() => setIsConsultationOpen(true)}
+        />
 
-      {/* Architectural Marquee Ticker */}
-      <MarqueeStrip variant="burgundy" />
+        {/* Architectural Marquee Ticker (Running in laptop layout, hidden on mobile) */}
+        <div className="hidden lg:block">
+          <MarqueeStrip variant="burgundy" />
+        </div>
 
-      {/* 02: About Section (Studio Purpose & Principles) */}
-      <AboutSection />
+        {/* 02: About Section */}
+        <AboutSection />
 
-      {/* 03: Selected Works (Curated Signature Architecture Showcase) */}
-      <SelectedWorksSection
-        onOpenDossier={(proj) => setSelectedDossierProject(proj)}
-      />
+        {/* 03: Selected Works */}
+        <SelectedWorksSection
+          onOpenDossier={(proj) => setSelectedDossierProject(proj)}
+        />
 
-      {/* 04: Services Section (Core Offerings & Deliverables) */}
-      <ServicesSection />
+        {/* 04: Services Section */}
+        <ServicesSection />
 
-      {/* 05: Locations & National Reach */}
-      <PresenceSection />
+        {/* 05: Locations & National Reach */}
+        <PresenceSection />
 
-      {/* 06: Studio Leadership & Team */}
-      <StudioSection />
+        {/* 06: Studio Leadership & Team */}
+        <StudioSection />
 
-      {/* 07: Contact & Discovery Consultation */}
-      <ContactSection
-        onOpenConsultation={() => setIsConsultationOpen(true)}
-      />
+        {/* 07: Contact & Discovery Consultation */}
+        <ContactSection
+          onOpenConsultation={() => setIsConsultationOpen(true)}
+        />
 
-      {/* 08: Minimal Footer */}
-      <Footer />
+        {/* 08: Classy Liquid Glass Footer */}
+        <Footer />
+      </main>
 
       {/* Interactive Project Case Study Dossier Modal */}
       {selectedDossierProject && (
@@ -73,6 +76,7 @@ export function App() {
           project={selectedDossierProject}
           onClose={() => setSelectedDossierProject(null)}
           onSelectProject={(proj) => setSelectedDossierProject(proj)}
+          onOpenConsultation={() => setIsConsultationOpen(true)}
         />
       )}
 

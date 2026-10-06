@@ -1,50 +1,58 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Compass, Sparkles, Sun, Heart } from 'lucide-react';
+import { Compass, Sun, Sparkles, Heart, Quote } from 'lucide-react';
 
 export const AboutSection: React.FC = () => {
   const pillars = [
     {
-      icon: Compass,
-      title: 'Context First',
-      desc: 'Shaped by natural breezes, sun path, and regional landscape.'
+      icon: Sun,
+      title: 'Climate Built',
+      desc: 'Natural breezes, morning sunlight, and shaded verandas.'
     },
     {
-      icon: Sun,
-      title: 'Design with Purpose',
-      desc: 'Functional layouts where elegance emerges from clarity and ease.'
+      icon: Compass,
+      title: 'Simple Living',
+      desc: 'Thoughtful floor layouts where rooms flow naturally.'
     },
     {
       icon: Sparkles,
-      title: 'Honest Materials',
-      desc: 'Local stone, seasoned teak, and raw concrete that age with grace.'
+      title: 'Natural Materials',
+      desc: 'Local stone, teak wood, and clean textures that age well.'
     },
     {
       icon: Heart,
-      title: 'Human Experience',
-      desc: 'Spaces measured by tranquility, comfort, and the joy of living.'
+      title: 'Family Comfort',
+      desc: 'Quiet, calm spaces built for everyday living.'
     }
   ];
 
   return (
-    <section id="about" className="relative w-full bg-[#3E1D23] text-[#F7F2EC] py-16 sm:py-20 border-b border-[#C5A06B]/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="about" className="relative w-full bg-[#3E1D23] text-[#F7F2EC] py-10 sm:py-20 overflow-hidden border-b border-[#C5A06B]/20">
+      {/* Ambient Burgundy Glow */}
+      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[550px] h-[550px] bg-[#542A33]/20 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8 sm:space-y-10">
         
         {/* Section Header */}
-        <div className="max-w-3xl space-y-3 mb-10">
-          <span className="font-mono-tech text-xs tracking-[0.25em] text-[#C5A06B] uppercase font-semibold block">
-            OUR PHILOSOPHY
-          </span>
-          <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-[#C5A06B] uppercase tracking-wide leading-tight">
-            Rooted in Context, <span className="text-white">Crafted for Life.</span>
-          </h2>
-          <p className="font-sans text-sm sm:text-base text-[#D8C7B5] leading-relaxed font-light">
-            We believe architecture is far more than building walls—it is the art of shaping daily life. Rather than following trends, we design private homes and tropical retreats that respond honestly to climate, stay cool naturally, and endure through generations.
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-white/10 pb-4">
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center space-x-1.5 px-3 py-0.5 rounded-full liquid-glass-pill text-[10px] sm:text-xs font-sans tracking-wider text-[#C5A06B] uppercase font-semibold">
+              <Compass size={11} className="text-[#C5A06B]" />
+              <span>OUR APPROACH · 02</span>
+            </div>
+            
+            <h2 className="font-serif-display text-2xl sm:text-4xl lg:text-5xl text-white uppercase tracking-tight leading-tight">
+              Built for Life. <span className="text-[#EBD2AC] block sm:inline">Made for Comfort.</span>
+            </h2>
+          </div>
+
+          <p className="font-sans text-xs sm:text-sm text-[#D8C7B5] leading-relaxed font-light max-w-sm">
+            We design homes that feel peaceful, let in fresh air and light, and look beautiful for generations.
           </p>
         </div>
 
-        {/* 4 Pillars Grid - Clean, Punchy, Fast to Read */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Compact Liquid Translucent Glass Cards (2x2 on mobile, 4-col on desktop) */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
           {pillars.map((pillar, idx) => {
             const Icon = pillar.icon;
             return (
@@ -53,21 +61,50 @@ export const AboutSection: React.FC = () => {
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.08 }}
-                className="p-5 bg-[#4A242C] border border-[#C5A06B]/30 hover:border-[#C5A06B] transition-colors space-y-2 group shadow-sm"
+                transition={{ duration: 0.4, delay: idx * 0.05 }}
+                className="liquid-glass-translucent rounded-xl sm:rounded-2xl p-3 sm:p-4 group flex flex-col justify-between"
               >
-                <div className="flex items-center space-x-2 text-[#C5A06B]">
-                  <Icon size={16} />
-                  <span className="font-serif-display text-sm text-white uppercase font-bold tracking-wider group-hover:text-[#C5A06B] transition-colors">
-                    {pillar.title}
-                  </span>
+                {/* Top specular glint highlight */}
+                <div className="absolute inset-x-3 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
+
+                <div>
+                  <div className="flex items-center space-x-2 mb-1.5">
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg liquid-glass-pill flex items-center justify-center text-[#C5A06B] shrink-0">
+                      <Icon size={13} />
+                    </div>
+                    <h3 className="font-serif-display text-[11px] sm:text-sm text-white uppercase tracking-wider font-semibold truncate group-hover:text-[#EBD2AC] transition-colors">
+                      {pillar.title}
+                    </h3>
+                  </div>
+
+                  <p className="font-sans text-[10.5px] sm:text-xs text-[#D8C7B5] leading-snug font-light line-clamp-2 sm:line-clamp-none">
+                    {pillar.desc}
+                  </p>
                 </div>
-                <p className="font-sans text-xs text-[#D8C7B5] leading-relaxed">
-                  {pillar.desc}
-                </p>
               </motion.div>
             );
           })}
+        </div>
+
+        {/* Ambient Quote Card with Translucent Liquid Glass */}
+        <div className="liquid-glass-translucent rounded-xl sm:rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border border-white/20 shadow-xl relative overflow-hidden">
+          <div className="flex items-start space-x-3 max-w-3xl">
+            <Quote size={20} className="text-[#C5A06B] shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <p className="font-sans text-xs sm:text-base text-white/95 leading-relaxed font-light">
+                “True luxury is not about excess decoration. It is quiet rooms, morning light, and fresh air in every corner.”
+              </p>
+              <span className="font-sans text-[10px] sm:text-xs tracking-wider text-[#C5A06B] uppercase font-semibold block pt-0.5">
+                — MUDDASSIR HAQUE · LEAD ARCHITECT
+              </span>
+            </div>
+          </div>
+
+          <div className="shrink-0 hidden sm:flex items-center space-x-2 text-xs font-sans text-[#D8C7B5]">
+            <span className="px-3.5 py-1 rounded-full liquid-glass-pill text-[#EBD2AC] font-medium border border-white/15 text-xs">
+              MUMBAI & GOA
+            </span>
+          </div>
         </div>
 
       </div>

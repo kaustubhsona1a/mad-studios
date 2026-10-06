@@ -98,7 +98,17 @@ export const ServicesSection: React.FC = () => {
   ];
 
   return (
-    <section id="services" className="relative w-full bg-[#3E1D23] text-[#F7F2EC] py-16 sm:py-24 border-b border-[#C5A06B]/20">
+    <section id="services" className="relative w-full bg-[#3E1D23] text-[#F7F2EC] py-14 sm:py-28 border-b border-[#C5A06B]/20 overflow-hidden">
+      {/* Ambient Burgundy Glow */}
+      <div className="absolute top-1/3 left-0 w-[550px] h-[550px] bg-[#6E1C2E]/15 rounded-full blur-[140px] pointer-events-none" />
+      <div 
+        className="absolute inset-0 opacity-[0.06] pointer-events-none"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(197, 160, 107, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(197, 160, 107, 0.15) 1px, transparent 1px)',
+          backgroundSize: '48px 48px'
+        }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Split Editorial Layout Matching PDF Page */}
@@ -107,84 +117,87 @@ export const ServicesSection: React.FC = () => {
           {/* LEFT: Exact PDF Services List */}
           <div className="lg:col-span-7 space-y-6">
             
-            {/* Header Lockup from PDF */}
+            {/* Header Lockup */}
             <div>
-              <h2 className="font-serif-display text-4xl sm:text-5xl lg:text-6xl text-[#F7F2EC] tracking-wide uppercase font-light">
+              <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full liquid-glass-pill text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold mb-3">
+                <span>WHAT WE DO · 04</span>
+              </div>
+              <h2 className="font-serif-display text-4xl sm:text-5xl lg:text-6xl text-white tracking-wide uppercase font-light">
                 SERVICES
               </h2>
-              {/* Gold Underline Bar from PDF */}
+              {/* Gold Underline Bar */}
               <div className="w-full h-[1.5px] bg-[#C5A06B]/80 mt-3 mb-6" />
             </div>
 
-            {/* Service Items Exactly like PDF */}
-            <div className="space-y-6">
+            {/* Service Items inside Liquid Translucent Glass Containers */}
+            <div className="space-y-3 sm:space-y-4">
               {servicesList.map((service, index) => (
-                <div key={service.id} className="space-y-4">
-                  <div className="flex items-start space-x-5">
-                    {/* Bespoke Architectural Emblem */}
-                    <div className="pt-0.5">
+                <div 
+                  key={service.id} 
+                  className="liquid-glass-translucent rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border border-white/15 hover:border-[#C5A06B]/50 transition-all duration-300"
+                >
+                  <div className="flex items-start space-x-3.5 sm:space-x-4">
+                    {/* Architectural Emblem */}
+                    <div className="pt-0.5 shrink-0 text-[#C5A06B]">
                       {service.icon}
                     </div>
 
                     {/* Content Lockup */}
-                    <div className="flex-1 space-y-1">
-                      <span className="font-sans text-sm sm:text-base text-[#D4B07B] font-semibold tracking-wider uppercase underline decoration-[#C5A06B] decoration-1 underline-offset-4 block">
+                    <div className="flex-1 space-y-0.5">
+                      <span className="font-sans text-xs sm:text-sm text-[#D4B07B] font-semibold tracking-wider uppercase block">
                         {service.title}
                       </span>
-                      <p className="font-sans text-xs sm:text-sm text-[#F7F2EC]/85 leading-relaxed font-light lowercase">
+                      <p className="font-sans text-xs sm:text-sm text-[#F7F2EC]/85 leading-relaxed font-light">
                         {service.desc}
                       </p>
                     </div>
                   </div>
-
-                  {/* Thin Gold Dividing Line from PDF */}
-                  {index < servicesList.length - 1 && (
-                    <div className="w-full h-[1px] bg-[#C5A06B]/30" />
-                  )}
                 </div>
               ))}
             </div>
 
-            {/* Bottom PDF Tagline */}
-            <div className="pt-4 border-t border-[#C5A06B]/30">
-              <p className="font-serif-editorial italic text-xs sm:text-sm text-[#D8C7B5]">
-                We offer end-to-end architectural solutions tailored to every scale and site.
+            {/* Bottom Tagline */}
+            <div className="pt-3 border-t border-white/10">
+              <p className="font-sans text-xs sm:text-sm text-[#D8C7B5] font-light">
+                We offer complete architectural and interior solutions tailored to your plot and lifestyle.
               </p>
             </div>
 
           </div>
 
-          {/* RIGHT: Curated Photographic Spread from PDF */}
+          {/* RIGHT: Curated Photographic Spread in Liquid Glass Frame */}
           <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-28">
             
             {/* Primary Property Photo: Siolim Villa Pool & Woodwork */}
-            <div className="border border-[#C5A06B]/40 shadow-xl overflow-hidden bg-[#35151B] aspect-[4/3] group">
-              <ArchitecturalVisual
-                type="hero-casa-sylva"
-                aspectRatio="aspect-auto"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="p-3 bg-[#33151A] border-t border-[#C5A06B]/25 flex items-center justify-between text-[11px] font-mono-tech text-[#C5A06B]">
-                <span>TROPICAL RETREAT</span>
-                <span className="text-[#D8C7B5]">SIOLIM, GOA</span>
-              </div>
-            </div>
-
-            {/* Secondary Photo: Courtyard & Reflection Pool */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="border border-[#C5A06B]/30 overflow-hidden aspect-[4/3] group bg-[#35151B]">
+            <div className="liquid-glass-translucent rounded-2xl p-2.5 sm:p-3 border border-white/20 shadow-2xl overflow-hidden group">
+              <div className="aspect-[4/3] rounded-xl overflow-hidden relative">
                 <ArchitecturalVisual
-                  type="services-courtyard"
+                  type="hero-casa-sylva"
                   aspectRatio="aspect-auto"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
+              <div className="p-3 flex items-center justify-between text-[11px] font-mono-tech text-[#C5A06B]">
+                <span className="font-semibold">TROPICAL RETREAT</span>
+                <span className="text-[#D8C7B5]">SIOLIM, GOA</span>
+              </div>
+            </div>
 
-              <div className="border border-[#C5A06B]/30 overflow-hidden aspect-[4/3] group bg-[#35151B]">
+            {/* Secondary Photos */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="liquid-glass-card rounded-xl p-2 border border-white/10 overflow-hidden aspect-[4/3] group">
+                <ArchitecturalVisual
+                  type="services-courtyard"
+                  aspectRatio="aspect-auto"
+                  className="w-full h-full object-cover rounded-lg transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+
+              <div className="liquid-glass-card rounded-xl p-2 border border-white/10 overflow-hidden aspect-[4/3] group">
                 <ArchitecturalVisual
                   type="experience-living"
                   aspectRatio="aspect-auto"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover rounded-lg transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
             </div>

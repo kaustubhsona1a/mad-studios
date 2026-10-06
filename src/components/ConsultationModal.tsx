@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Check, Phone, Mail, Instagram, MapPin, Sparkles } from 'lucide-react';
+import { X, Check, Phone, Mail, Instagram, MapPin, Sparkles, Calendar } from 'lucide-react';
 import { MadLogo } from './MadLogo';
 
 interface ConsultationModalProps {
@@ -31,43 +31,47 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none">
-      <div className="relative w-full max-w-2xl bg-[#3E1D23] text-[#F7F2EC] border-2 border-[#C5A06B]/40 p-6 sm:p-10 shadow-[0_25px_60px_rgba(0,0,0,0.9)]">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 select-none animate-fade-in">
+      <div className="relative w-full max-w-2xl rounded-3xl bg-gradient-to-b from-[#180508]/92 via-[#110305]/96 to-[#090204]/98 backdrop-blur-3xl text-[#F7F2EC] border border-white/20 p-6 sm:p-10 shadow-[0_30px_90px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.35)] overflow-hidden">
+        
+        {/* Top Liquid Specular Reflection Sheen */}
+        <div className="absolute inset-x-8 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
+
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-[#C5A06B] hover:text-white hover:bg-[#48232B] border border-[#C5A06B]/30 transition-colors cursor-pointer"
+          className="absolute top-5 right-5 p-2 rounded-full text-[#C5A06B] hover:text-white hover:bg-white/10 border border-white/15 transition-all cursor-pointer"
           aria-label="Close Modal"
         >
           <X size={18} />
         </button>
 
         {/* Modal Header */}
-        <div className="text-center space-y-2 mb-8 border-b border-[#C5A06B]/25 pb-6">
+        <div className="text-center space-y-2 mb-8 border-b border-white/10 pb-6">
           <MadLogo size="sm" variant="gold" className="mb-2" />
-          <span className="font-mono-tech text-[11px] tracking-[0.25em] text-[#C5A06B] uppercase block font-semibold">
-            M.A.D DESIGN STUDIO
+          <span className="font-mono-tech text-[10px] tracking-[0.25em] text-[#C5A06B] uppercase block font-semibold">
+            M.A.D DESIGN STUDIO · ARCHITECTURE & INTERIORS
           </span>
           <h2 className="font-serif-display text-2xl sm:text-3xl text-white uppercase font-normal">
-            Book a Free Consultation
+            Book a Consultation
           </h2>
-          <p className="font-sans text-xs sm:text-sm text-[#D8C7B5] max-w-md mx-auto leading-relaxed">
-            Let's discuss your architectural vision, site parameters, and timeline to bring your dream project to life seamlessly.
+          <p className="font-sans text-xs sm:text-sm text-[#D8C7B5] max-w-md mx-auto leading-relaxed font-light">
+            Discuss your plot, budget, and design ideas directly with our architects.
           </p>
         </div>
 
         {isSubmitted ? (
           <div className="text-center py-8 space-y-4">
-            <div className="w-14 h-14 mx-auto bg-[#48232B] border-2 border-[#C5A06B] flex items-center justify-center text-[#C5A06B] shadow-lg">
-              <Check size={28} />
+            <div className="w-16 h-16 mx-auto rounded-full liquid-glass-burgundy border border-[#C5A06B] flex items-center justify-center text-[#C5A06B] shadow-xl">
+              <Check size={30} />
             </div>
-            <h3 className="font-serif-display text-xl text-white uppercase">
-              Consultation Scheduled
+            <h3 className="font-serif-display text-2xl text-white uppercase tracking-wide">
+              Consultation Requested
             </h3>
             <p className="font-sans text-sm text-[#D8C7B5] max-w-md mx-auto leading-relaxed">
-              Thank you, <span className="text-[#C5A06B] font-bold">{formData.name}</span>. Our senior architecture team will review your project details for <span className="text-[#C5A06B] font-bold">{formData.city || 'your site'}</span> and contact you within 24 hours.
+              Thank you, <span className="text-[#C5A06B] font-semibold">{formData.name}</span>. Our team will review your project details for <span className="text-[#C5A06B] font-semibold">{formData.city || 'your site'}</span> and reach out within 24 hours.
             </p>
-            <div className="pt-4 border-t border-[#C5A06B]/25 flex flex-wrap justify-center gap-4 text-xs font-mono-tech text-[#C5A06B]">
+            <div className="pt-4 border-t border-white/10 flex flex-wrap justify-center gap-4 text-xs font-sans text-[#C5A06B]">
               <a href="tel:+918822225224" className="hover:underline flex items-center space-x-1 font-semibold">
                 <Phone size={14} />
                 <span>+91 8822225224</span>
@@ -82,33 +86,33 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 setIsSubmitted(false);
                 onClose();
               }}
-              className="mt-6 px-6 py-2.5 bg-[#542A33] text-[#F7F2EC] border border-[#C5A06B] font-serif-display text-xs tracking-widest uppercase hover:bg-[#6E1C2E] cursor-pointer shadow-lg"
+              className="mt-6 px-7 py-3 rounded-full bg-gradient-to-r from-[#4A1A24] to-[#6E1C2E] text-[#F7F2EC] border border-[#C5A06B]/60 font-serif-display text-xs tracking-widest uppercase hover:brightness-110 cursor-pointer shadow-lg"
             >
-              Return to Website
+              Back to Home
             </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Sector Selector */}
             <div>
-              <label className="block text-[11px] font-mono-tech tracking-[0.18em] text-[#C5A06B] uppercase mb-2 font-bold">
-                Project Typology
+              <label className="block text-[11px] font-sans tracking-[0.18em] text-[#C5A06B] uppercase mb-2 font-bold">
+                Project Type
               </label>
               <div className="grid grid-cols-2 gap-2 text-xs font-sans">
                 {[
-                  'Private Homes',
-                  'Restaurants & Cafes',
-                  'Home Interiors',
+                  'Private Homes & Villas',
+                  'Restaurants & Hospitality',
+                  'Luxury Home Interiors',
                   'Offices & Workspaces'
                 ].map((sec) => (
                   <button
                     type="button"
                     key={sec}
                     onClick={() => setFormData({ ...formData, sector: sec })}
-                    className={`p-2.5 text-left border transition-all cursor-pointer ${
+                    className={`p-3 rounded-xl text-left border transition-all cursor-pointer ${
                       formData.sector === sec
-                        ? 'border-[#C5A06B] bg-[#3E1019] text-[#C5A06B] font-semibold'
-                        : 'border-[#C5A06B]/25 bg-[#33151A] text-[#D8C7B5] hover:border-[#C5A06B]/60'
+                        ? 'border-[#C5A06B] bg-gradient-to-r from-[#4A1A24] to-[#6E1C2E] text-white font-semibold shadow-md'
+                        : 'border-white/12 bg-white/[0.04] text-[#D8C7B5] hover:border-white/30 hover:bg-white/[0.08]'
                     }`}
                   >
                     {sec}
@@ -120,7 +124,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
             {/* Inputs: Name, Email, Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase mb-1 font-semibold">
+                <label className="block text-[11px] font-mono-tech tracking-[0.15em] text-[#D8C7B5] uppercase mb-1 font-semibold">
                   Your Full Name
                 </label>
                 <input
@@ -129,12 +133,12 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   placeholder="e.g. Muddassir Haque"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-[#2E1217] border border-[#C5A06B]/30 p-2.5 text-xs text-white placeholder-[#8B7B70] focus:border-[#C5A06B] focus:outline-none"
+                  className="w-full bg-white/[0.05] border border-white/15 rounded-xl p-3 text-xs text-white placeholder-[#8B7B70] focus:border-[#C5A06B] focus:bg-white/[0.08] focus:outline-none transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase mb-1 font-semibold">
+                <label className="block text-[11px] font-mono-tech tracking-[0.15em] text-[#D8C7B5] uppercase mb-1 font-semibold">
                   Phone Number
                 </label>
                 <input
@@ -143,14 +147,14 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   placeholder="+91 8822225224"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full bg-[#2E1217] border border-[#C5A06B]/30 p-2.5 text-xs text-white placeholder-[#8B7B70] focus:border-[#C5A06B] focus:outline-none"
+                  className="w-full bg-white/[0.05] border border-white/15 rounded-xl p-3 text-xs text-white placeholder-[#8B7B70] focus:border-[#C5A06B] focus:bg-white/[0.08] focus:outline-none transition-all"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase mb-1 font-semibold">
+                <label className="block text-[11px] font-mono-tech tracking-[0.15em] text-[#D8C7B5] uppercase mb-1 font-semibold">
                   Email Address
                 </label>
                 <input
@@ -159,39 +163,39 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   placeholder="name@domain.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-[#2E1217] border border-[#C5A06B]/30 p-2.5 text-xs text-white placeholder-[#8B7B70] focus:border-[#C5A06B] focus:outline-none"
+                  className="w-full bg-white/[0.05] border border-white/15 rounded-xl p-3 text-xs text-white placeholder-[#8B7B70] focus:border-[#C5A06B] focus:bg-white/[0.08] focus:outline-none transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase mb-1 font-semibold">
+                <label className="block text-[11px] font-mono-tech tracking-[0.15em] text-[#D8C7B5] uppercase mb-1 font-semibold">
                   Location (City / State)
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Siolim, Goa or Mumbai"
+                  placeholder="e.g. Siolim, Goa or Lower Parel, Mumbai"
                   value={formData.city}
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  className="w-full bg-[#2E1217] border border-[#C5A06B]/30 p-2.5 text-xs text-white placeholder-[#8B7B70] focus:border-[#C5A06B] focus:outline-none"
+                  className="w-full bg-white/[0.05] border border-white/15 rounded-xl p-3 text-xs text-white placeholder-[#8B7B70] focus:border-[#C5A06B] focus:bg-white/[0.08] focus:outline-none transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] font-mono-tech tracking-[0.15em] text-[#C5A06B]/80 uppercase mb-1 font-semibold">
-                Tell us about your project
+              <label className="block text-[11px] font-mono-tech tracking-[0.15em] text-[#D8C7B5] uppercase mb-1 font-semibold">
+                Project Scope & Vision
               </label>
               <textarea
                 rows={3}
-                placeholder="Mention plot size, rooms needed, envisioned budget, or any special architectural requirements..."
+                placeholder="Mention plot area, rooms needed, style preferences, or envisioned timeline..."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full bg-[#2E1217] border border-[#C5A06B]/30 p-2.5 text-xs text-white placeholder-[#8B7B70] focus:border-[#C5A06B] focus:outline-none resize-none"
+                className="w-full bg-white/[0.05] border border-white/15 rounded-xl p-3 text-xs text-white placeholder-[#8B7B70] focus:border-[#C5A06B] focus:bg-white/[0.08] focus:outline-none resize-none transition-all"
               />
             </div>
 
             {/* Direct Studio Contact Strip */}
-            <div className="pt-3 border-t border-[#C5A06B]/25 flex flex-wrap items-center justify-between text-xs font-mono-tech text-[#D8C7B5] gap-2">
+            <div className="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between text-xs font-mono-tech text-[#D8C7B5] gap-2">
               <span className="flex items-center space-x-1">
                 <MapPin size={13} className="text-[#C5A06B]" />
                 <span>Lower Parel West, Mumbai</span>
@@ -212,7 +216,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full py-4 bg-[#C5A06B] hover:bg-[#F4E2BE] text-[#2E1217] border border-[#C5A06B] font-serif-display text-xs tracking-[0.2em] uppercase transition-all font-bold shadow-xl cursor-pointer hover:scale-[1.01]"
+                className="w-full py-4 rounded-full bg-gradient-to-r from-[#C5A06B] via-[#EBD2AC] to-[#C5A06B] text-[#140508] font-serif-display text-xs tracking-[0.2em] uppercase transition-all font-bold shadow-[0_8px_30px_rgba(197,160,107,0.35)] cursor-pointer hover:brightness-110 hover:scale-[1.01] active:scale-98"
               >
                 Request Free Consultation
               </button>

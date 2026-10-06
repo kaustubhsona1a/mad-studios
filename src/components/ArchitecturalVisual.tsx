@@ -139,12 +139,9 @@ export const ArchitecturalVisual: React.FC<ArchitecturalVisualProps> = ({
           src={photoUrl}
           alt={imageAlt}
           referrerPolicy="no-referrer"
-          loading="lazy"
           onLoad={() => setIsLoaded(true)}
           onError={() => setImageError(true)}
-          className={`w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105 ${
-            isLoaded ? 'opacity-100 filter brightness-100 contrast-100' : 'opacity-0'
-          }`}
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 filter brightness-100 contrast-100"
         />
       ) : (
         /* Zero-Broken-Image Policy Fallback */

@@ -494,4 +494,19 @@ PROJECTS_DATA.forEach(p => {
   }
 });
 
+export const getProjectSqFt = (project: Project): string => {
+  const sqFtMap: Record<string, string> = {
+    'casa-sylva': '2,260 Sq. Ft. (210 SQM)',
+    'casa-verde': '3,842 Sq. Ft. (357 SQM)',
+    'indus-villa': '4,690 Sq. Ft. (436 SQM)',
+    'airani-mane': '4,200 Sq. Ft. (390 SQM)',
+    'michaels-villa': '4,520 Sq. Ft. (420 SQM)',
+    'mannat-bungalow': '6,027 Sq. Ft. (560 SQM)',
+    'mad-studio-office': '2,800 Sq. Ft.',
+    'espirit-stones': '13,012 Sq. Ft.'
+  };
+  return sqFtMap[project.id] || project.dossier?.builtUpArea || project.dossier?.carpetArea || 'Custom Size';
+};
+
 export const ALL_DOSSIERS = PROJECTS_DATA.filter(p => p.hasDossier && p.dossier);
+
