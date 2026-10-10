@@ -32,52 +32,52 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* PART 1 (TOP ON MOBILE / LEFT ON DESKTOP): Text written directly on Burgundy */}
       {/* Restored to original balanced options, sizing, and comfortable spacing */}
       {/* ========================================================================= */}
-      <div className="w-full lg:w-[54%] xl:w-[52%] flex flex-col justify-center px-6 sm:px-12 lg:px-16 xl:px-20 pt-6 sm:pt-10 pb-8 sm:pb-12 lg:py-24 relative z-10 bg-[#3E1D23]">
-        <div className="max-w-xl xl:max-w-2xl space-y-4 sm:space-y-6 lg:space-y-8">
+      <div className="w-full lg:w-[54%] xl:w-[52%] flex flex-col justify-center px-4 sm:px-10 lg:px-14 xl:px-18 pt-5 sm:pt-8 pb-6 sm:pb-10 lg:py-20 relative z-10 bg-[#3E1D23]">
+        <div className="max-w-xl xl:max-w-2xl space-y-3.5 sm:space-y-5 lg:space-y-7">
           
-          {/* Studio Kicker: Original text with Compass emblem */}
+          {/* Studio Kicker: Topmost line changed as requested, responsive on iPad and iPhone */}
           <motion.div 
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full liquid-glass-pill text-xs font-sans tracking-[0.2em] text-[#EBD2AC] uppercase shadow-xs border border-white/15 w-fit"
+            className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-xs font-sans tracking-[0.12em] sm:tracking-[0.18em] text-[#EBD2AC] uppercase shadow-xs border border-white/15 max-w-full overflow-hidden"
           >
-            <Compass size={12} className="text-[#C5A06B]" />
-            <span>ARCHITECTURE & INTERIORS · MUMBAI & GOA</span>
+            <Compass size={12} className="text-[#C5A06B] shrink-0" />
+            <span className="truncate sm:whitespace-normal">architecture , inetriors and landscapes</span>
           </motion.div>
 
-          {/* Grand Headline written directly on burgundy */}
+          {/* Grand Headline written directly on burgundy - Responsive for iPhone and iPad */}
           <motion.h1 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-serif-display text-3xl sm:text-5xl lg:text-[4rem] xl:text-[4.6rem] text-white tracking-tight uppercase font-medium leading-[1.05]"
+            className="font-serif-display text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[3.8rem] xl:text-[4.4rem] text-white tracking-tight uppercase font-medium leading-[1.1] break-words"
           >
             Designing Homes <br className="hidden sm:inline" />
             <span className="text-[#EBD2AC]">With Character.</span>
           </motion.h1>
 
-          {/* Subtitle - Original clear, understandable description */}
+          {/* Subtitle - tailored to your space */}
           <motion.p 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="font-sans text-sm sm:text-base lg:text-lg text-[#D8C7B5] leading-relaxed max-w-xl font-light"
+            className="font-sans text-xs sm:text-sm lg:text-base text-[#D8C7B5] leading-relaxed max-w-xl font-light"
           >
-            We design private villas, modern homes, and warm interiors. Built for natural breezes, sunlight, and everyday comfort.
+            We design private villas, modern homes, and warm interiors tailored to your space.
           </motion.p>
 
-          {/* Action Buttons: Original comfortable sizing */}
+          {/* Action Buttons: Responsive sizing for iPhone & iPad */}
           <motion.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="pt-1 sm:pt-2 flex flex-wrap items-center gap-3 sm:gap-4"
+            className="pt-1 sm:pt-2 flex flex-col xs:flex-row items-stretch xs:items-center gap-2.5 sm:gap-4 w-full xs:w-auto"
           >
             <a
               href="#works"
               onClick={onExploreWork}
-              className="relative overflow-hidden group inline-flex items-center justify-center space-x-2 px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-full bg-gradient-to-r from-[#4A1A24] to-[#6E1C2E] hover:from-[#5C202C] hover:to-[#842238] text-[#F7F2EC] border border-[#C5A06B]/70 hover:border-[#C5A06B] font-serif-display text-xs tracking-[0.16em] uppercase transition-all duration-300 shadow-md hover:scale-[1.02] active:scale-98 font-semibold cursor-pointer shrink-0"
+              className="relative overflow-hidden group inline-flex items-center justify-center space-x-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-gradient-to-r from-[#4A1A24] to-[#6E1C2E] hover:from-[#5C202C] hover:to-[#842238] text-[#F7F2EC] border border-[#C5A06B]/70 hover:border-[#C5A06B] font-serif-display text-[11px] sm:text-xs tracking-[0.14em] uppercase transition-all duration-300 shadow-md hover:scale-[1.02] active:scale-98 font-semibold cursor-pointer shrink-0 text-center"
             >
               <span>EXPLORE PROJECTS</span>
               <ArrowDown size={13} className="text-[#C5A06B] group-hover:translate-y-0.5 transition-transform" />
@@ -87,7 +87,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <button
                 type="button"
                 onClick={onOpenConsultation}
-                className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-full liquid-glass-translucent hover:bg-white/[0.16] text-white hover:text-[#EBD2AC] border border-white/20 hover:border-[#C5A06B]/60 font-serif-display text-xs tracking-[0.16em] uppercase transition-all duration-300 shadow-xs font-medium cursor-pointer shrink-0"
+                className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full liquid-glass-translucent hover:bg-white/[0.16] text-white hover:text-[#EBD2AC] border border-white/20 hover:border-[#C5A06B]/60 font-serif-display text-[11px] sm:text-xs tracking-[0.14em] uppercase transition-all duration-300 shadow-xs font-medium cursor-pointer shrink-0 text-center"
               >
                 <Calendar size={13} className="text-[#C5A06B]" />
                 <span>BOOK A CONSULTATION</span>
@@ -96,23 +96,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             )}
           </motion.div>
 
-          {/* Credibility Stats */}
+          {/* Credibility Stats: Clean wrapping on mobile */}
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="pt-4 sm:pt-6 border-t border-[#C5A06B]/20 flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-sans text-[#D8C7B5]"
+            className="pt-3 sm:pt-5 border-t border-[#C5A06B]/20 flex flex-wrap items-center gap-3 sm:gap-5 text-[11px] sm:text-xs font-sans text-[#D8C7B5]"
           >
             <div className="flex items-center space-x-1.5">
               <span className="font-semibold text-white">45+</span>
               <span className="text-[#C5A06B]">HOMES & VILLAS</span>
             </div>
-            <span className="text-[#C5A06B]/40">·</span>
+            <span className="text-[#C5A06B]/40 hidden xs:inline">·</span>
             <div className="flex items-center space-x-1.5">
               <span className="font-semibold text-white">10+</span>
               <span>CITIES</span>
             </div>
-            <span className="text-[#C5A06B]/40">·</span>
+            <span className="text-[#C5A06B]/40 hidden xs:inline">·</span>
             <div className="flex items-center space-x-1.5">
               <span className="font-semibold text-[#EBD2AC]">250K+</span>
               <span>SQ.FT BUILT</span>

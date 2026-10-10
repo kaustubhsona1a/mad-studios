@@ -27,6 +27,10 @@ export const PROJECT_IMAGES: Record<string, string> = {
   'naveens-den': 'https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&w=1600&q=85',
   'minimal-haven': 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1600&q=85',
 
+  // Restaurants & Hospitality Architecture
+  'the-crest-restobar': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=85',
+  'sol-coastal-dining': 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1600&q=85',
+
   // Workspaces & Commercial
   'fine-tone': 'https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?auto=format&fit=crop&w=1600&q=85',
   'espirit-stones': 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=85',
@@ -214,6 +218,50 @@ export const PROJECT_GALLERIES: Record<string, ProjectGalleryImage[]> = {
       url: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1600&q=85',
       title: 'Stone Experience Center',
       category: 'Experience Center'
+    }
+  ],
+  'the-crest-restobar': [
+    {
+      url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=85',
+      title: 'Main Dining Hall & Ambient Bar',
+      category: 'Dining & Lounge'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=1600&q=85',
+      title: 'Terrace Garden Alfresco Seating',
+      category: 'Outdoor Veranda'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1578474846511-04ba529f0b88?auto=format&fit=crop&w=1600&q=85',
+      title: 'Fluted Wood Cocktail Bar Counter',
+      category: 'Bar Counter'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&w=1600&q=85',
+      title: 'Private Dining Booth & Lighting',
+      category: 'Private Dining'
+    }
+  ],
+  'sol-coastal-dining': [
+    {
+      url: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1600&q=85',
+      title: 'Coastal Dining Veranda & Cane Lamps',
+      category: 'Open-Air Veranda'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1525610553991-2bede1a236e2?auto=format&fit=crop&w=1600&q=85',
+      title: 'Reflecting Water Pool & Bar Plinth',
+      category: 'Water Courtyard'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?auto=format&fit=crop&w=1600&q=85',
+      title: 'Handcrafted Brick Arches & Booths',
+      category: 'Interior Archway'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1600&q=85',
+      title: 'Evening Mood Illumination',
+      category: 'Night Ambience'
     }
   ]
 };

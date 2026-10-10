@@ -46,7 +46,7 @@ export interface ProjectDossier {
 export interface Project {
   id: string;
   title: string;
-  category: 'residential' | 'interiors' | 'commercial';
+  category: 'residential' | 'restaurant' | 'commercial';
   location: string;
   pageNumber: string;
   catalogIndex: number;
@@ -390,14 +390,112 @@ export const PROJECTS_DATA: Project[] = [
     }
   },
 
-  // 07: M.A.D STUDIO HEADQUARTERS (Mumbai Studio)
+  // 07: THE CREST RESTO-BAR (Dining Architecture)
+  {
+    id: 'the-crest-restobar',
+    title: 'THE CREST RESTO-BAR',
+    category: 'restaurant',
+    location: 'Chalisgaon, Maharashtra',
+    pageNumber: '07',
+    catalogIndex: 7,
+    highlight: 'Contemporary Resto-Bar with Ambient Mood Lighting & Tropical Alfresco Verandas',
+    hasDossier: true,
+    dossierId: 'the-crest-restobar',
+    dossier: {
+      statusTag: 'COMPLETED — RESTAURANT & BAR',
+      location: 'Chalisgaon, Maharashtra.',
+      projectType: 'Boutique Resto-Bar & Lounge',
+      configuration: 'Main Dining Hall + Cocktail Bar + Terrace Veranda',
+      builtUpArea: '4,500 SQFT (418 SQM)',
+      timeline: 'Completed 2025',
+      status: 'Open & Operational',
+      scopeOfWork: ['Architectural Layout', 'Interior Architecture', 'Custom Lighting & Bar Design'],
+      description: 'THE CREST RESTO-BAR is designed as a destination hospitality space pairing warm fluted timber, dark terracotta masonry, and soft recessed amber lighting. Featuring an open-air landscaped terrace veranda and an intimate indoor dining lounge, the design celebrates communal dining with timeless architectural finesse.',
+      quote: 'Spaces that transform dining into a memorable atmospheric ritual.',
+      stampTagline: 'CRAFTED FOR HOSPITALITY & CONVERSATION.',
+      designConcept: {
+        title: 'Warm Mood Illumination & Material Warmth',
+        points: [
+          { title: 'Fluted Timber Bar Plinth', desc: 'Custom curved teak joinery and fluted paneling creating an inviting centerpiece.' },
+          { title: 'Terrace Dining Veranda', desc: 'Overhead pergolas and lush green planters framing natural evening breezes.' },
+          { title: 'Acoustic Sound Comfort', desc: 'Concealed acoustic wall panels ensuring lively yet comfortable dining volume.' }
+        ]
+      },
+      floorPlans: [
+        {
+          id: 'restaurant-plan',
+          label: 'Dining & Lounge Layout',
+          sublabel: '4,500 SQFT Multi-Zone Hospitality Layout',
+          spaces: ['Cocktail Bar & Lounge', 'Main Dining Hall (80 Covers)', 'Private Dining Room', 'Alfresco Garden Veranda', 'Full Commercial Kitchen'],
+          dimensionsSummary: '4,500 SQFT Usable Area',
+          keyFeatures: ['Curved cocktail island bar', 'Seamless indoor-outdoor garden transition']
+        }
+      ],
+      materialPalette: [
+        { name: 'Warm Fluted Teak', category: 'Bar & Feature Walls', description: 'Custom architectural millwork with matte finish.', color: '#7E4D2B' },
+        { name: 'Terracotta Acoustic Tile', category: 'Acoustics & Texture', description: 'Handmade clay tiles providing acoustic warmth.', color: '#A0523C' },
+        { name: 'Honed Charcoal Basalt', category: 'Bar Countertops', description: 'Deep resilient natural stone counter surfaces.', color: '#2C2B2A' }
+      ]
+    }
+  },
+
+  // 08: SOL COASTAL KITCHEN & BAR (Coastal Hospitality)
+  {
+    id: 'sol-coastal-dining',
+    title: 'SOL COASTAL KITCHEN & BAR',
+    category: 'restaurant',
+    location: 'Siolim, North Goa',
+    pageNumber: '08',
+    catalogIndex: 8,
+    highlight: 'Coastal Fine-Dining Pavilion with Handcrafted Cane Canopies & Water Terrace',
+    hasDossier: true,
+    dossierId: 'sol-coastal-dining',
+    dossier: {
+      statusTag: 'COMPLETED — COASTAL HOSPITALITY',
+      location: 'Siolim, North Goa.',
+      projectType: 'Open-Air Coastal Restaurant & Bar',
+      configuration: 'Covered Pavilion + Water Deck + Private Tasting Lounge',
+      builtUpArea: '5,200 SQFT (483 SQM)',
+      timeline: 'Completed 2025',
+      status: 'Handed Over & Serving',
+      scopeOfWork: ['Concept Architecture', 'Landscape Integration', 'Turnkey Interiors'],
+      description: 'SOL is a coastal dining pavilion set against Goan coconut palms and shallow reflection pools. Built with exposed local laterite, soaring bamboo and cane light domes, and porous lime-washed arches, the restaurant creates a breezy, sunlit daytime ambience and a magical candlelit evening retreat.',
+      quote: 'Architecture that breathes with coastal breezes and celebrates Goan ingredients.',
+      stampTagline: 'DESIGNED FOR SLOW LIVING & FINE FOOD.',
+      designConcept: {
+        title: 'Coastal Biophilic Dining & Tropical Shading',
+        points: [
+          { title: 'Handcrafted Cane Light Canopies', desc: 'Monumental organic woven light installations casting soft geometric shadow patterns.' },
+          { title: 'Shallow Reflection Pools', desc: 'Water surfaces cooling coastal breezes naturally through passive evaporative cooling.' },
+          { title: 'Laterite Archways', desc: 'Porous reddish stone arches creating shaded sightlines between dining pods.' }
+        ]
+      },
+      floorPlans: [
+        {
+          id: 'sol-layout',
+          label: 'Master Pavilion Layout',
+          sublabel: '5,200 SQFT Open-Air Coastal Restaurant',
+          spaces: ['Welcome Water Foyer', 'Covered Main Dining Pavilion', 'Sunset Cocktail Deck', 'Private Tasting Veranda', 'Prep & Show Kitchens'],
+          dimensionsSummary: '5,200 SQFT Footprint',
+          keyFeatures: ['Reflecting water feature integration', 'Naturally ventilated 18ft high ceiling']
+        }
+      ],
+      materialPalette: [
+        { name: 'Local Goan Laterite', category: 'Structural Arches', description: 'Porous regional red stone quarried locally.', color: '#883E2D' },
+        { name: 'Woven Cane & Rattan', category: 'Canopies & Pendants', description: 'Artisanal coastal weaving by Goan craftsmen.', color: '#C6A373' },
+        { name: 'Limestone Terrazzo', category: 'Flooring', description: 'Cool mineral floor with shell and marble inlays.', color: '#E4DFD6' }
+      ]
+    }
+  },
+
+  // 09: M.A.D STUDIO HEADQUARTERS (Mumbai Studio)
   {
     id: 'mad-studio-office',
     title: 'M.A.D STUDIO HEADQUARTERS',
     category: 'commercial',
     location: 'Lower Parel, Mumbai',
-    pageNumber: '07',
-    catalogIndex: 7,
+    pageNumber: '09',
+    catalogIndex: 9,
     highlight: 'Flagship Design Studio & Architectural Material Library in Sun Mill Compound',
     hasDossier: true,
     dossierId: 'mad-studio-office',
@@ -439,14 +537,14 @@ export const PROJECTS_DATA: Project[] = [
     }
   },
 
-  // 08: ESPIRIT STONES (Corporate HQ)
+  // 10: ESPIRIT STONES (Corporate HQ)
   {
     id: 'espirit-stones',
     title: 'ESPIRIT STONES CORPORATE HQ',
     category: 'commercial',
     location: 'Mumbai, Maharashtra',
-    pageNumber: '08',
-    catalogIndex: 8,
+    pageNumber: '10',
+    catalogIndex: 10,
     highlight: '13,000+ SQFT Luxury Corporate Headquarters & Executive Boardroom',
     hasDossier: true,
     dossierId: 'espirit-stones',
@@ -502,6 +600,8 @@ export const getProjectSqFt = (project: Project): string => {
     'airani-mane': '4,200 Sq. Ft. (390 SQM)',
     'michaels-villa': '4,520 Sq. Ft. (420 SQM)',
     'mannat-bungalow': '6,027 Sq. Ft. (560 SQM)',
+    'the-crest-restobar': '4,500 Sq. Ft. (418 SQM)',
+    'sol-coastal-dining': '5,200 Sq. Ft. (483 SQM)',
     'mad-studio-office': '2,800 Sq. Ft.',
     'espirit-stones': '13,012 Sq. Ft.'
   };

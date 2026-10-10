@@ -9,7 +9,7 @@ export const SERVICES_DATA: Service[] = [
   {
     number: '01',
     title: 'ARCHITECTURAL DESIGN',
-    shortDesc: 'Complete building design tailored to site topography, natural light, and climate.',
+    shortDesc: 'Complete building design tailored to your space.',
     deliverables: [
       'Custom floor plans and spatial planning',
       'Realistic 3D elevations and renderings',

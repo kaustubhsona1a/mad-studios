@@ -122,7 +122,7 @@ export const ServicesSection: React.FC = () => {
               <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full liquid-glass-pill text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold mb-3">
                 <span>WHAT WE DO · 04</span>
               </div>
-              <h2 className="font-serif-display text-4xl sm:text-5xl lg:text-6xl text-white tracking-wide uppercase font-light">
+              <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-white tracking-wide uppercase font-light break-words">
                 SERVICES
               </h2>
               {/* Gold Underline Bar */}
@@ -156,10 +156,10 @@ export const ServicesSection: React.FC = () => {
               ))}
             </div>
 
-            {/* Bottom Tagline */}
+            {/* Bottom Tagline: tailored to your space */}
             <div className="pt-3 border-t border-white/10">
               <p className="font-sans text-xs sm:text-sm text-[#D8C7B5] font-light">
-                We offer complete architectural and interior solutions tailored to your plot and lifestyle.
+                We offer complete architectural and interior solutions tailored to your space.
               </p>
             </div>
 

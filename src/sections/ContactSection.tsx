@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { ArrowUpRight, Phone, Mail, MapPin, Calendar, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Phone, Mail, MapPin, Calendar, Sparkles, MessageCircle, Instagram } from 'lucide-react';
 
 interface ContactSectionProps {
   onOpenConsultation: () => void;
@@ -31,12 +31,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             
             {/* Left: Direct Call to Action */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full liquid-glass-pill text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold">
                 <Sparkles size={12} className="text-[#C5A06B]" />
-                <span>GET IN TOUCH · 07</span>
+                <span>GET IN TOUCH · 08</span>
               </div>
 
-              <h2 className="font-serif-display text-3xl sm:text-5xl text-white uppercase tracking-wide leading-tight">
+              <h2 className="font-serif-display text-2xl sm:text-4xl lg:text-5xl text-white uppercase tracking-wide leading-tight break-words">
                 Let's Design Something <span className="text-[#EBD2AC] block sm:inline">Beautiful.</span>
               </h2>
               <p className="font-sans text-sm sm:text-base text-[#D8C7B5] max-w-lg leading-relaxed font-light">
@@ -71,11 +71,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
           </div>
         </motion.div>
 
-        {/* Contact Details Grid in Liquid Glass Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-xs font-sans text-[#D8C7B5]">
+        {/* Contact Details Grid in Liquid Glass Cards (4-Column Layout) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 text-xs font-sans text-[#D8C7B5]">
           
           {/* Telephone */}
-          <div className="liquid-glass-card rounded-2xl p-6 border border-white/12 hover:border-[#C5A06B]/40 transition-all space-y-2">
+          <div className="liquid-glass-card rounded-2xl p-5 sm:p-6 border border-white/12 hover:border-[#C5A06B]/40 transition-all space-y-2">
             <div className="flex items-center space-x-2 text-[#C5A06B]">
               <Phone size={14} />
               <span className="text-[10px] font-sans uppercase tracking-wider font-semibold">
@@ -88,31 +88,57 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             <span className="text-[11px] text-[#D8C7B5]/80 block">Monday – Saturday, 10am – 7pm</span>
           </div>
 
-          {/* Email & Instagram */}
-          <div className="liquid-glass-card rounded-2xl p-6 border border-white/12 hover:border-[#C5A06B]/40 transition-all space-y-2">
-            <div className="flex items-center space-x-2 text-[#C5A06B]">
-              <Mail size={14} />
+          {/* WhatsApp Direct */}
+          <div className="liquid-glass-card rounded-2xl p-5 sm:p-6 border border-[#25D366]/30 hover:border-[#25D366]/70 transition-all space-y-2 bg-[#120508]/80">
+            <div className="flex items-center space-x-2 text-[#25D366]">
+              <MessageCircle size={14} />
               <span className="text-[10px] font-sans uppercase tracking-wider font-semibold">
-                EMAIL & INSTAGRAM
+                WHATSAPP US
               </span>
             </div>
-            <a href="mailto:madstudio.reach@gmail.com" className="text-white hover:text-[#C5A06B] block text-xs font-medium transition-colors break-all">
-              madstudio.reach@gmail.com
+            <a 
+              href="https://wa.me/918822225224?text=Hi%20M.A.D%20Studio,%20I'd%20like%20to%20discuss%20an%20architectural%20project%20requirement%20with%20your%20team." 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-white hover:text-[#25D366] block text-base font-semibold transition-colors flex items-center justify-between"
+            >
+              <span>+91 8822225224</span>
+              <ArrowUpRight size={14} className="text-[#25D366]" />
             </a>
-            <a href="https://instagram.com/madstudio.arch" target="_blank" rel="noopener noreferrer" className="text-[#C5A06B] hover:text-[#EBD2AC] block text-xs mt-1 transition-colors font-medium">
-              @madstudio.arch
+            <span className="text-[11px] text-[#25D366]/85 block font-medium">Instant leads & requirements</span>
+          </div>
+
+          {/* Email & Instagram */}
+          <div className="liquid-glass-card rounded-2xl p-5 sm:p-6 border border-white/12 hover:border-[#C5A06B]/40 transition-all space-y-2">
+            <div className="flex items-center space-x-2 text-[#C5A06B]">
+              <Instagram size={14} />
+              <span className="text-[10px] font-sans uppercase tracking-wider font-semibold">
+                INSTAGRAM & EMAIL
+              </span>
+            </div>
+            <a 
+              href="https://www.instagram.com/madstudio.arch/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-white hover:text-[#EBD2AC] block text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-1"
+            >
+              <span>@madstudio.arch</span>
+              <ArrowUpRight size={13} className="text-[#C5A06B]" />
+            </a>
+            <a href="mailto:madstudio.reach@gmail.com" className="text-[#D8C7B5] hover:text-[#C5A06B] block text-[11px] transition-colors break-all">
+              madstudio.reach@gmail.com
             </a>
           </div>
 
           {/* Studio Office */}
-          <div className="liquid-glass-card rounded-2xl p-6 border border-white/12 hover:border-[#C5A06B]/40 transition-all space-y-2">
+          <div className="liquid-glass-card rounded-2xl p-5 sm:p-6 border border-white/12 hover:border-[#C5A06B]/40 transition-all space-y-2">
             <div className="flex items-center space-x-2 text-[#C5A06B]">
               <MapPin size={14} />
               <span className="text-[10px] font-sans uppercase tracking-wider font-semibold">
                 STUDIO LOCATIONS
               </span>
             </div>
-            <p className="text-white text-xs leading-relaxed">
+            <p className="text-white text-xs leading-relaxed font-medium">
               Lower Parel, Mumbai & Siolim, Goa
             </p>
             <span className="text-[11px] text-[#D8C7B5]/80 block">Open by appointment</span>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Check, Phone, Mail, Instagram, MapPin, Sparkles, Calendar } from 'lucide-react';
+import { X, Check, Phone, Mail, Instagram, MapPin, Sparkles, Calendar, MessageCircle, ArrowUpRight } from 'lucide-react';
 import { MadLogo } from './MadLogo';
 
 interface ConsultationModalProps {
@@ -15,18 +15,58 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
     name: '',
     email: '',
     phone: '',
-    sector: 'Private Homes',
+    sector: 'Private Homes & Villas',
     city: '',
     area: '',
     description: ''
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [whatsAppUrl, setWhatsAppUrl] = useState('');
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 1. Format full requirement payload for WhatsApp notification to 8822225224
+    const message = 
+      `🏛️ *NEW ARCHITECTURAL LEAD - M.A.D STUDIO*\n` +
+      `-----------------------------------------\n` +
+      `👤 *Client Name:* ${formData.name.trim()}\n` +
+      `📞 *Phone Number:* ${formData.phone.trim()}\n` +
+      `✉️ *Email:* ${formData.email.trim()}\n` +
+      `🏡 *Project Typology:* ${formData.sector}\n` +
+      `📍 *Location / Site:* ${formData.city.trim() || 'Not specified'}\n` +
+      `📐 *Plot / Built Area:* ${formData.area.trim() || 'Not specified'}\n` +
+      `📝 *Client Requirements & Vision:*\n"${formData.description.trim() || 'Consultation request'}"\n` +
+      `-----------------------------------------\n` +
+      `📅 *Date:* ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}\n` +
+      `🌐 *Source:* M.A.D Studio Website`;
+
+    const generatedUrl = `https://wa.me/918822225224?text=${encodeURIComponent(message)}`;
+    setWhatsAppUrl(generatedUrl);
+
+    // 2. Persist lead in localStorage for record keeping
+    try {
+      const storedLeads = JSON.parse(localStorage.getItem('mad_studio_leads') || '[]');
+      storedLeads.unshift({
+        id: `lead-${Date.now()}`,
+        ...formData,
+        submittedAt: new Date().toISOString()
+      });
+      localStorage.setItem('mad_studio_leads', JSON.stringify(storedLeads));
+    } catch {
+      // ignore localStorage quota errors
+    }
+
+    // 3. Trigger WhatsApp notification immediately
+    try {
+      window.open(generatedUrl, '_blank');
+    } catch {
+      // popup blocker handled by interactive button
+    }
+
     setIsSubmitted(true);
   };
 
@@ -61,7 +101,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
         </div>
 
         {isSubmitted ? (
-          <div className="text-center py-8 space-y-4">
+          <div className="text-center py-6 sm:py-8 space-y-4">
             <div className="w-16 h-16 mx-auto rounded-full liquid-glass-burgundy border border-[#C5A06B] flex items-center justify-center text-[#C5A06B] shadow-xl">
               <Check size={30} />
             </div>
@@ -69,24 +109,51 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
               Consultation Requested
             </h3>
             <p className="font-sans text-sm text-[#D8C7B5] max-w-md mx-auto leading-relaxed">
-              Thank you, <span className="text-[#C5A06B] font-semibold">{formData.name}</span>. Our team will review your project details for <span className="text-[#C5A06B] font-semibold">{formData.city || 'your site'}</span> and reach out within 24 hours.
+              Thank you, <span className="text-[#C5A06B] font-semibold">{formData.name}</span>. Your requirements have been recorded and formatted for direct notification.
             </p>
-            <div className="pt-4 border-t border-white/10 flex flex-wrap justify-center gap-4 text-xs font-sans text-[#C5A06B]">
-              <a href="tel:+918822225224" className="hover:underline flex items-center space-x-1 font-semibold">
+
+            {/* Direct WhatsApp Notification Button to 8822225224 */}
+            <div className="p-4 rounded-2xl bg-[#140609] border border-[#25D366]/40 max-w-md mx-auto space-y-2.5 shadow-lg">
+              <div className="flex items-center justify-center space-x-1.5 text-xs text-[#25D366] font-semibold font-sans">
+                <MessageCircle size={14} />
+                <span>Instant Notification to Architect</span>
+              </div>
+              <p className="text-[11px] text-[#D8C7B5]/90 font-sans">
+                Click below to send all your project details directly to our WhatsApp number <span className="text-white font-semibold">+91 8822225224</span>:
+              </p>
+              <a
+                href={whatsAppUrl || `https://wa.me/918822225224?text=${encodeURIComponent(`Hi M.A.D Studio, I am ${formData.name} and would like to consult about ${formData.sector}.`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-[#0A2612] font-sans text-xs tracking-wider uppercase transition-all flex items-center justify-center space-x-2 font-bold shadow-[0_4px_20px_rgba(37,211,102,0.35)] cursor-pointer hover:scale-[1.01]"
+              >
+                <MessageCircle size={16} />
+                <span>Notify On WhatsApp (8822225224)</span>
+                <ArrowUpRight size={14} />
+              </a>
+            </div>
+
+            <div className="pt-3 border-t border-white/10 flex flex-wrap justify-center gap-5 text-xs font-sans text-[#C5A06B]">
+              <a href="tel:+918822225224" className="hover:text-white flex items-center space-x-1 font-semibold transition-colors">
                 <Phone size={14} />
                 <span>+91 8822225224</span>
               </a>
-              <a href="mailto:madstudio.reach@gmail.com" className="hover:underline flex items-center space-x-1 font-semibold">
+              <a href="https://www.instagram.com/madstudio.arch/" target="_blank" rel="noopener noreferrer" className="hover:text-white flex items-center space-x-1 font-semibold transition-colors">
+                <Instagram size={14} />
+                <span>@madstudio.arch</span>
+              </a>
+              <a href="mailto:madstudio.reach@gmail.com" className="hover:text-white flex items-center space-x-1 font-semibold transition-colors">
                 <Mail size={14} />
                 <span>madstudio.reach@gmail.com</span>
               </a>
             </div>
+
             <button
               onClick={() => {
                 setIsSubmitted(false);
                 onClose();
               }}
-              className="mt-6 px-7 py-3 rounded-full bg-gradient-to-r from-[#4A1A24] to-[#6E1C2E] text-[#F7F2EC] border border-[#C5A06B]/60 font-serif-display text-xs tracking-widest uppercase hover:brightness-110 cursor-pointer shadow-lg"
+              className="mt-4 px-7 py-2.5 rounded-full bg-gradient-to-r from-[#4A1A24] to-[#6E1C2E] text-[#F7F2EC] border border-[#C5A06B]/60 font-serif-display text-xs tracking-widest uppercase hover:brightness-110 cursor-pointer shadow-lg"
             >
               Back to Home
             </button>
@@ -205,7 +272,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                   <Phone size={13} />
                   <span>+91 8822225224</span>
                 </a>
-                <a href="https://instagram.com/madstudio.arch" target="_blank" rel="noreferrer" className="hover:text-[#C5A06B] flex items-center space-x-1 font-semibold">
+                <a href="https://www.instagram.com/madstudio.arch/" target="_blank" rel="noopener noreferrer" className="hover:text-[#C5A06B] flex items-center space-x-1 font-semibold">
                   <Instagram size={13} />
                   <span>@madstudio.arch</span>
                 </a>

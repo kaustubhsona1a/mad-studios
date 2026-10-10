@@ -12,7 +12,8 @@ import {
   Layers,
   Sparkles,
   ArrowRight,
-  ArrowLeft
+  ArrowLeft,
+  MessageCircle
 } from 'lucide-react';
 
 interface ProjectDossierModalProps {
@@ -120,7 +121,7 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
                 </span>
                 <span className="text-white/30 hidden sm:inline">·</span>
                 <span className="text-[11px] font-sans text-[#EBD2AC] hidden sm:inline">
-                  {project.category === 'residential' ? 'Villa / Home' : 'Workspace'}
+                  {project.category === 'residential' ? 'Villa / Home' : project.category === 'restaurant' ? 'Restaurant & Bar' : 'Workspace'}
                 </span>
               </div>
               <h2 className="font-serif-display text-lg sm:text-2xl text-white tracking-wide uppercase truncate font-medium">
@@ -315,7 +316,17 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
               Want to build something similar on your land or property?
             </p>
 
-            <div className="flex items-center space-x-3 w-full sm:w-auto justify-end">
+            <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-end">
+              <a
+                href={`https://wa.me/918822225224?text=${encodeURIComponent(`Hi M.A.D Studio, I am inspired by ${project.title} in ${project.location} and would like to discuss designing a similar space. Here are my requirements:`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-full border border-[#25D366]/50 bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#25D366] font-sans text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-xs"
+              >
+                <MessageCircle size={14} />
+                <span>WhatsApp Enquiry</span>
+              </a>
+
               {onOpenConsultation && (
                 <button
                   onClick={() => {
@@ -324,16 +335,16 @@ export const ProjectDossierModal: React.FC<ProjectDossierModalProps> = ({
                   }}
                   className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-gradient-to-r from-[#4A1A24] to-[#6E1C2E] hover:from-[#5C202C] hover:to-[#842238] text-white border border-[#C5A06B]/60 font-serif-display text-xs tracking-wider uppercase font-semibold transition-all shadow-md hover:scale-[1.02] cursor-pointer"
                 >
-                  Book Free Consultation
+                  Book Consultation
                 </button>
               )}
 
               {nextProject && (
                 <button
                   onClick={() => onSelectProject(nextProject)}
-                  className="hidden sm:inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-full liquid-glass hover:bg-white/10 text-[#C5A06B] hover:text-white border border-white/15 text-xs font-sans uppercase transition-all cursor-pointer font-medium"
+                  className="hidden sm:inline-flex items-center space-x-1.5 px-3.5 py-2.5 rounded-full liquid-glass hover:bg-white/10 text-[#C5A06B] hover:text-white border border-white/15 text-xs font-sans uppercase transition-all cursor-pointer font-medium"
                 >
-                  <span>Next: {nextProject.title}</span>
+                  <span>Next</span>
                   <ArrowRight size={13} />
                 </button>
               )}

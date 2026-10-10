@@ -32,13 +32,13 @@ export const StudioSection: React.FC = () => {
         
         {/* Section Header */}
         <div>
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full liquid-glass-pill text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold mb-3">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold mb-3">
             <Compass size={12} className="text-[#C5A06B]" />
-            <span>OUR TEAM · 05</span>
+            <span>OUR TEAM · 07</span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
             <div>
-              <h2 className="font-serif-display text-4xl sm:text-5xl lg:text-6xl text-white uppercase tracking-wide">
+              <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-white uppercase tracking-wide break-words">
                 THE STUDIO
               </h2>
               <p className="font-sans text-sm sm:text-base text-[#D8C7B5] mt-1 font-light">

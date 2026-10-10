@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { PROJECTS_DATA, Project, getProjectSqFt } from '../data/projects';
 import { ArchitecturalVisual } from '../components/ArchitecturalVisual';
@@ -11,14 +11,39 @@ interface SelectedWorksSectionProps {
 export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
   onOpenDossier
 }) => {
-  const [filter, setFilter] = useState<'all' | 'residential' | 'commercial'>('all');
+  const [filter, setFilter] = useState<'all' | 'residential' | 'restaurant' | 'commercial'>('all');
+  const [allProjects, setAllProjects] = useState<Project[]>(PROJECTS_DATA);
+
+  useEffect(() => {
+    const loadProjects = () => {
+      try {
+        const stored = localStorage.getItem('mad_website_projects');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setAllProjects(parsed);
+            return;
+          }
+        }
+      } catch {}
+      setAllProjects(PROJECTS_DATA);
+    };
+
+    loadProjects();
+    window.addEventListener('storage', loadProjects);
+    window.addEventListener('mad_projects_updated', loadProjects);
+    return () => {
+      window.removeEventListener('storage', loadProjects);
+      window.removeEventListener('mad_projects_updated', loadProjects);
+    };
+  }, []);
 
   const filteredProjects = filter === 'all'
-    ? PROJECTS_DATA
-    : PROJECTS_DATA.filter(p => p.category === filter);
+    ? allProjects
+    : allProjects.filter(p => p.category === filter);
 
   return (
-    <section id="works" className="relative w-full bg-[#3E1D23] text-[#F7F2EC] py-14 sm:py-28 border-b border-[#C5A06B]/20 overflow-hidden">
+    <section id="works" className="relative w-full bg-[#3E1D23] text-[#F7F2EC] py-12 sm:py-20 lg:py-28 border-b border-[#C5A06B]/20 overflow-hidden">
       {/* Ambient Lighting & Grid */}
       <div className="absolute top-1/4 right-0 w-[550px] h-[550px] bg-[#6E1C2E]/15 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-10 left-0 w-[500px] h-[500px] bg-[#542A33]/15 rounded-full blur-[130px] pointer-events-none" />
@@ -31,35 +56,36 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 relative z-10">
         
-        {/* Section Header & Filter */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/[0.08] pb-6">
-          <div className="space-y-3 max-w-xl">
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full liquid-glass-pill text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold">
+        {/* Section Header & Filter (Responsive for iPad and iPhone) */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 border-b border-white/[0.08] pb-6">
+          <div className="space-y-2.5 max-w-xl">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold">
               <Compass size={12} className="text-[#C5A06B]" />
               <span>OUR WORK · 03</span>
             </div>
 
-            <h2 className="font-serif-display text-3xl sm:text-5xl lg:text-6xl text-white uppercase tracking-tight">
+            <h2 className="font-serif-display text-2xl sm:text-4xl lg:text-5xl text-white uppercase tracking-tight break-words">
               Selected Projects
             </h2>
-            <p className="font-sans text-sm sm:text-base text-[#D8C7B5] leading-relaxed font-light">
-              Private villas, holiday retreats, and modern workspaces designed across India.
+            <p className="font-sans text-xs sm:text-sm lg:text-base text-[#D8C7B5] leading-relaxed font-light">
+              Private villas, destination restaurants, and modern workspaces designed across India.
             </p>
           </div>
 
-          {/* Liquid Glass Category Filter Tabs (Single clean row on mobile, no deformed wrapping) */}
-          <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar max-w-full p-1 sm:p-1.5 rounded-full liquid-glass border border-white/10 shadow-lg shrink-0">
+          {/* Liquid Glass Category Filter Tabs (Homes & Villas first, then Restaurants, then Workspaces) */}
+          <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar max-w-full p-1 sm:p-1.5 rounded-full liquid-glass border border-white/10 shadow-lg shrink-0 w-full sm:w-auto">
             {[
               { id: 'all', label: `ALL (${PROJECTS_DATA.length})` },
               { id: 'residential', label: `HOMES & VILLAS (${PROJECTS_DATA.filter(p => p.category === 'residential').length})` },
+              { id: 'restaurant', label: `RESTAURANTS (${PROJECTS_DATA.filter(p => p.category === 'restaurant').length})` },
               { id: 'commercial', label: `WORKSPACES (${PROJECTS_DATA.filter(p => p.category === 'commercial').length})` }
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setFilter(tab.id as any)}
-                className={`shrink-0 whitespace-nowrap px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-sans tracking-wider uppercase transition-all duration-300 cursor-pointer ${
+                className={`shrink-0 whitespace-nowrap px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-sans tracking-wider uppercase transition-all duration-300 cursor-pointer ${
                   filter === tab.id
                     ? 'bg-gradient-to-r from-[#4A1A24] to-[#6E1C2E] text-white font-semibold border border-[#C5A06B]/50 shadow-md'
                     : 'text-[#D8C7B5] hover:text-white hover:bg-white/[0.06]'
@@ -95,7 +121,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                 {/* Floating Liquid Glass Category Badge */}
                 <div className="absolute top-3 left-3 right-3 flex items-center justify-between text-[10px] font-sans tracking-wider uppercase pointer-events-none">
                   <span className="px-3 py-1 rounded-full liquid-glass-pill text-[#EBD2AC] font-semibold backdrop-blur-md">
-                    {project.category === 'residential' ? 'VILLA / RESIDENCE' : 'COMMERCIAL SPACE'}
+                    {project.category === 'residential' ? 'HOME & VILLA' : project.category === 'restaurant' ? 'RESTAURANT & BAR' : 'WORKSPACE'}
                   </span>
 
                   <span className="px-3 py-1 rounded-full bg-[#140609]/80 text-[#C5A06B] border border-[#C5A06B]/40 flex items-center space-x-1 font-semibold backdrop-blur-md">

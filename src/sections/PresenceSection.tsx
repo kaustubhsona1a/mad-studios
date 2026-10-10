@@ -26,10 +26,10 @@ export const PresenceSection: React.FC = () => {
           className="border-b border-[#C5A06B]/25 pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2"
         >
           <div>
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full liquid-glass-pill text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold mb-2">
-              <span>LOCATIONS · 06</span>
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold mb-2">
+              <span>LOCATIONS · 05</span>
             </div>
-            <h2 className="font-serif-display text-3xl sm:text-4xl text-white uppercase tracking-wide">
+            <h2 className="font-serif-display text-2xl sm:text-3xl lg:text-4xl text-white uppercase tracking-wide break-words">
               Where We Build
             </h2>
           </div>
