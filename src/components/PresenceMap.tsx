@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import { PRESENCE_CITIES, CityPresence } from '../data/presence';
+import { INDIA_MAP_OUTLINE } from '../data/indiaMapPath';
 import { MapPin, Building, ArrowUpRight, CheckCircle2, Compass, Sparkles } from 'lucide-react';
 
 interface PresenceMapProps {
   onSelectCity?: (city: CityPresence) => void;
 }
 
-// Geographically calibrated coordinates for standard 500x580 India Cartographic Projection
-const CITY_COORDS: Record<string, { x: number; y: number; labelPos: 'left' | 'right' | 'top' | 'bottom' }> = {
-  'Mumbai': { x: 136, y: 358, labelPos: 'left' },
-  'Karjat': { x: 150, y: 364, labelPos: 'right' },
-  'Lonavala': { x: 156, y: 374, labelPos: 'right' },
-  'Goa': { x: 146, y: 435, labelPos: 'left' },
-  'Chalisgaon': { x: 176, y: 330, labelPos: 'right' },
-  'Ahmedabad': { x: 122, y: 285, labelPos: 'left' },
-  'Lucknow': { x: 268, y: 224, labelPos: 'right' },
-  'Hyderabad': { x: 222, y: 405, labelPos: 'right' },
-  'Bangalore': { x: 194, y: 482, labelPos: 'right' },
-  'Dharwad': { x: 164, y: 438, labelPos: 'right' }
+// Geographically calibrated coordinates for official 667x778 India Projection
+const CITY_COORDS: Record<string, { x: number; y: number; labelPos: 'left' | 'right' | 'top' | 'bottom'; regionTag?: string }> = {
+  'Mumbai': { x: 118, y: 482, labelPos: 'left', regionTag: 'Flagship Studio' },
+  'Karjat': { x: 130, y: 476, labelPos: 'top', regionTag: 'Weekend Retreats' },
+  'Lonavala': { x: 134, y: 494, labelPos: 'bottom', regionTag: 'Hill Villas' },
+  'Goa': { x: 138, y: 563, labelPos: 'left', regionTag: 'Coastal Architecture' },
+  'Dharwad': { x: 164, y: 563, labelPos: 'right', regionTag: 'Heritage & Modern Homes' },
+  'Chalisgaon': { x: 160, y: 438, labelPos: 'right', regionTag: 'Dining & Living Spaces' },
+  'Ahmedabad': { x: 105, y: 376, labelPos: 'left', regionTag: 'Modern Workplaces' },
+  'Lucknow': { x: 283, y: 270, labelPos: 'right', regionTag: 'Bespoke Residences' },
+  'Hyderabad': { x: 238, y: 510, labelPos: 'right', regionTag: 'Turnkey Residences' },
+  'Bangalore': { x: 222, y: 622, labelPos: 'right', regionTag: 'Modern Bungalows' },
 };
 
 export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
@@ -72,8 +73,8 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
         
-        {/* Interactive India Map Canvas (Authentic Full India Silhouette) */}
-        <div className="lg:col-span-7 flex flex-col items-center justify-center relative min-h-[380px] sm:min-h-[460px] bg-[#2A0E13]/90 rounded-2xl p-3 sm:p-6 border border-[#C5A06B]/30 shadow-inner overflow-hidden">
+        {/* Interactive India Map Canvas (Authentic Full Survey of India Silhouette) */}
+        <div className="lg:col-span-7 flex flex-col items-center justify-center relative min-h-[420px] sm:min-h-[520px] bg-[#2A0E13]/90 rounded-2xl p-3 sm:p-6 border border-[#C5A06B]/30 shadow-inner overflow-hidden">
           
           {/* Subtle Architectural Drafting Grid */}
           <div 
@@ -91,121 +92,115 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
           </div>
 
           <svg 
-            viewBox="0 0 500 580" 
-            className="w-full max-w-[440px] h-auto select-none relative z-10 overflow-visible" 
+            viewBox="0 0 667 778" 
+            className="w-full max-w-[480px] h-auto select-none relative z-10 overflow-visible" 
             preserveAspectRatio="xMidYMid meet"
           >
             <defs>
               <linearGradient id="indiaMapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#C5A06B" stopOpacity="0.28" />
-                <stop offset="50%" stopColor="#8A2E3E" stopOpacity="0.22" />
-                <stop offset="100%" stopColor="#541B26" stopOpacity="0.35" />
+                <stop offset="0%" stopColor="#C5A06B" stopOpacity="0.32" />
+                <stop offset="45%" stopColor="#8A2E3E" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#4A1520" stopOpacity="0.42" />
               </linearGradient>
 
-              <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3.5" result="blur" />
+              <filter id="goldGlow" x="-25%" y="-25%" width="150%" height="150%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
               </filter>
             </defs>
 
-            {/* Geographically Accurate Full India Coastline & International Border Silhouette */}
-            {/* Covers Jammu & Kashmir, Ladakh, Punjab, Rajasthan, Gujarat (Kutch + Kathiawar), Maharashtra, Goa, Karnataka, Kerala, Kanyakumari, Tamil Nadu, Andhra, Odisha, Bengal, and the North-East */}
+            {/* Geographically Authentic Full India Outline (Jammu, Kashmir & Ladakh, Gujarat, North-East, Peninsula) */}
             <path
-              d={`
-                M 212,38 
-                C 220,44 235,46 248,56 
-                C 255,62 260,74 258,84 
-                C 255,95 245,108 248,120 
-                C 252,132 262,140 255,152 
-                C 246,165 234,172 230,185 
-                C 225,198 242,208 255,214 
-                C 272,222 290,228 310,235 
-                C 328,242 342,246 348,244 
-                C 352,238 355,225 362,228 
-                C 370,232 378,245 388,242 
-                C 405,236 420,220 438,212 
-                C 450,206 462,214 466,224 
-                C 470,236 464,248 456,258 
-                C 448,268 444,280 435,292 
-                C 426,304 416,310 405,302 
-                C 395,294 388,284 378,288 
-                C 368,292 362,306 352,316 
-                C 344,324 336,334 330,332 
-                C 322,330 320,318 312,324 
-                C 300,334 305,355 292,374 
-                C 280,392 268,410 256,428 
-                C 244,446 235,468 224,490 
-                C 214,510 205,532 195,555 
-                C 192,555 188,548 185,535 
-                C 180,515 174,494 168,474 
-                C 162,454 154,435 146,415 
-                C 140,400 134,382 135,364 
-                C 136,346 142,332 136,320 
-                C 130,310 120,314 112,318 
-                C 100,324 88,322 84,310 
-                C 80,298 90,286 102,280 
-                C 95,274 76,274 72,266 
-                C 68,258 84,250 96,246 
-                C 108,242 112,230 114,216 
-                C 116,200 125,185 132,170 
-                C 140,154 150,140 156,124 
-                C 162,108 170,95 180,82 
-                C 190,68 202,52 212,38 
-                Z
-              `}
+              d={INDIA_MAP_OUTLINE}
               fill="url(#indiaMapGrad)"
               stroke="#C5A06B"
               strokeWidth="1.8"
-              filter="drop-shadow(0px 8px 16px rgba(0,0,0,0.6))"
+              strokeLinejoin="round"
+              filter="drop-shadow(0px 8px 20px rgba(0,0,0,0.7))"
+              className="transition-colors duration-500"
             />
 
-            {/* Subtle Tropic of Cancer & Latitude Reference Line */}
+            {/* Subtle Tropic of Cancer Reference Line (23.5° N) */}
             <path
-              d="M 100,280 Q 250,288 420,270"
+              d="M 25,372 Q 280,360 540,340"
               stroke="#C5A06B"
-              strokeWidth="0.75"
-              strokeDasharray="3 4"
+              strokeWidth="0.85"
+              strokeDasharray="4 4"
               strokeOpacity="0.4"
               fill="none"
             />
-            <text x="424" y="273" fill="#C5A06B" opacity="0.5" fontSize="7" fontFamily="sans-serif">23.5° N</text>
+            <text x="546" y="343" fill="#C5A06B" opacity="0.55" fontSize="8" fontFamily="sans-serif" letterSpacing="0.08em">
+              23.5° N · TROPIC OF CANCER
+            </text>
 
-            {/* Internal Regional Transit / Project Corridors */}
+            {/* Lakshadweep Archipelago */}
+            <g className="opacity-80">
+              <ellipse cx="106" cy="658" rx="2.5" ry="4.5" fill="#C5A06B" />
+              <ellipse cx="102" cy="672" rx="2.5" ry="5.5" fill="#C5A06B" />
+              <ellipse cx="98" cy="688" rx="3" ry="6" fill="#C5A06B" />
+              <ellipse cx="108" cy="700" rx="2.5" ry="4" fill="#C5A06B" />
+              <ellipse cx="118" cy="722" rx="2.5" ry="5" fill="#C5A06B" />
+              <ellipse cx="128" cy="748" rx="3" ry="4" fill="#C5A06B" />
+              <text x="45" y="700" fill="#C5A06B" opacity="0.6" fontSize="7.5" fontFamily="sans-serif" letterSpacing="0.1em">
+                LAKSHADWEEP
+              </text>
+            </g>
+
+            {/* Andaman & Nicobar Archipelago */}
+            <g className="opacity-80">
+              <path d="M 558,582 C 560,578 564,582 563,594 C 562,602 557,605 558,582 Z" fill="#C5A06B" />
+              <path d="M 561,602 C 563,598 566,602 565,616 C 564,623 560,626 561,602 Z" fill="#C5A06B" />
+              <path d="M 564,624 C 566,620 568,624 567,640 C 566,647 563,650 564,624 Z" fill="#C5A06B" />
+              <ellipse cx="566" cy="656" rx="3" ry="5.5" fill="#C5A06B" />
+              <ellipse cx="574" cy="688" rx="3.5" ry="5" fill="#C5A06B" />
+              <ellipse cx="581" cy="716" rx="4" ry="7" fill="#C5A06B" />
+              <ellipse cx="587" cy="744" rx="4.5" ry="8" fill="#C5A06B" />
+              <text x="540" y="764" fill="#C5A06B" opacity="0.6" fontSize="7.5" fontFamily="sans-serif" letterSpacing="0.1em">
+                ANDAMAN &amp; NICOBAR
+              </text>
+            </g>
+
+            {/* Regional Architectural Corridors linking Mumbai Studio Hub */}
             <path
               d="
-                M 136,358 L 268,224
-                M 136,358 L 146,435
-                M 146,435 L 194,482
-                M 136,358 L 222,405
+                M 118,482 L 283,270
+                M 118,482 L 105,376
+                M 118,482 L 160,438
+                M 118,482 L 238,510
+                M 118,482 L 138,563
+                M 138,563 L 164,563
+                M 164,563 L 222,622
+                M 118,482 L 130,476
+                M 130,476 L 134,494
               "
               stroke="#C5A06B"
-              strokeWidth="0.8"
-              strokeDasharray="2 3"
-              strokeOpacity="0.3"
+              strokeWidth="0.9"
+              strokeDasharray="3 4"
+              strokeOpacity="0.4"
               fill="none"
             />
 
             {/* Interactive City Pinpoints with Calibrated Coordinates */}
             {PRESENCE_CITIES.map((c) => {
-              const coords = CITY_COORDS[c.name] || { x: c.x * 4.4 + 40, y: c.y * 4.6 + 40, labelPos: 'right' };
+              const coords = CITY_COORDS[c.name] || { x: (c.x / 100) * 667, y: (c.y / 100) * 778, labelPos: 'right' };
               const { x: cx, y: cy, labelPos } = coords;
               const isSelected = activeCity.name === c.name;
 
               // Compute clean text anchor and offset based on label position
-              let textX = cx + 9;
-              let textY = cy + 3.5;
+              let textX = cx + 11;
+              let textY = cy + 4;
               let textAnchor: 'start' | 'middle' | 'end' = 'start';
 
               if (labelPos === 'left') {
-                textX = cx - 9;
+                textX = cx - 11;
                 textAnchor = 'end';
               } else if (labelPos === 'top') {
                 textX = cx;
-                textY = cy - 9;
+                textY = cy - 11;
                 textAnchor = 'middle';
               } else if (labelPos === 'bottom') {
                 textX = cx;
-                textY = cy + 14;
+                textY = cy + 16;
                 textAnchor = 'middle';
               }
 
@@ -222,7 +217,7 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
                       <circle 
                         cx={cx} 
                         cy={cy} 
-                        r="18" 
+                        r="22" 
                         fill="none" 
                         stroke="#C5A06B" 
                         strokeWidth="1.5" 
@@ -233,7 +228,7 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
                       <circle 
                         cx={cx} 
                         cy={cy} 
-                        r="10" 
+                        r="12" 
                         fill="#C5A06B" 
                         fillOpacity="0.25" 
                       />
@@ -244,10 +239,10 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
                   <circle
                     cx={cx}
                     cy={cy}
-                    r={isSelected ? 6 : 4}
+                    r={isSelected ? 7 : 4.5}
                     fill={isSelected ? '#C5A06B' : '#4E1D25'}
                     stroke={isSelected ? '#FFF2DF' : '#C5A06B'}
-                    strokeWidth={isSelected ? 2 : 1.2}
+                    strokeWidth={isSelected ? 2 : 1.4}
                     className="transition-all duration-300 group-hover:scale-125"
                     filter={isSelected ? 'url(#goldGlow)' : undefined}
                   />
@@ -256,7 +251,7 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
                   <circle
                     cx={cx}
                     cy={cy}
-                    r={isSelected ? 2.5 : 1.5}
+                    r={isSelected ? 3 : 1.8}
                     fill="#FFFFFF"
                   />
 
@@ -266,9 +261,9 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
                     y={textY}
                     textAnchor={textAnchor}
                     fill={isSelected ? '#EBD2AC' : '#F7F2EC'}
-                    fontSize={isSelected ? '11' : '9.5'}
+                    fontSize={isSelected ? '12' : '10'}
                     fontFamily="sans-serif"
-                    fontWeight={isSelected ? '700' : '500'}
+                    fontWeight={isSelected ? '700' : '600'}
                     letterSpacing="0.06em"
                     className="select-none pointer-events-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
                   >

@@ -8,16 +8,16 @@ export interface CityPresence {
 }
 
 export const PRESENCE_CITIES: CityPresence[] = [
-  { name: 'Mumbai', state: 'Maharashtra', x: 28, y: 58, activeProjects: ['MAD Studio Office', 'Aggarwals House', 'Espirit Stones', 'Fine Tone Realtors', 'Shaikh’s House', 'Poptates Colaba', 'Minimal Haven'], type: 'Studio Office & Flagship Homes' },
-  { name: 'Karjat', state: 'Maharashtra', x: 30, y: 59, activeProjects: ['Casa Verde (4-Bedroom Villa)'], type: 'Private Weekend Homes' },
-  { name: 'Lonavala', state: 'Maharashtra', x: 31, y: 61, activeProjects: ['Indus Villa 8 & 9', 'Utopia Dream Villas (22-Bungalow Colony)', 'Utopia Dream Villa'], type: 'Hill Retreats & Bungalow Communities' },
-  { name: 'Goa', state: 'Goa', x: 28, y: 72, activeProjects: ['Casa Sylva (Siolim)', 'Michael’s Villa (Mapuca)', 'Mannat Bungalow (Fatorda)', 'Shaikh Residency (Raia)'], type: 'Tropical Holiday Villas' },
-  { name: 'Chalisgaon', state: 'Maharashtra', x: 34, y: 54, activeProjects: ['The Crest Resto-Bar', 'Naveen’s Den 3BHK Home'], type: 'Dining Spaces & Family Homes' },
-  { name: 'Ahmedabad', state: 'Gujarat', x: 23, y: 47, activeProjects: ['Modern Commercial & Office Developments'], type: 'Workplaces & Commercial' },
-  { name: 'Lucknow', state: 'Uttar Pradesh', x: 52, y: 38, activeProjects: ['Hospitality & Family Living Spaces'], type: 'Restaurants & Homes' },
-  { name: 'Hyderabad', state: 'Telangana', x: 45, y: 65, activeProjects: ['Complete Turnkey Home Builds'], type: 'Private Residences' },
-  { name: 'Bangalore', state: 'Karnataka', x: 39, y: 79, activeProjects: ['Modern Family Bungalows & Interiors'], type: 'Bungalows & Modern Interiors' },
-  { name: 'Dharwad', state: 'Karnataka', x: 33, y: 72, activeProjects: ['Airani Mane (4-Bedroom House)', 'Patil House'], type: 'Brick & Concrete Homes' }
+  { name: 'Mumbai', state: 'Maharashtra', x: 18, y: 62, activeProjects: ['MAD Studio Office', 'Aggarwals House', 'Espirit Stones', 'Fine Tone Realtors', 'Shaikh’s House', 'Poptates Colaba', 'Minimal Haven'], type: 'Studio Office & Flagship Homes' },
+  { name: 'Karjat', state: 'Maharashtra', x: 20, y: 61, activeProjects: ['Casa Verde (4-Bedroom Villa)'], type: 'Private Weekend Homes' },
+  { name: 'Lonavala', state: 'Maharashtra', x: 20, y: 64, activeProjects: ['Indus Villa 8 & 9', 'Utopia Dream Villas (22-Bungalow Colony)', 'Utopia Dream Villa'], type: 'Hill Retreats & Bungalow Communities' },
+  { name: 'Goa', state: 'Goa', x: 21, y: 72, activeProjects: ['Casa Sylva (Siolim)', 'Michael’s Villa (Mapuca)', 'Mannat Bungalow (Fatorda)', 'Shaikh Residency (Raia)'], type: 'Tropical Holiday Villas' },
+  { name: 'Chalisgaon', state: 'Maharashtra', x: 24, y: 56, activeProjects: ['The Crest Resto-Bar', 'Naveen’s Den 3BHK Home'], type: 'Dining Spaces & Family Homes' },
+  { name: 'Ahmedabad', state: 'Gujarat', x: 16, y: 48, activeProjects: ['Modern Commercial & Office Developments'], type: 'Workplaces & Commercial' },
+  { name: 'Lucknow', state: 'Uttar Pradesh', x: 42, y: 35, activeProjects: ['Hospitality & Family Living Spaces'], type: 'Restaurants & Homes' },
+  { name: 'Hyderabad', state: 'Telangana', x: 36, y: 66, activeProjects: ['Complete Turnkey Home Builds'], type: 'Private Residences' },
+  { name: 'Bangalore', state: 'Karnataka', x: 33, y: 80, activeProjects: ['Modern Family Bungalows & Interiors'], type: 'Bungalows & Modern Interiors' },
+  { name: 'Dharwad', state: 'Karnataka', x: 25, y: 72, activeProjects: ['Airani Mane (4-Bedroom House)', 'Patil House'], type: 'Brick & Concrete Homes' }
 ];
 
 export const PRESENCE_STATS = [

@@ -15,7 +15,7 @@ import {
   INITIAL_OPERATOR_BOQS, 
   INITIAL_OPERATOR_PLANS
 } from '../../data/operatorInitialData';
-import { PROJECTS_DATA, Project } from '../../data/projects';
+import { PROJECTS_DATA, Project, getProjectSqFt } from '../../data/projects';
 import { MadLogo } from '../MadLogo';
 import { 
   Plus, 
@@ -88,7 +88,9 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
 
   // Modals
   const [isUploadWebsiteModalOpen, setIsUploadWebsiteModalOpen] = useState(false);
+  const [editingWebsiteProject, setEditingWebsiteProject] = useState<Project | null>(null);
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
+  const [editingOngoingProject, setEditingOngoingProject] = useState<ClientProject | null>(null);
   const [isAttachPlanModalOpen, setIsAttachPlanModalOpen] = useState(false);
   const [targetStageForNewPlan, setTargetStageForNewPlan] = useState<ProjectStageKey>('04_working_gfc');
   const [isNewBillModalOpen, setIsNewBillModalOpen] = useState(false);
@@ -262,6 +264,57 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
       saveWebsiteProjects(updated);
       showToast('Project removed from website');
     }
+  };
+
+  // Feature an ongoing commission in the public website Selected Works
+  const handleFeatureOngoingOnWebsite = (proj: ClientProject) => {
+    const existing = websiteProjects.find(w => w.id === proj.id);
+    if (existing) {
+      showToast(`"${proj.projectTitle}" is already visible in Selected Works`);
+      return;
+    }
+    const newWork: Project = {
+      id: proj.id,
+      title: proj.projectTitle,
+      category: proj.typology.toLowerCase().includes('villa') || proj.typology.toLowerCase().includes('residence') 
+        ? 'residential' 
+        : proj.typology.toLowerCase().includes('restaurant') 
+        ? 'restaurant' 
+        : 'commercial',
+      location: proj.location,
+      pageNumber: `0${websiteProjects.length + 1}`,
+      catalogIndex: websiteProjects.length + 1,
+      highlight: proj.notes || 'Ongoing architectural commission currently in active execution.',
+      hasDossier: true,
+      imageUrl: proj.coverImageUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+      dossier: {
+        statusTag: `Ongoing · ${ARCHITECTURAL_STAGES.find(s => s.key === proj.currentStage)?.label || 'Execution'}`,
+        location: proj.location,
+        projectType: proj.typology,
+        configuration: `${proj.totalAreaSqFt.toLocaleString()} Sq.Ft Built-up`,
+        builtUpArea: `${proj.totalAreaSqFt.toLocaleString()} Sq. Ft.`,
+        timeline: 'Under Construction · 2026',
+        status: 'Ongoing Execution',
+        scopeOfWork: ['Architectural Design', 'Site Execution', 'GFC Drawings'],
+        description: proj.notes || `Bespoke architectural commission for ${proj.clientName} in ${proj.location}.`,
+        quote: '“Architecture crafted with deep material sensitivity and spatial rhythm.”',
+        stampTagline: 'M.A.D Studio Selected Work',
+        designConcept: {
+          title: 'Spatial Concept & Execution',
+          points: [
+            { title: 'Current Focus', desc: proj.notes || 'Regional textures responding to climate.' },
+            { title: 'Next Site Milestone', desc: `Next visit: ${proj.nextSiteVisit}` }
+          ]
+        },
+        floorPlans: [],
+        materialPalette: [
+          { name: 'Exposed Laterite', category: 'Masonry', description: 'Regional laterite stone', color: '#8B4513' },
+          { name: 'Teak Wood Joinery', category: 'Timber', description: 'Seasoned teak rafters', color: '#654321' }
+        ]
+      }
+    };
+    saveWebsiteProjects([newWork, ...websiteProjects]);
+    showToast(`Featured "${proj.projectTitle}" on website Selected Works!`);
   };
 
   return (
@@ -497,8 +550,16 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
                       </span>
                       <div className="flex items-center space-x-2">
                         <button
+                          onClick={() => setEditingWebsiteProject(proj)}
+                          className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-[#C5A06B] hover:text-[#140508] text-white text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer"
+                          title="Edit Project Details for Website"
+                        >
+                          <Edit3 size={12} />
+                          <span>Edit</span>
+                        </button>
+                        <button
                           onClick={() => handleDeleteWebsiteProject(proj.id)}
-                          className="text-[#D8C7B5]/60 hover:text-red-300 p-1 transition-colors"
+                          className="text-[#D8C7B5]/60 hover:text-red-300 p-1.5 transition-colors rounded-lg hover:bg-white/5"
                           title="Remove from Website"
                         >
                           <Trash2 size={13} />
@@ -587,21 +648,46 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
 
                         {/* Right: Stage Badge & Actions */}
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3 shrink-0">
-                          <div className="text-left sm:text-right">
+                          <div className="text-left sm:text-right space-y-1">
                             <span className="px-2.5 py-1 rounded-full bg-[#C5A06B]/15 border border-[#C5A06B]/40 text-[#EBD2AC] text-xs font-semibold block">
                               {stageObj?.label || proj.currentStage}
                             </span>
-                            <span className="text-[11px] text-[#D8C7B5]/70 block mt-1">
-                              {projPlansCount} Plans · {projBillsCount} Bills
-                            </span>
+                            <div className="flex items-center justify-start sm:justify-end gap-1.5">
+                              {websiteProjects.some(w => w.id === proj.id) ? (
+                                <span className="text-[10px] text-green-300 bg-green-950/60 border border-green-500/30 px-1.5 py-0.2 rounded font-medium flex items-center space-x-0.5">
+                                  <Check size={9} />
+                                  <span>On Web</span>
+                                </span>
+                              ) : (
+                                <button
+                                  onClick={() => handleFeatureOngoingOnWebsite(proj)}
+                                  className="text-[10px] text-[#C5A06B] hover:text-[#EBD2AC] bg-white/[0.04] hover:bg-[#C5A06B]/20 border border-white/10 hover:border-[#C5A06B]/40 px-1.5 py-0.2 rounded transition-all flex items-center space-x-1 cursor-pointer"
+                                  title="Feature in Website Selected Works"
+                                >
+                                  <Globe size={9} />
+                                  <span>+ Feature on Web</span>
+                                </button>
+                              )}
+                              <span className="text-[10px] text-[#D8C7B5]/60">
+                                {projPlansCount} Plans · {projBillsCount} Bills
+                              </span>
+                            </div>
                           </div>
 
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-1.5">
                             <button
                               onClick={() => setSelectedOngoingProjectId(proj.id)}
-                              className="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-[#C5A06B] hover:text-[#140508] text-white text-xs font-semibold uppercase transition-colors cursor-pointer"
+                              className="px-3 py-2 rounded-lg bg-white/10 hover:bg-[#C5A06B] hover:text-[#140508] text-white text-xs font-semibold uppercase transition-colors cursor-pointer"
                             >
-                              Manage Stages
+                              Stages
+                            </button>
+
+                            <button
+                              onClick={() => setEditingOngoingProject(proj)}
+                              className="p-2 rounded-lg border border-white/15 hover:border-[#C5A06B] text-[#D8C7B5] hover:text-white transition-colors cursor-pointer"
+                              title="Edit Ongoing Project Details"
+                            >
+                              <Edit3 size={14} />
                             </button>
 
                             <a
@@ -611,7 +697,7 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
                               className="p-2 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/40 text-[#25D366] transition-colors"
                               title="WhatsApp Client"
                             >
-                              <MessageCircle size={15} />
+                              <MessageCircle size={14} />
                             </a>
 
                             <button
@@ -648,6 +734,15 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
                 </button>
 
                 <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setEditingOngoingProject(currentOngoingProject)}
+                    className="px-2.5 py-1 rounded border border-white/15 hover:border-[#C5A06B] text-xs text-[#D8C7B5] hover:text-white flex items-center space-x-1 cursor-pointer"
+                    title="Edit Project Details"
+                  >
+                    <Edit3 size={12} />
+                    <span>Edit Project</span>
+                  </button>
+
                   <a
                     href={`https://wa.me/${currentOngoingProject.clientPhone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${currentOngoingProject.clientName}, regarding ${currentOngoingProject.projectTitle}...`)}`}
                     target="_blank"
@@ -662,7 +757,7 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
                     onClick={() => handleArchiveProject(currentOngoingProject.id)}
                     className="px-2.5 py-1 rounded border border-white/15 text-xs text-[#D8C7B5] hover:text-white"
                   >
-                    Archive Project
+                    Archive
                   </button>
                 </div>
               </div>
@@ -1292,6 +1387,221 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
       )}
 
       {/* ========================================================================= */}
+      {/* 4B. MODAL: EDIT WEBSITE SELECTED WORK */}
+      {/* ========================================================================= */}
+      {editingWebsiteProject && (
+        <div className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+          <form
+            onSubmit={(e: any) => {
+              e.preventDefault();
+              const fd = new FormData(e.target);
+              const title = fd.get('title') as string;
+              const category = fd.get('category') as 'residential' | 'restaurant' | 'commercial';
+              const location = fd.get('location') as string;
+              const builtUpArea = fd.get('builtUpArea') as string;
+              const statusTag = fd.get('statusTag') as string;
+              const imageUrl = fd.get('imageUrl') as string;
+              const highlight = fd.get('highlight') as string;
+              const description = fd.get('description') as string;
+              const quote = fd.get('quote') as string;
+              const materialsStr = fd.get('materials') as string;
+
+              const materialItems = materialsStr
+                ? materialsStr.split(',').map(m => m.trim()).filter(Boolean).map(m => ({
+                    name: m,
+                    category: 'Finishes',
+                    description: 'Architectural specification',
+                    color: '#C5A06B'
+                  }))
+                : editingWebsiteProject.dossier?.materialPalette || [];
+
+              const updatedWebsiteProjects: Project[] = websiteProjects.map(p => {
+                if (p.id === editingWebsiteProject.id) {
+                  const prevDossier = p.dossier;
+                  const newDossier: any = {
+                    statusTag: statusTag || prevDossier?.statusTag || 'Ongoing Execution',
+                    location,
+                    projectType: prevDossier?.projectType || (category === 'residential' ? 'Private Villa' : category === 'restaurant' ? 'Hospitality' : 'Commercial'),
+                    configuration: prevDossier?.configuration || builtUpArea || 'Custom Architectural Layout',
+                    plotArea: prevDossier?.plotArea,
+                    builtUpArea,
+                    unitArea: prevDossier?.unitArea,
+                    carpetArea: prevDossier?.carpetArea,
+                    timeline: statusTag || prevDossier?.timeline || '2024-2026',
+                    status: prevDossier?.status || 'Active',
+                    scopeOfWork: prevDossier?.scopeOfWork || ['Architectural Design', 'Site Execution'],
+                    description,
+                    quote: quote || prevDossier?.quote || '“Every space responds to sunlight, wind, and regional craftsmanship.”',
+                    stampTagline: prevDossier?.stampTagline || 'M.A.D Studio Selected Work',
+                    designConcept: prevDossier?.designConcept || { title: 'Spatial Concept', points: [] },
+                    floorPlans: prevDossier?.floorPlans || [],
+                    materialPalette: materialItems,
+                    experienceImages: prevDossier?.experienceImages,
+                    sections: prevDossier?.sections
+                  };
+
+                  return {
+                    ...p,
+                    title,
+                    category,
+                    location,
+                    highlight,
+                    imageUrl,
+                    dossier: newDossier
+                  };
+                }
+                return p;
+              });
+
+              saveWebsiteProjects(updatedWebsiteProjects);
+              setEditingWebsiteProject(null);
+              showToast(`Saved changes to "${title}" on website!`);
+            }}
+            className="w-full max-w-xl rounded-2xl bg-[#1C080C] border border-[#C5A06B]/50 p-6 space-y-4 text-white shadow-2xl relative text-xs max-h-[90vh] overflow-y-auto"
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div>
+                <h4 className="font-serif-display text-base uppercase font-semibold text-white">
+                  Edit Website Selected Work
+                </h4>
+                <span className="text-[11px] text-[#D8C7B5]">Updates the public portfolio project instantly</span>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setEditingWebsiteProject(null)} 
+                className="text-white/70 hover:text-white p-1"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div>
+              <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Project Title</label>
+              <input 
+                name="title" 
+                required 
+                defaultValue={editingWebsiteProject.title} 
+                className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Category / Typology</label>
+                <select 
+                  name="category" 
+                  defaultValue={editingWebsiteProject.category} 
+                  className="w-full bg-[#140508] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none"
+                >
+                  <option value="residential">Residential Villa / Home</option>
+                  <option value="restaurant">Restaurant & Hospitality</option>
+                  <option value="commercial">Commercial Workspace</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Location</label>
+                <input 
+                  name="location" 
+                  required 
+                  defaultValue={editingWebsiteProject.location} 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Built-Up Area / Sq.Ft</label>
+                <input 
+                  name="builtUpArea" 
+                  defaultValue={editingWebsiteProject.dossier?.builtUpArea || getProjectSqFt(editingWebsiteProject)} 
+                  placeholder="e.g. 5,200 Sq. Ft. (483 SQM)" 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Status Tag / Year</label>
+                <input 
+                  name="statusTag" 
+                  defaultValue={editingWebsiteProject.dossier?.statusTag || editingWebsiteProject.dossier?.timeline || 'Ongoing Execution · 2026'} 
+                  placeholder="e.g. Ongoing Execution · 2026" 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Cover Photo Image URL</label>
+              <input 
+                name="imageUrl" 
+                defaultValue={editingWebsiteProject.imageUrl} 
+                className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Highlight Tagline</label>
+              <input 
+                name="highlight" 
+                defaultValue={editingWebsiteProject.highlight || ''} 
+                placeholder="e.g. Raw Laterite, Teakwood Rafters & Shaded Verandahs" 
+                className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Design Narrative / Description</label>
+              <textarea 
+                name="description" 
+                rows={3} 
+                required 
+                defaultValue={editingWebsiteProject.dossier?.description || ''} 
+                className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Architect's Quote / Vision</label>
+              <input 
+                name="quote" 
+                defaultValue={editingWebsiteProject.dossier?.quote || ''} 
+                placeholder="“Every space responds to sunlight, wind, and regional craftsmanship.”" 
+                className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Principal Materials (comma-separated)</label>
+              <input 
+                name="materials" 
+                defaultValue={editingWebsiteProject.dossier?.materialPalette?.map(m => m.name).join(', ') || 'Exposed Laterite, Reclaimed Teak, Cast Terrazzo'} 
+                placeholder="e.g. Exposed Laterite, Reclaimed Teak, Cast Terrazzo" 
+                className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+              />
+            </div>
+
+            <div className="flex justify-end space-x-2 pt-3 border-t border-white/10">
+              <button 
+                type="button" 
+                onClick={() => setEditingWebsiteProject(null)} 
+                className="px-4 py-2 rounded-lg border border-white/15 text-xs text-[#D8C7B5] hover:text-white"
+              >
+                Cancel
+              </button>
+              <button 
+                type="submit" 
+                className="px-5 py-2 rounded-lg bg-[#C5A06B] text-[#140508] text-xs font-bold uppercase hover:bg-[#d6b07a] transition-all cursor-pointer"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
       {/* 5. MODAL: REGISTER NEW ONGOING PROJECT */}
       {/* ========================================================================= */}
       {isNewProjectModalOpen && (
@@ -1380,6 +1690,267 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
               </button>
               <button type="submit" className="px-4 py-1.5 rounded-lg bg-[#C5A06B] text-[#140508] text-xs font-bold uppercase">
                 Save
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 5B. MODAL: EDIT ONGOING PROJECT */}
+      {/* ========================================================================= */}
+      {editingOngoingProject && (
+        <div className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+          <form
+            onSubmit={(e: any) => {
+              e.preventDefault();
+              const fd = new FormData(e.target);
+              const projectTitle = fd.get('projectTitle') as string;
+              const clientName = fd.get('clientName') as string;
+              const clientPhone = fd.get('clientPhone') as string;
+              const clientEmail = fd.get('clientEmail') as string;
+              const location = fd.get('location') as string;
+              const typology = fd.get('typology') as any;
+              const totalAreaSqFt = Number(fd.get('totalAreaSqFt')) || editingOngoingProject.totalAreaSqFt;
+              const totalProjectCostCr = Number(fd.get('totalProjectCostCr')) || editingOngoingProject.totalProjectCostCr;
+              const architecturalFee = Number(fd.get('architecturalFee')) || editingOngoingProject.architecturalFee;
+              const currentStage = fd.get('currentStage') as ProjectStageKey;
+              const stageProgressPercent = Number(fd.get('stageProgressPercent')) || editingOngoingProject.stageProgressPercent;
+              const nextSiteVisit = fd.get('nextSiteVisit') as string;
+              const targetHandoverDate = fd.get('targetHandoverDate') as string;
+              const activeContractor = fd.get('activeContractor') as string;
+              const notes = fd.get('notes') as string;
+
+              const updatedProjects = projects.map(p => {
+                if (p.id === editingOngoingProject.id) {
+                  return {
+                    ...p,
+                    projectTitle,
+                    clientName,
+                    clientPhone,
+                    clientEmail,
+                    location,
+                    typology,
+                    totalAreaSqFt,
+                    totalProjectCostCr,
+                    architecturalFee,
+                    currentStage,
+                    stageProgressPercent,
+                    nextSiteVisit,
+                    targetHandoverDate,
+                    activeContractor,
+                    notes,
+                    updatedAt: new Date().toISOString().split('T')[0]
+                  };
+                }
+                return p;
+              });
+
+              saveProjects(updatedProjects);
+
+              // If also in website projects, sync the title & location
+              if (websiteProjects.some(w => w.id === editingOngoingProject.id)) {
+                const updatedWeb: Project[] = websiteProjects.map(w => {
+                  if (w.id === editingOngoingProject.id) {
+                    return {
+                      ...w,
+                      title: projectTitle,
+                      location,
+                      highlight: notes,
+                      dossier: w.dossier ? {
+                        ...w.dossier,
+                        location,
+                        builtUpArea: `${totalAreaSqFt.toLocaleString()} Sq. Ft.`
+                      } : undefined
+                    };
+                  }
+                  return w;
+                });
+                saveWebsiteProjects(updatedWeb);
+              }
+
+              setEditingOngoingProject(null);
+              showToast(`Updated project "${projectTitle}"`);
+            }}
+            className="w-full max-w-lg rounded-2xl bg-[#1C080C] border border-[#C5A06B]/50 p-6 space-y-4 text-white shadow-2xl relative text-xs max-h-[90vh] overflow-y-auto"
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div>
+                <h4 className="font-serif-display text-base uppercase font-semibold text-white">
+                  Edit Ongoing Project Details
+                </h4>
+                <span className="text-[11px] text-[#D8C7B5]">Commission Code: {editingOngoingProject.code}</span>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setEditingOngoingProject(null)} 
+                className="text-white/70 hover:text-white p-1"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div>
+              <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Project Title</label>
+              <input 
+                name="projectTitle" 
+                required 
+                defaultValue={editingOngoingProject.projectTitle} 
+                className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Client Name</label>
+                <input 
+                  name="clientName" 
+                  required 
+                  defaultValue={editingOngoingProject.clientName} 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Client WhatsApp Phone</label>
+                <input 
+                  name="clientPhone" 
+                  required 
+                  defaultValue={editingOngoingProject.clientPhone} 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Location</label>
+                <input 
+                  name="location" 
+                  required 
+                  defaultValue={editingOngoingProject.location} 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Typology</label>
+                <select 
+                  name="typology" 
+                  defaultValue={editingOngoingProject.typology} 
+                  className="w-full bg-[#140508] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none"
+                >
+                  <option value="Villa / Residence">Villa / Residence</option>
+                  <option value="Restaurant & Hospitality">Restaurant & Hospitality</option>
+                  <option value="Corporate Workspace">Corporate Workspace</option>
+                  <option value="Luxury Interiors">Luxury Interiors</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Built-up Sq.Ft</label>
+                <input 
+                  name="totalAreaSqFt" 
+                  type="number" 
+                  defaultValue={editingOngoingProject.totalAreaSqFt} 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2 text-xs text-white outline-none" 
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Fee (₹)</label>
+                <input 
+                  name="architecturalFee" 
+                  type="number" 
+                  defaultValue={editingOngoingProject.architecturalFee} 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2 text-xs text-white outline-none" 
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Budget (Cr)</label>
+                <input 
+                  name="totalProjectCostCr" 
+                  type="number" 
+                  step="0.1" 
+                  defaultValue={editingOngoingProject.totalProjectCostCr} 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2 text-xs text-white outline-none" 
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Current Stage</label>
+                <select 
+                  name="currentStage" 
+                  defaultValue={editingOngoingProject.currentStage} 
+                  className="w-full bg-[#140508] border border-white/15 rounded-lg p-2 text-xs text-white outline-none"
+                >
+                  {ARCHITECTURAL_STAGES.map(s => (
+                    <option key={s.key} value={s.key}>{s.order}. {s.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Stage Progress %</label>
+                <input 
+                  name="stageProgressPercent" 
+                  type="number" 
+                  min="0" 
+                  max="100" 
+                  defaultValue={editingOngoingProject.stageProgressPercent} 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2 text-xs text-white outline-none" 
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Next Site Visit</label>
+                <input 
+                  name="nextSiteVisit" 
+                  defaultValue={editingOngoingProject.nextSiteVisit} 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2 text-xs text-white outline-none" 
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Active Contractor</label>
+                <input 
+                  name="activeContractor" 
+                  defaultValue={editingOngoingProject.activeContractor} 
+                  className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2 text-xs text-white outline-none" 
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-[10px] text-[#C5A06B] block mb-1 font-semibold uppercase">Current Site Focus & Directives</label>
+              <textarea 
+                name="notes" 
+                rows={2} 
+                defaultValue={editingOngoingProject.notes} 
+                className="w-full bg-white/[0.04] border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]" 
+              />
+            </div>
+
+            <div className="flex justify-end space-x-2 pt-3 border-t border-white/10">
+              <button 
+                type="button" 
+                onClick={() => setEditingOngoingProject(null)} 
+                className="px-4 py-2 rounded-lg border border-white/15 text-xs text-[#D8C7B5] hover:text-white"
+              >
+                Cancel
+              </button>
+              <button 
+                type="submit" 
+                className="px-5 py-2 rounded-lg bg-[#C5A06B] text-[#140508] text-xs font-bold uppercase hover:bg-[#d6b07a] transition-all cursor-pointer"
+              >
+                Save Project
               </button>
             </div>
           </form>

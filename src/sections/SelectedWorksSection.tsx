@@ -6,10 +6,12 @@ import { MapPin, Sparkles, ArrowUpRight, Compass } from 'lucide-react';
 
 interface SelectedWorksSectionProps {
   onOpenDossier: (project: Project) => void;
+  onOpenOperatorPortal?: () => void;
 }
 
 export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
-  onOpenDossier
+  onOpenDossier,
+  onOpenOperatorPortal
 }) => {
   const [filter, setFilter] = useState<'all' | 'residential' | 'restaurant' | 'commercial'>('all');
   const [allProjects, setAllProjects] = useState<Project[]>(PROJECTS_DATA);
@@ -61,9 +63,21 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
         {/* Section Header & Filter (Responsive for iPad and iPhone) */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 border-b border-white/[0.08] pb-6">
           <div className="space-y-2.5 max-w-xl">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold">
-              <Compass size={12} className="text-[#C5A06B]" />
-              <span>OUR WORK · 03</span>
+            <div className="flex items-center space-x-2">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold">
+                <Compass size={12} className="text-[#C5A06B]" />
+                <span>OUR WORK · 03</span>
+              </div>
+              {onOpenOperatorPortal && (
+                <button
+                  onClick={onOpenOperatorPortal}
+                  className="px-2.5 py-1 rounded-full bg-white/[0.06] hover:bg-[#C5A06B]/20 border border-white/10 hover:border-[#C5A06B]/40 text-[10px] text-[#D8C7B5] hover:text-[#EBD2AC] transition-all flex items-center space-x-1 cursor-pointer"
+                  title="Operator Portal: Edit Selected Works"
+                >
+                  <Sparkles size={10} className="text-[#C5A06B]" />
+                  <span>Edit Selected Works</span>
+                </button>
+              )}
             </div>
 
             <h2 className="font-serif-display text-2xl sm:text-4xl lg:text-5xl text-white uppercase tracking-tight break-words">
@@ -77,10 +91,10 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
           {/* Liquid Glass Category Filter Tabs (Homes & Villas first, then Restaurants, then Workspaces) */}
           <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar max-w-full p-1 sm:p-1.5 rounded-full liquid-glass border border-white/10 shadow-lg shrink-0 w-full sm:w-auto">
             {[
-              { id: 'all', label: `ALL (${PROJECTS_DATA.length})` },
-              { id: 'residential', label: `HOMES & VILLAS (${PROJECTS_DATA.filter(p => p.category === 'residential').length})` },
-              { id: 'restaurant', label: `RESTAURANTS (${PROJECTS_DATA.filter(p => p.category === 'restaurant').length})` },
-              { id: 'commercial', label: `WORKSPACES (${PROJECTS_DATA.filter(p => p.category === 'commercial').length})` }
+              { id: 'all', label: `ALL (${allProjects.length})` },
+              { id: 'residential', label: `HOMES & VILLAS (${allProjects.filter(p => p.category === 'residential').length})` },
+              { id: 'restaurant', label: `RESTAURANTS (${allProjects.filter(p => p.category === 'restaurant').length})` },
+              { id: 'commercial', label: `WORKSPACES (${allProjects.filter(p => p.category === 'commercial').length})` }
             ].map((tab) => (
               <button
                 key={tab.id}

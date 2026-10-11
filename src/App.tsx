@@ -94,6 +94,7 @@ export function App() {
         {/* 03: Selected Works */}
         <SelectedWorksSection
           onOpenDossier={(proj) => setSelectedDossierProject(proj)}
+          onOpenOperatorPortal={() => setIsOperatorOpen(true)}
         />
 
         {/* 04: Services Section */}
