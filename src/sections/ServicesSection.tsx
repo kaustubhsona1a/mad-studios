@@ -119,9 +119,6 @@ export const ServicesSection: React.FC = () => {
             
             {/* Header Lockup */}
             <div>
-              <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full liquid-glass-pill text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold mb-3">
-                <span>WHAT WE DO · 04</span>
-              </div>
               <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-white tracking-wide uppercase font-light break-words">
                 SERVICES
               </h2>
@@ -131,7 +128,7 @@ export const ServicesSection: React.FC = () => {
 
             {/* Service Items inside Liquid Translucent Glass Containers */}
             <div className="space-y-3 sm:space-y-4">
-              {servicesList.map((service, index) => (
+              {servicesList.map((service) => (
                 <div 
                   key={service.id} 
                   className="liquid-glass-translucent rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border border-white/15 hover:border-[#C5A06B]/50 transition-all duration-300"
@@ -156,19 +153,12 @@ export const ServicesSection: React.FC = () => {
               ))}
             </div>
 
-            {/* Bottom Tagline: tailored to your space */}
-            <div className="pt-3 border-t border-white/10">
-              <p className="font-sans text-xs sm:text-sm text-[#D8C7B5] font-light">
-                We offer complete architectural and interior solutions tailored to your space.
-              </p>
-            </div>
-
           </div>
 
           {/* RIGHT: Curated Photographic Spread in Liquid Glass Frame */}
           <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-28">
             
-            {/* Primary Property Photo: Siolim Villa Pool & Woodwork */}
+            {/* Primary Property Photo */}
             <div className="liquid-glass-translucent rounded-2xl p-2.5 sm:p-3 border border-white/20 shadow-2xl overflow-hidden group">
               <div className="aspect-[4/3] rounded-xl overflow-hidden relative">
                 <ArchitecturalVisual
@@ -176,10 +166,6 @@ export const ServicesSection: React.FC = () => {
                   aspectRatio="aspect-auto"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-              </div>
-              <div className="p-3 flex items-center justify-between text-[11px] font-mono-tech text-[#C5A06B]">
-                <span className="font-semibold">TROPICAL RETREAT</span>
-                <span className="text-[#D8C7B5]">SIOLIM, GOA</span>
               </div>
             </div>
 

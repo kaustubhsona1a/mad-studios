@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { FOUNDER_DATA, LEAD_TEAM_DATA, TeamMember } from '../data/team';
+import { 
+  FOUNDER_DATA, 
+  LEAD_TEAM_DATA, 
+  TeamMember, 
+  FounderProfile, 
+  getStoredFounder, 
+  getStoredTeam 
+} from '../data/team';
 import { 
   Sparkles, 
   Quote as QuoteIcon, 
@@ -13,6 +20,17 @@ import {
 
 export const StudioSection: React.FC = () => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [founder, setFounder] = useState<FounderProfile>(getStoredFounder());
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(getStoredTeam());
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setFounder(getStoredFounder());
+      setTeamMembers(getStoredTeam());
+    };
+    window.addEventListener('mad_team_updated', handleUpdate);
+    return () => window.removeEventListener('mad_team_updated', handleUpdate);
+  }, []);
 
   return (
     <section id="studio" className="relative w-full bg-[#3E1D23] text-[#F7F2EC] py-20 sm:py-28 border-b border-[#C5A06B]/20 overflow-hidden">
@@ -32,10 +50,6 @@ export const StudioSection: React.FC = () => {
         
         {/* Section Header */}
         <div>
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold mb-3">
-            <Compass size={12} className="text-[#C5A06B]" />
-            <span>OUR TEAM · 07</span>
-          </div>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
             <div>
               <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-white uppercase tracking-wide break-words">
@@ -44,14 +58,6 @@ export const StudioSection: React.FC = () => {
               <p className="font-sans text-sm sm:text-base text-[#D8C7B5] mt-1 font-light">
                 An experienced team of architects, designers, and site engineers.
               </p>
-            </div>
-            <div className="text-left sm:text-right">
-              <span className="text-xs font-sans text-[#EBD2AC] uppercase tracking-wider font-semibold block">
-                MUMBAI & GOA
-              </span>
-              <span className="text-[11px] font-sans text-[#D8C7B5] block mt-0.5">
-                ESTABLISHED PRACTICE
-              </span>
             </div>
           </div>
           <div className="w-full h-[1.5px] bg-[#C5A06B]/80 mt-4" />
@@ -74,8 +80,8 @@ export const StudioSection: React.FC = () => {
             <div className="lg:col-span-5 relative group">
               <div className="relative aspect-[3/4] max-w-sm mx-auto rounded-2xl overflow-hidden border border-white/20 bg-black/40 shadow-xl">
                 <img
-                  src={FOUNDER_DATA.image}
-                  alt={FOUNDER_DATA.name}
+                  src={founder.image}
+                  alt={founder.name}
                   className="w-full h-full object-cover filter contrast-[1.05] transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0E0507]/90 via-transparent to-transparent" />
@@ -83,12 +89,9 @@ export const StudioSection: React.FC = () => {
                 {/* Name Tag on Photo */}
                 <div className="absolute bottom-4 left-4 right-4 liquid-glass-pill rounded-xl p-3 backdrop-blur-md flex items-center justify-between text-xs font-sans text-white border border-white/20">
                   <div>
-                    <span className="font-semibold block">{FOUNDER_DATA.name}</span>
-                    <span className="text-[11px] text-[#C5A06B] block">Principal Architect</span>
+                    <span className="font-semibold block">{founder.name}</span>
+                    <span className="text-[11px] text-[#C5A06B] block">{founder.role}</span>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-[#3E1D23] text-[#EBD2AC] text-[10px] font-semibold border border-[#C5A06B]/40">
-                    LEAD
-                  </span>
                 </div>
               </div>
             </div>
@@ -99,13 +102,13 @@ export const StudioSection: React.FC = () => {
               <div className="space-y-2 border-b border-white/10 pb-4">
                 <div className="inline-flex items-center space-x-2 text-xs font-sans text-[#C5A06B] uppercase tracking-wider font-semibold">
                   <Sparkles size={13} className="text-[#C5A06B]" />
-                  <span>PRINCIPAL ARCHITECT</span>
+                  <span>{founder.role}</span>
                 </div>
                 <h3 className="font-serif-display text-3xl sm:text-4xl text-white uppercase tracking-wide font-normal">
-                  {FOUNDER_DATA.name}
+                  {founder.name}
                 </h3>
                 <p className="text-xs sm:text-sm font-sans text-[#D8C7B5]">
-                  Council of Architecture Registered · 10+ Years Designing Spaces
+                  {founder.credentials || 'Council of Architecture Registered · Principal Design Director'}
                 </p>
               </div>
 
@@ -113,18 +116,18 @@ export const StudioSection: React.FC = () => {
               <div className="relative pl-5 border-l-2 border-[#C5A06B]">
                 <QuoteIcon size={18} className="text-[#C5A06B]/60 absolute -top-1 -left-2 transform -translate-x-full" />
                 <p className="font-sans text-base sm:text-lg text-[#F7F2EC] leading-relaxed font-light">
-                  “{FOUNDER_DATA.quote}”
+                  “{founder.quote}”
                 </p>
               </div>
 
               {/* Simple Paragraph */}
               <p className="font-sans text-sm text-[#D8C7B5] leading-relaxed font-light">
-                {FOUNDER_DATA.statement}
+                {founder.statement}
               </p>
 
               {/* Key Stats in Liquid Glass Pills */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                {FOUNDER_DATA.stats.map((stat, idx) => (
+                {founder.stats.map((stat, idx) => (
                   <div key={idx} className="p-3.5 rounded-xl liquid-glass-pill border border-white/15">
                     <span className="font-serif-display text-xl sm:text-2xl text-[#C5A06B] font-medium block">
                       {stat.value}
@@ -145,9 +148,6 @@ export const StudioSection: React.FC = () => {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-white/10 pb-3">
             <div>
-              <span className="font-sans text-xs tracking-wider text-[#C5A06B] uppercase font-semibold block mb-1">
-                DISCIPLINE LEADS
-              </span>
               <h3 className="font-serif-display text-2xl sm:text-3xl text-white uppercase tracking-wide">
                 Studio Leads
               </h3>
@@ -158,7 +158,7 @@ export const StudioSection: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {LEAD_TEAM_DATA.slice(0, 4).map((member, idx) => (
+            {teamMembers.map((member, idx) => (
               <motion.div
                 key={member.id}
                 initial={{ opacity: 0, y: 15 }}
@@ -210,16 +210,6 @@ export const StudioSection: React.FC = () => {
               </motion.div>
             ))}
           </div>
-        </div>
-
-        {/* Bottom Citation */}
-        <div className="text-center pt-6 border-t border-white/10">
-          <p className="font-sans text-base text-[#D8C7B5] font-light">
-            “The strongest designs emerge when clear communication and quality guide every step.”
-          </p>
-          <span className="text-[11px] font-sans tracking-wider text-[#C5A06B] uppercase block mt-1.5 font-semibold">
-            M.A.D STUDIO · REGISTERED PRACTICE · MUMBAI & GOA
-          </span>
         </div>
 
       </div>

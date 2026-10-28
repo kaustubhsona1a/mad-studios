@@ -14,10 +14,24 @@ export interface TeamMember {
   tag: string;
 }
 
-export const FOUNDER_DATA = {
+export interface FounderProfile {
+  name: string;
+  role: string;
+  credentials: string;
+  education: string;
+  statement: string;
+  philosophy: string;
+  quote: string;
+  signature: string;
+  image: string;
+  stats: { label: string; value: string }[];
+  materials: { name: string; note: string }[];
+}
+
+export const FOUNDER_DATA: FounderProfile = {
   name: 'MUDDASSIR HAQUE',
   role: 'FOUNDER & PRINCIPAL ARCHITECT',
-  credentials: 'COUNCIL OF ARCHITECTURE REG. · EST. MUMBAI & GOA · OVER 10 YEARS OF CRAFT',
+  credentials: 'COUNCIL OF ARCHITECTURE REG. · EST. MUMBAI & GOA',
   education: 'B.Arch · Principal Design Director',
   statement: 'Architecture has always been more than the design of buildings to me. It is the opportunity to shape how people live, work, gather, and experience the world around them.',
   philosophy: 'We do not impose foreign forms on Indian landscapes. Every villa in Goa and residence in Mumbai begins with sun paths, monsoon wind vectors, and local stone masons. When architecture respects its site, luxury feels effortless.',
@@ -25,16 +39,59 @@ export const FOUNDER_DATA = {
   signature: 'Muddassir Haque',
   image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=85',
   stats: [
-    { label: 'YEARS IN PRACTICE', value: '10+' },
     { label: 'BUILT PROJECTS', value: '45+' },
     { label: 'SQUARE FEET CRAFTED', value: '250K+' },
-    { label: 'STUDIO HUBS', value: 'MUMBAI & GOA' }
+    { label: 'STUDIO HUBS', value: 'MUMBAI & GOA' },
+    { label: 'CLIENT RATING', value: '100%' }
   ],
   materials: [
     { name: 'Goan Laterite Stone', note: 'Quarried in North Goa, porous & thermally insulating' },
     { name: 'Seasoned Burma Teak', note: 'Hand-rubbed oil finish for humid coastal climates' },
     { name: 'Fair-Faced Concrete', note: 'Textured board-formed finishes that patina over decades' }
   ]
+};
+
+export const getStoredFounder = (): FounderProfile => {
+  try {
+    const raw = localStorage.getItem('mad_founder_data');
+    if (raw) {
+      const parsed: FounderProfile = JSON.parse(raw);
+      if (parsed && parsed.name) {
+        parsed.name = parsed.name
+          .replace(/\bMUDASSIR\b/gi, 'MUDDASSIR')
+          .replace(/\bMUDASSAR\b/gi, 'MUDDASSIR');
+      }
+      if (parsed && parsed.signature) {
+        parsed.signature = parsed.signature
+          .replace(/\bMudassir\b/gi, 'Muddassir')
+          .replace(/\bMudassar\b/gi, 'Muddassir');
+      }
+      return parsed;
+    }
+  } catch {}
+  return FOUNDER_DATA;
+};
+
+export const saveStoredFounder = (data: FounderProfile) => {
+  try {
+    localStorage.setItem('mad_founder_data', JSON.stringify(data));
+    window.dispatchEvent(new Event('mad_team_updated'));
+  } catch {}
+};
+
+export const getStoredTeam = (): TeamMember[] => {
+  try {
+    const raw = localStorage.getItem('mad_team_members');
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return LEAD_TEAM_DATA;
+};
+
+export const saveStoredTeam = (data: TeamMember[]) => {
+  try {
+    localStorage.setItem('mad_team_members', JSON.stringify(data));
+    window.dispatchEvent(new Event('mad_team_updated'));
+  } catch {}
 };
 
 export const LEAD_TEAM_DATA: TeamMember[] = [

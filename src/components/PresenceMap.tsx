@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PRESENCE_CITIES, CityPresence } from '../data/presence';
 import { INDIA_MAP_OUTLINE } from '../data/indiaMapPath';
-import { MapPin, Building, ArrowUpRight, CheckCircle2, Compass, Sparkles } from 'lucide-react';
+import { MapPin, CheckCircle2 } from 'lucide-react';
 
 interface PresenceMapProps {
   onSelectCity?: (city: CityPresence) => void;
@@ -31,26 +31,6 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
 
   return (
     <div className="w-full liquid-glass-burgundy rounded-2xl sm:rounded-3xl border border-[#C5A06B]/35 p-4 sm:p-7 lg:p-8 relative overflow-hidden shadow-2xl">
-      {/* Top Header Strip */}
-      <div className="flex flex-wrap items-center justify-between border-b border-[#C5A06B]/25 pb-4 mb-6 gap-3">
-        <div>
-          <span className="font-sans text-[10px] sm:text-xs tracking-[0.25em] text-[#C5A06B] uppercase block font-semibold">
-            WHERE WE BUILD · NATIONAL REACH
-          </span>
-          <h4 className="font-serif-display text-lg sm:text-2xl text-white uppercase font-semibold">
-            OUR LOCATIONS ACROSS INDIA
-          </h4>
-        </div>
-        <div className="text-left sm:text-right">
-          <span className="text-[10px] font-sans text-[#C5A06B]/80 tracking-wider block uppercase">
-            ACTIVE REGIONS
-          </span>
-          <span className="font-sans text-xs sm:text-sm text-[#EBD2AC] font-bold">
-            10+ CITIES & METROS
-          </span>
-        </div>
-      </div>
-
       {/* Quick Region Selector Pills for Easy Touch Navigation on Mobile & iPad */}
       <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-3 mb-6 max-w-full">
         {PRESENCE_CITIES.map((c) => {
@@ -85,12 +65,6 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
             }}
           />
 
-          {/* Compass Rose Accent */}
-          <div className="absolute top-4 right-4 text-[#C5A06B]/40 pointer-events-none flex flex-col items-center">
-            <Compass size={28} className="text-[#C5A06B]/50 animate-spin-slow" />
-            <span className="text-[8px] font-mono-tech text-[#C5A06B]/60 tracking-widest mt-0.5">NORTH</span>
-          </div>
-
           <svg 
             viewBox="0 0 667 778" 
             className="w-full max-w-[480px] h-auto select-none relative z-10 overflow-visible" 
@@ -109,7 +83,7 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
               </filter>
             </defs>
 
-            {/* Geographically Authentic Full India Outline (Jammu, Kashmir & Ladakh, Gujarat, North-East, Peninsula) */}
+            {/* Geographically Authentic Full India Outline */}
             <path
               d={INDIA_MAP_OUTLINE}
               fill="url(#indiaMapGrad)"
@@ -120,19 +94,6 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
               className="transition-colors duration-500"
             />
 
-            {/* Subtle Tropic of Cancer Reference Line (23.5° N) */}
-            <path
-              d="M 25,372 Q 280,360 540,340"
-              stroke="#C5A06B"
-              strokeWidth="0.85"
-              strokeDasharray="4 4"
-              strokeOpacity="0.4"
-              fill="none"
-            />
-            <text x="546" y="343" fill="#C5A06B" opacity="0.55" fontSize="8" fontFamily="sans-serif" letterSpacing="0.08em">
-              23.5° N · TROPIC OF CANCER
-            </text>
-
             {/* Lakshadweep Archipelago */}
             <g className="opacity-80">
               <ellipse cx="106" cy="658" rx="2.5" ry="4.5" fill="#C5A06B" />
@@ -141,9 +102,6 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
               <ellipse cx="108" cy="700" rx="2.5" ry="4" fill="#C5A06B" />
               <ellipse cx="118" cy="722" rx="2.5" ry="5" fill="#C5A06B" />
               <ellipse cx="128" cy="748" rx="3" ry="4" fill="#C5A06B" />
-              <text x="45" y="700" fill="#C5A06B" opacity="0.6" fontSize="7.5" fontFamily="sans-serif" letterSpacing="0.1em">
-                LAKSHADWEEP
-              </text>
             </g>
 
             {/* Andaman & Nicobar Archipelago */}
@@ -155,9 +113,6 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
               <ellipse cx="574" cy="688" rx="3.5" ry="5" fill="#C5A06B" />
               <ellipse cx="581" cy="716" rx="4" ry="7" fill="#C5A06B" />
               <ellipse cx="587" cy="744" rx="4.5" ry="8" fill="#C5A06B" />
-              <text x="540" y="764" fill="#C5A06B" opacity="0.6" fontSize="7.5" fontFamily="sans-serif" letterSpacing="0.1em">
-                ANDAMAN &amp; NICOBAR
-              </text>
             </g>
 
             {/* Regional Architectural Corridors linking Mumbai Studio Hub */}
@@ -273,14 +228,9 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
               );
             })}
           </svg>
-
-          {/* Map Footer Note */}
-          <div className="mt-2 text-[10px] font-sans text-[#C5A06B]/80 tracking-widest uppercase text-center">
-            TAP ANY CITY TO VIEW ACTIVE PROJECTS
-          </div>
         </div>
 
-        {/* Selected City Dossier Card in Rich Burgundy (Responsive for iPad & iPhone) */}
+        {/* Selected City Card in Rich Burgundy */}
         <div className="lg:col-span-5 flex flex-col justify-between space-y-5 liquid-glass-translucent rounded-2xl p-5 sm:p-7 border border-[#C5A06B]/35 shadow-xl">
           <div className="space-y-4">
             
@@ -299,19 +249,19 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
 
             {/* Description */}
             <p className="font-sans text-xs sm:text-sm text-[#D8C7B5] leading-relaxed font-light">
-              {activeCity.type} across {activeCity.state}. Bespoke climate-responsive architecture and turnkey project execution.
+              {activeCity.type} across {activeCity.state}.
             </p>
 
-            {/* Key Project Types in this city */}
-            <div className="space-y-2 pt-2">
+            {/* Key Projects in this city */}
+            <div className="space-y-2.5 pt-1">
               <span className="text-[10px] font-sans text-[#C5A06B] uppercase tracking-wider block font-bold">
-                COMPLETED & ACTIVE PROJECTS
+                PROJECTS IN {activeCity.name.toUpperCase()}
               </span>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 {activeCity.activeProjects.map((proj, i) => (
                   <span
                     key={i}
-                    className="px-2.5 py-1 rounded-lg bg-[#2A0E13]/90 border border-[#C5A06B]/30 text-xs font-sans text-[#F7F2EC] flex items-center space-x-1.5 shadow-xs"
+                    className="px-3 py-1.5 rounded-lg bg-[#2A0E13]/90 border border-[#C5A06B]/30 text-xs font-sans text-[#F7F2EC] flex items-center space-x-1.5 shadow-xs"
                   >
                     <CheckCircle2 size={11} className="text-[#C5A06B] shrink-0" />
                     <span>{proj}</span>
@@ -320,26 +270,6 @@ export const PresenceMap: React.FC<PresenceMapProps> = ({ onSelectCity }) => {
               </div>
             </div>
 
-            {/* Featured Typology in this city */}
-            <div className="p-3.5 rounded-xl bg-[#2A0E13]/90 border-l-3 border-[#C5A06B] space-y-1 mt-3">
-              <span className="text-[10px] font-sans text-[#C5A06B]/80 uppercase tracking-widest block font-semibold">
-                TYPOLOGY IN FOCUS
-              </span>
-              <div className="font-serif-display text-sm text-white uppercase font-bold">
-                {activeCity.type}
-              </div>
-              <div className="text-xs text-[#D8C7B5] font-sans">
-                {activeCity.activeProjects.length} Active & Delivered Projects in Region
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-3.5 border-t border-[#C5A06B]/25 flex items-center justify-between text-xs font-sans text-[#C5A06B]/80">
-            <span>ARCHITECTURAL REACH</span>
-            <span className="font-bold text-[#EBD2AC] flex items-center space-x-1">
-              <Sparkles size={12} className="text-[#C5A06B]" />
-              <span>ACTIVE PRACTICE</span>
-            </span>
           </div>
         </div>
 

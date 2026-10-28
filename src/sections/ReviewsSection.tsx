@@ -165,12 +165,7 @@ export const ReviewsSection: React.FC = () => {
         
         {/* Section Header with Rating Pill and Write Review Button */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-white/[0.08] pb-6">
-          <div className="space-y-2.5 max-w-xl">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold">
-              <Compass size={12} className="text-[#C5A06B]" />
-              <span>TESTIMONIALS · CLIENT STORIES</span>
-            </div>
-
+          <div className="space-y-2 max-w-xl">
             <h2 className="font-serif-display text-2xl sm:text-4xl lg:text-5xl text-white uppercase tracking-tight break-words">
               What Our Clients Say
             </h2>

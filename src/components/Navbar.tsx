@@ -32,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 w-full overflow-hidden border-b ${
           isScrolled
             ? 'bg-[#2A0E13]/95 backdrop-blur-2xl border-[#C5A06B]/35 shadow-[0_12px_40px_rgba(0,0,0,0.65)] py-2 sm:py-3'
-            : 'bg-[#36161D]/90 backdrop-blur-2xl border-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.45)] py-2 sm:py-3'
+            : 'bg-[#140608]/50 backdrop-blur-md border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.25)] py-2.5 sm:py-3.5'
         }`}
       >
         {/* Top Gold Scroll Progress Bar */}
@@ -84,18 +84,43 @@ export const Navbar: React.FC<NavbarProps> = ({
             ))}
           </nav>
 
-          {/* Action Zone: Clean Consultation CTA + Mobile/Tablet Menu Toggle */}
+          {/* Action Zone: Desktop Consultation CTA + Mobile WhatsApp/Instagram & Menu Toggle */}
           <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+            {/* Desktop / Laptop: Full Consultation Button */}
             <button
               onClick={onOpenConsultation}
-              className="relative overflow-hidden inline-flex items-center space-x-1.5 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-full bg-gradient-to-r from-[#4A1A24] to-[#6E1C2E] hover:from-[#5C202C] hover:to-[#842238] text-[#F7F2EC] border border-[#C5A06B]/70 hover:border-[#C5A06B] font-serif-display text-[10px] sm:text-xs tracking-[0.12em] uppercase transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:shadow-[0_4px_25px_rgba(197,160,107,0.35)] hover:scale-[1.02] active:scale-98 shrink-0 cursor-pointer whitespace-nowrap font-semibold"
+              className="hidden md:inline-flex relative overflow-hidden items-center space-x-1.5 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-full bg-gradient-to-r from-[#4A1A24] to-[#6E1C2E] hover:from-[#5C202C] hover:to-[#842238] text-[#F7F2EC] border border-[#C5A06B]/70 hover:border-[#C5A06B] font-serif-display text-[10px] sm:text-xs tracking-[0.12em] uppercase transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:shadow-[0_4px_25px_rgba(197,160,107,0.35)] hover:scale-[1.02] active:scale-98 shrink-0 cursor-pointer whitespace-nowrap font-semibold"
             >
               {/* Glass specular sweep */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
               <Calendar size={12} className="text-[#C5A06B] shrink-0" />
-              <span><span className="hidden sm:inline">BOOK </span>CONSULTATION</span>
-              <ArrowUpRight size={12} className="text-[#C5A06B] hidden sm:inline" />
+              <span>BOOK CONSULTATION</span>
+              <ArrowUpRight size={12} className="text-[#C5A06B]" />
             </button>
+
+            {/* Mobile: WhatsApp Direct Icon Button */}
+            <a
+              href="https://wa.me/918822225224?text=Hi%20M.A.D%20Studio,%20I'd%20like%20to%20discuss%20my%20architectural%20project."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="md:hidden flex items-center justify-center w-8 h-8 rounded-full border border-white/15 bg-white/[0.05] text-[#25D366] hover:bg-[#25D366]/15 hover:border-[#25D366]/40 transition-colors shrink-0"
+              aria-label="Chat on WhatsApp"
+              title="Chat on WhatsApp"
+            >
+              <MessageCircle size={15} />
+            </a>
+
+            {/* Mobile: Instagram Icon Button */}
+            <a
+              href="https://www.instagram.com/madstudio.arch/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="md:hidden flex items-center justify-center w-8 h-8 rounded-full border border-white/15 bg-white/[0.05] text-[#EBD2AC] hover:text-white hover:bg-white/10 transition-colors shrink-0"
+              aria-label="Instagram"
+              title="Instagram"
+            >
+              <Instagram size={15} />
+            </a>
 
             {/* Mobile & Tablet Hamburger Toggle */}
             <button
@@ -112,7 +137,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile / Tablet Liquid Glass Drawer Menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 bg-[#0E0507]/95 backdrop-blur-2xl xl:hidden flex flex-col p-6 animate-fade-in border-b border-white/15 max-w-[100vw] overflow-y-auto">
-          <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
+          <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
             <MadLogo size="sm" variant="gold" />
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -120,6 +145,21 @@ export const Navbar: React.FC<NavbarProps> = ({
               aria-label="Close menu"
             >
               <X size={20} />
+            </button>
+          </div>
+
+          {/* Prominent Consultation CTA in Dropdown Header */}
+          <div className="mb-4">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenConsultation();
+              }}
+              className="w-full py-3 px-4 rounded-full bg-gradient-to-r from-[#4A1A24] via-[#6E1C2E] to-[#4A1A24] hover:from-[#5C202C] hover:to-[#842238] text-[#F7F2EC] border border-[#C5A06B]/70 font-serif-display text-xs tracking-[0.16em] uppercase font-semibold cursor-pointer shadow-lg flex items-center justify-center space-x-2 transition-all active:scale-98"
+            >
+              <Calendar size={13} className="text-[#C5A06B]" />
+              <span>BOOK A CONSULTATION</span>
+              <ArrowUpRight size={13} className="text-[#C5A06B]" />
             </button>
           </div>
 

@@ -81,12 +81,11 @@ export function App() {
         {/* 01: Hero Section */}
         <HeroSection
           onOpenConsultation={() => setIsConsultationOpen(true)}
+          onOpenDossier={(proj) => setSelectedDossierProject(proj)}
+          onExploreWork={() => {
+            document.getElementById('works')?.scrollIntoView({ behavior: 'smooth' });
+          }}
         />
-
-        {/* Architectural Marquee Ticker (Running in laptop layout, hidden on mobile) */}
-        <div className="hidden lg:block">
-          <MarqueeStrip variant="burgundy" />
-        </div>
 
         {/* 02: About Section */}
         <AboutSection />

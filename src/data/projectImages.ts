@@ -2,9 +2,17 @@
 // All shots feature natural daylight, sun-drenched spaces, and crisp architectural lines.
 
 export interface ProjectGalleryImage {
+  id?: string;
   url: string;
   title: string;
   category: string;
+  storagePath?: string;
+  sortOrder?: number;
+  isCover?: boolean;
+  fileSizeKB?: number;
+  width?: number;
+  height?: number;
+  mimeType?: string;
 }
 
 export const PROJECT_IMAGES: Record<string, string> = {
@@ -36,6 +44,20 @@ export const PROJECT_IMAGES: Record<string, string> = {
   'espirit-stones': 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=85',
   'mad-studio-office': 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=85',
   'regus-office': 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1600&q=85'
+};
+
+export const normalizeImageLink = (url?: string): string => {
+  if (!url) return '';
+  const trimmed = url.trim();
+  // Convert Google Drive share links to direct thumbnail/view URLs if needed
+  const driveMatch =
+    trimmed.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/) ||
+    trimmed.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/) ||
+    trimmed.match(/drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/);
+  if (driveMatch && driveMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${driveMatch[1]}=w1600`;
+  }
+  return trimmed;
 };
 
 export const getProjectPhoto = (projectId: string): string => {
@@ -266,15 +288,55 @@ export const PROJECT_GALLERIES: Record<string, ProjectGalleryImage[]> = {
   ]
 };
 
-export const getProjectGallery = (projectId: string): ProjectGalleryImage[] => {
+export const getStoredProjectGalleries = (): Record<string, ProjectGalleryImage[]> => {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = localStorage.getItem('mad_project_galleries');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') return parsed;
+    }
+  } catch {}
+  return {};
+};
+
+export const saveStoredProjectGallery = (projectId: string, gallery: ProjectGalleryImage[]) => {
+  if (typeof window === 'undefined') return;
+  try {
+    const current = getStoredProjectGalleries();
+    current[projectId] = gallery;
+    localStorage.setItem('mad_project_galleries', JSON.stringify(current));
+    window.dispatchEvent(new Event('mad_projects_updated'));
+  } catch {}
+};
+
+export const saveAllStoredProjectGalleries = (galleries: Record<string, ProjectGalleryImage[]>) => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem('mad_project_galleries', JSON.stringify(galleries));
+    window.dispatchEvent(new Event('mad_projects_updated'));
+  } catch {}
+};
+
+export const getProjectGallery = (
+  projectId: string,
+  projectObj?: { gallery?: ProjectGalleryImage[]; imageUrl?: string }
+): ProjectGalleryImage[] => {
+  if (projectObj?.gallery && projectObj.gallery.length > 0) {
+    return projectObj.gallery;
+  }
+  const storedGalleries = getStoredProjectGalleries();
+  if (storedGalleries[projectId] && storedGalleries[projectId].length > 0) {
+    return storedGalleries[projectId];
+  }
   if (PROJECT_GALLERIES[projectId]) {
     return PROJECT_GALLERIES[projectId];
   }
-  const defaultPhoto = getProjectPhoto(projectId);
+  const defaultPhoto = projectObj?.imageUrl || getProjectPhoto(projectId);
   return [
-    { url: defaultPhoto, title: 'Architectural Perspective', category: 'Exterior' },
-    { url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=85', title: 'Open Living Pavilion', category: 'Living Space' },
-    { url: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1600&q=85', title: 'Bedroom Suite', category: 'Bedroom' },
-    { url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=85', title: 'Outdoor Veranda', category: 'Veranda' }
+    { url: defaultPhoto, title: 'Architectural Perspective', category: 'Exterior', isCover: true, sortOrder: 0 },
+    { url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=85', title: 'Open Living Pavilion', category: 'Living Space', sortOrder: 1 },
+    { url: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1600&q=85', title: 'Bedroom Suite', category: 'Bedroom', sortOrder: 2 },
+    { url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=85', title: 'Outdoor Veranda', category: 'Veranda', sortOrder: 3 }
   ];
 };

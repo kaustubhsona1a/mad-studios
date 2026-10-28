@@ -1,26 +1,36 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
+export const SUPABASE_STORAGE_BUCKET =
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_BUCKET) || 'project-photos';
+
 // Environment variables or localStorage overrides for custom runtime setup
-const getSupabaseConfig = () => {
-  const envUrl = import.meta.env.VITE_SUPABASE_URL;
-  const envKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+export const getSupabaseConfig = () => {
+  const envUrl = typeof import.meta !== 'undefined' ? import.meta.env?.VITE_SUPABASE_URL : '';
+  const envKey = typeof import.meta !== 'undefined' ? import.meta.env?.VITE_SUPABASE_ANON_KEY : '';
   
   const customUrl = typeof window !== 'undefined' ? localStorage.getItem('mad_supabase_url') : null;
   const customKey = typeof window !== 'undefined' ? localStorage.getItem('mad_supabase_key') : null;
 
-  const url = customUrl || envUrl || '';
-  const key = customKey || envKey || '';
+  const url = (customUrl || envUrl || '').trim();
+  const key = (customKey || envKey || '').trim();
 
-  return { url, key, isConfigured: Boolean(url && key && url.startsWith('http')) };
+  return {
+    url,
+    key,
+    bucket: SUPABASE_STORAGE_BUCKET,
+    isConfigured: Boolean(url && key && url.startsWith('http') && !url.includes('your-project-id'))
+  };
 };
 
 let clientInstance: SupabaseClient | null = null;
+let lastConfigKey = '';
 
 export const getSupabaseClient = (): SupabaseClient | null => {
   const { url, key, isConfigured } = getSupabaseConfig();
   if (!isConfigured) return null;
 
-  if (!clientInstance) {
+  const currentKey = `${url}::${key}`;
+  if (!clientInstance || lastConfigKey !== currentKey) {
     try {
       clientInstance = createClient(url, key, {
         auth: {
@@ -28,6 +38,7 @@ export const getSupabaseClient = (): SupabaseClient | null => {
           autoRefreshToken: true
         }
       });
+      lastConfigKey = currentKey;
     } catch (err) {
       console.warn('Failed to initialize Supabase client:', err);
       clientInstance = null;
@@ -37,6 +48,7 @@ export const getSupabaseClient = (): SupabaseClient | null => {
 };
 
 export const updateSupabaseCredentials = (url: string, key: string) => {
+  if (typeof window === 'undefined') return;
   if (url && key) {
     localStorage.setItem('mad_supabase_url', url.trim());
     localStorage.setItem('mad_supabase_key', key.trim());
@@ -45,6 +57,8 @@ export const updateSupabaseCredentials = (url: string, key: string) => {
     localStorage.removeItem('mad_supabase_key');
   }
   clientInstance = null;
+  lastConfigKey = '';
+  window.dispatchEvent(new Event('mad_supabase_config_updated'));
 };
 
 export const isSupabaseReady = (): boolean => {

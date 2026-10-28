@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { PROJECTS_DATA, Project, getProjectSqFt } from '../data/projects';
+import { fetchProjectsFromSupabase } from '../lib/supabaseProjectsService';
 import { ArchitecturalVisual } from '../components/ArchitecturalVisual';
 import { MapPin, Sparkles, ArrowUpRight, Compass } from 'lucide-react';
 
@@ -17,7 +18,7 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
   const [allProjects, setAllProjects] = useState<Project[]>(PROJECTS_DATA);
 
   useEffect(() => {
-    const loadProjects = () => {
+    const loadLocalProjects = () => {
       try {
         const stored = localStorage.getItem('mad_website_projects');
         if (stored) {
@@ -31,12 +32,23 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
       setAllProjects(PROJECTS_DATA);
     };
 
-    loadProjects();
-    window.addEventListener('storage', loadProjects);
-    window.addEventListener('mad_projects_updated', loadProjects);
+    const syncFromSupabase = async () => {
+      const remoteProjects = await fetchProjectsFromSupabase();
+      if (remoteProjects && remoteProjects.length > 0) {
+        setAllProjects(remoteProjects);
+      }
+    };
+
+    loadLocalProjects();
+    syncFromSupabase();
+
+    window.addEventListener('storage', loadLocalProjects);
+    window.addEventListener('mad_projects_updated', loadLocalProjects);
+    window.addEventListener('mad_supabase_config_updated', syncFromSupabase);
     return () => {
-      window.removeEventListener('storage', loadProjects);
-      window.removeEventListener('mad_projects_updated', loadProjects);
+      window.removeEventListener('storage', loadLocalProjects);
+      window.removeEventListener('mad_projects_updated', loadLocalProjects);
+      window.removeEventListener('mad_supabase_config_updated', syncFromSupabase);
     };
   }, []);
 
@@ -62,13 +74,9 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
         
         {/* Section Header & Filter (Responsive for iPad and iPhone) */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5 border-b border-white/[0.08] pb-6">
-          <div className="space-y-2.5 max-w-xl">
-            <div className="flex items-center space-x-2">
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold">
-                <Compass size={12} className="text-[#C5A06B]" />
-                <span>OUR WORK · 03</span>
-              </div>
-              {onOpenOperatorPortal && (
+          <div className="space-y-2 max-w-xl">
+            {onOpenOperatorPortal && (
+              <div className="flex items-center">
                 <button
                   onClick={onOpenOperatorPortal}
                   className="px-2.5 py-1 rounded-full bg-white/[0.06] hover:bg-[#C5A06B]/20 border border-white/10 hover:border-[#C5A06B]/40 text-[10px] text-[#D8C7B5] hover:text-[#EBD2AC] transition-all flex items-center space-x-1 cursor-pointer"
@@ -77,8 +85,8 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                   <Sparkles size={10} className="text-[#C5A06B]" />
                   <span>Edit Selected Works</span>
                 </button>
-              )}
-            </div>
+              </div>
+            )}
 
             <h2 className="font-serif-display text-2xl sm:text-4xl lg:text-5xl text-white uppercase tracking-tight break-words">
               Selected Projects
@@ -132,22 +140,17 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
                   className="transition-transform duration-700 ease-out group-hover:scale-105 filter brightness-[0.98]"
                 />
 
-                {/* Floating Liquid Glass Category Badge */}
-                <div className="absolute top-3 left-3 right-3 flex items-center justify-between text-[10px] font-sans tracking-wider uppercase pointer-events-none">
-                  <span className="px-3 py-1 rounded-full liquid-glass-pill text-[#EBD2AC] font-semibold backdrop-blur-md">
+                {/* Floating Category Badge */}
+                <div className="absolute top-3 left-3 flex items-center text-[10px] font-sans tracking-wider uppercase pointer-events-none">
+                  <span className="px-2.5 sm:px-3 py-1 rounded-full liquid-glass-pill text-[#EBD2AC] font-semibold backdrop-blur-md truncate">
                     {project.category === 'residential' ? 'HOME & VILLA' : project.category === 'restaurant' ? 'RESTAURANT & BAR' : 'WORKSPACE'}
-                  </span>
-
-                  <span className="px-3 py-1 rounded-full bg-[#140609]/80 text-[#C5A06B] border border-[#C5A06B]/40 flex items-center space-x-1 font-semibold backdrop-blur-md">
-                    <Sparkles size={10} className="text-[#C5A06B]" />
-                    <span>PHOTOS</span>
                   </span>
                 </div>
 
                 {/* Subtle Hover Overlay */}
                 <div className="absolute inset-0 bg-[#140609]/60 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
                   <div className="px-5 py-2.5 rounded-full liquid-glass-burgundy text-xs font-serif-display text-white uppercase tracking-wider flex items-center space-x-2 font-semibold shadow-2xl border border-[#C5A06B]">
-                    <span>VIEW SITE PHOTOS</span>
+                    <span>VIEW PROJECT</span>
                     <ArrowUpRight size={14} className="text-[#C5A06B]" />
                   </div>
                 </div>
@@ -156,14 +159,9 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
               {/* Card Information: Basic Area & Sq Ft */}
               <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
                 <div>
-                  <div className="flex items-baseline justify-between">
-                    <h3 className="font-serif-display text-lg sm:text-xl text-white uppercase tracking-wide group-hover:text-[#EBD2AC] transition-colors font-medium line-clamp-1">
-                      {project.title}
-                    </h3>
-                    <span className="font-sans text-xs text-[#C5A06B] font-semibold ml-2">
-                      0{project.catalogIndex}
-                    </span>
-                  </div>
+                  <h3 className="font-serif-display text-lg sm:text-xl text-white uppercase tracking-wide group-hover:text-[#EBD2AC] transition-colors font-medium line-clamp-1">
+                    {project.title}
+                  </h3>
 
                   <p className="font-sans text-xs text-[#D8C7B5] leading-relaxed font-light mt-1.5 line-clamp-2">
                     {project.highlight || 'Contemporary bespoke architecture designed for comfort and natural light.'}
@@ -184,16 +182,6 @@ export const SelectedWorksSection: React.FC<SelectedWorksSectionProps> = ({
               </div>
             </motion.div>
           ))}
-        </div>
-
-        {/* Bottom Note in Liquid Glass */}
-        <div className="text-center pt-8 border-t border-white/[0.08]">
-          <p className="font-sans text-base text-[#D8C7B5] font-light">
-            “Every project is an unrepeatable response to its site, climate, and client vision.”
-          </p>
-          <span className="text-[11px] font-mono-tech tracking-[0.25em] text-[#C5A06B] uppercase block mt-1.5 font-medium">
-            25+ COMPLETED WORKS · MUMBAI · GOA · LONAVALA · BENGALURU
-          </span>
         </div>
 
       </div>

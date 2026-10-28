@@ -35,12 +35,7 @@ export const AboutSection: React.FC = () => {
         
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-white/10 pb-4">
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center space-x-1.5 px-3 py-0.5 rounded-full liquid-glass-pill text-[10px] sm:text-xs font-sans tracking-wider text-[#C5A06B] uppercase font-semibold">
-              <Compass size={11} className="text-[#C5A06B]" />
-              <span>OUR APPROACH · 02</span>
-            </div>
-            
+          <div>
             <h2 className="font-serif-display text-2xl sm:text-4xl lg:text-5xl text-white uppercase tracking-tight leading-tight">
               Built for Life. <span className="text-[#EBD2AC] block sm:inline">Made for Comfort.</span>
             </h2>
@@ -87,7 +82,7 @@ export const AboutSection: React.FC = () => {
         </div>
 
         {/* Ambient Quote Card with Translucent Liquid Glass */}
-        <div className="liquid-glass-translucent rounded-xl sm:rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border border-white/20 shadow-xl relative overflow-hidden">
+        <div className="liquid-glass-translucent rounded-xl sm:rounded-2xl p-4 sm:p-6 flex items-center justify-between gap-4 border border-white/20 shadow-xl relative overflow-hidden">
           <div className="flex items-start space-x-3 max-w-3xl">
             <Quote size={20} className="text-[#C5A06B] shrink-0 mt-0.5" />
             <div className="space-y-0.5">
@@ -98,12 +93,6 @@ export const AboutSection: React.FC = () => {
                 — MUDDASSIR HAQUE · LEAD ARCHITECT
               </span>
             </div>
-          </div>
-
-          <div className="shrink-0 hidden sm:flex items-center space-x-2 text-xs font-sans text-[#D8C7B5]">
-            <span className="px-3.5 py-1 rounded-full liquid-glass-pill text-[#EBD2AC] font-medium border border-white/15 text-xs">
-              MUMBAI & GOA
-            </span>
           </div>
         </div>
 

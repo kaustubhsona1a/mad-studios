@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Maximize2, Image as ImageIcon } from 'lucide-react';
+import { normalizeImageLink } from '../data/projectImages';
 
 export interface ArchitecturalVisualProps {
   type?: 
@@ -116,8 +117,12 @@ export const ArchitecturalVisual: React.FC<ArchitecturalVisualProps> = ({
   const [isLoaded, setIsLoaded] = useState(false);
 
   const registryItem = PHOTO_REGISTRY[type] || PHOTO_REGISTRY['generic-project'];
-  const photoUrl = src || registryItem.url;
+  const photoUrl = normalizeImageLink(src || registryItem.url);
   const imageAlt = alt || caption || registryItem.title;
+
+  useEffect(() => {
+    setImageError(false);
+  }, [photoUrl]);
 
   return (
     <div className={`relative w-full overflow-hidden bg-[#33151A] group ${aspectRatio} ${className}`}>

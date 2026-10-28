@@ -16,6 +16,25 @@ import {
   INITIAL_OPERATOR_PLANS
 } from '../../data/operatorInitialData';
 import { PROJECTS_DATA, Project, getProjectSqFt } from '../../data/projects';
+import { 
+  FounderProfile, 
+  TeamMember, 
+  FOUNDER_DATA, 
+  LEAD_TEAM_DATA, 
+  getStoredFounder, 
+  saveStoredFounder, 
+  getStoredTeam, 
+  saveStoredTeam 
+} from '../../data/team';
+import { EditFounderModal, EditTeamMemberModal } from './OperatorTeamModals';
+import { OperatorSupabaseModal, ProjectPhotosManagerModal } from './OperatorSupabaseModal';
+import { OperatorBulkPhotoUploader } from './OperatorBulkPhotoUploader';
+import { getProjectGallery, ProjectGalleryImage, saveStoredProjectGallery } from '../../data/projectImages';
+import {
+  fetchProjectsFromSupabase,
+  upsertProjectToSupabase,
+  deleteProjectFromSupabase
+} from '../../lib/supabaseProjectsService';
 import { MadLogo } from '../MadLogo';
 import { 
   Plus, 
@@ -44,7 +63,12 @@ import {
   ArrowLeft,
   Sparkles,
   Eye,
-  RefreshCw
+  RefreshCw,
+  Camera,
+  Upload,
+  UserPlus,
+  UserCheck,
+  Database
 } from 'lucide-react';
 
 interface OperatorPortalProps {
@@ -58,20 +82,28 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
 }) => {
   // Navigation tabs:
   // 1. 'website': Upload & Manage Selected Works on the public website
-  // 2. 'ongoing': Show all ongoing client projects with stage management
-  // 3. 'archives': Show completed / archived projects
-  // 4. 'boq': Dedicated Bill of Quantities hub
-  // 5. 'bills': Milestone fees & WhatsApp invoices
-  // 6. 'inquiries': Website client leads
-  const [activeTab, setActiveTab] = useState<'website' | 'ongoing' | 'archives' | 'boq' | 'bills' | 'inquiries'>('website');
+  // 2. 'team': Edit Muddassir Haque & all lead architects, photos, credentials, stats
+  // 3. 'ongoing': Show all ongoing client projects with stage management
+  // 4. 'archives': Show completed / archived projects
+  // 5. 'boq': Dedicated Bill of Quantities hub
+  // 6. 'bills': Milestone fees & WhatsApp invoices
+  // 7. 'inquiries': Website client leads
+  const [activeTab, setActiveTab] = useState<'website' | 'team' | 'ongoing' | 'archives' | 'boq' | 'bills' | 'inquiries'>('website');
 
   // Core Data States with localStorage persistence
   const [projects, setProjects] = useState<ClientProject[]>([]);
   const [websiteProjects, setWebsiteProjects] = useState<Project[]>([]);
+  const [founderData, setFounderData] = useState<FounderProfile>(getStoredFounder());
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(getStoredTeam());
   const [bills, setBills] = useState<ClientBill[]>([]);
   const [boqs, setBoqs] = useState<BOQItem[]>([]);
   const [plans, setPlans] = useState<ProjectPlanDocument[]>([]);
   const [webLeads, setWebLeads] = useState<any[]>([]);
+
+  // Team Modals
+  const [isEditFounderModalOpen, setIsEditFounderModalOpen] = useState(false);
+  const [editingTeamMember, setEditingTeamMember] = useState<TeamMember | null>(null);
+  const [isNewTeamMemberModalOpen, setIsNewTeamMemberModalOpen] = useState(false);
 
   // Detailed Stage Workbench view for a specific ongoing project
   const [selectedOngoingProjectId, setSelectedOngoingProjectId] = useState<string | null>(null);
@@ -89,6 +121,10 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
   // Modals
   const [isUploadWebsiteModalOpen, setIsUploadWebsiteModalOpen] = useState(false);
   const [editingWebsiteProject, setEditingWebsiteProject] = useState<Project | null>(null);
+  const [managingPhotosProject, setManagingPhotosProject] = useState<Project | null>(null);
+  const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState(false);
+  const [isBulkUploaderOpen, setIsBulkUploaderOpen] = useState(false);
+  const [bulkUploaderProjectId, setBulkUploaderProjectId] = useState<string | undefined>(undefined);
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [editingOngoingProject, setEditingOngoingProject] = useState<ClientProject | null>(null);
   const [isAttachPlanModalOpen, setIsAttachPlanModalOpen] = useState(false);
@@ -116,6 +152,9 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
       const storedWebProjects = localStorage.getItem('mad_website_projects');
       setWebsiteProjects(storedWebProjects ? JSON.parse(storedWebProjects) : PROJECTS_DATA);
 
+      setFounderData(getStoredFounder());
+      setTeamMembers(getStoredTeam());
+
       const storedBills = localStorage.getItem('mad_operator_bills');
       setBills(storedBills ? JSON.parse(storedBills) : INITIAL_OPERATOR_BILLS);
 
@@ -130,11 +169,21 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
     } catch {
       setProjects(INITIAL_OPERATOR_PROJECTS);
       setWebsiteProjects(PROJECTS_DATA);
+      setFounderData(FOUNDER_DATA);
+      setTeamMembers(LEAD_TEAM_DATA);
+      setWebsiteProjects(PROJECTS_DATA);
       setBills(INITIAL_OPERATOR_BILLS);
       setBoqs(INITIAL_OPERATOR_BOQS);
       setPlans(INITIAL_OPERATOR_PLANS);
       setWebLeads([]);
     }
+
+    // Also pull latest projects & project-wise photos from Supabase if connected
+    fetchProjectsFromSupabase().then((remote) => {
+      if (remote && remote.length > 0) {
+        setWebsiteProjects(remote);
+      }
+    });
   }, []);
 
   // Save helpers
@@ -149,6 +198,48 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
       localStorage.setItem('mad_website_projects', JSON.stringify(updated));
       window.dispatchEvent(new Event('mad_projects_updated'));
     } catch {}
+  };
+
+  const handleSaveFounder = (updated: FounderProfile) => {
+    setFounderData(updated);
+    saveStoredFounder(updated);
+    setIsEditFounderModalOpen(false);
+    showToast('Muddassir Haque profile updated');
+  };
+
+  const handleSaveTeamMember = (member: TeamMember) => {
+    const existingIdx = teamMembers.findIndex(m => m.id === member.id);
+    let updated: TeamMember[];
+    if (existingIdx >= 0) {
+      updated = [...teamMembers];
+      updated[existingIdx] = member;
+    } else {
+      updated = [...teamMembers, member];
+    }
+    setTeamMembers(updated);
+    saveStoredTeam(updated);
+    setEditingTeamMember(null);
+    setIsNewTeamMemberModalOpen(false);
+    showToast(`Team member "${member.name}" saved`);
+  };
+
+  const handleDeleteTeamMember = (id: string) => {
+    if (confirm('Are you sure you want to remove this team member from the website?')) {
+      const updated = teamMembers.filter(m => m.id !== id);
+      setTeamMembers(updated);
+      saveStoredTeam(updated);
+      showToast('Team member removed');
+    }
+  };
+
+  const handleResetTeamToDefault = () => {
+    if (confirm('Reset team and Muddassir Haque profile back to original studio defaults?')) {
+      setFounderData(FOUNDER_DATA);
+      saveStoredFounder(FOUNDER_DATA);
+      setTeamMembers(LEAD_TEAM_DATA);
+      saveStoredTeam(LEAD_TEAM_DATA);
+      showToast('Reset to original studio team defaults');
+    }
   };
 
   const saveBills = (updated: ClientBill[]) => {
@@ -262,7 +353,8 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
     if (confirm('Remove this project from public website Selected Works?')) {
       const updated = websiteProjects.filter(p => p.id !== projectId);
       saveWebsiteProjects(updated);
-      showToast('Project removed from website');
+      deleteProjectFromSupabase(projectId);
+      showToast('Project removed from website & Supabase');
     }
   };
 
@@ -342,8 +434,29 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
           </span>
         </div>
 
-        {/* Right: Return to Website & Exit */}
+        {/* Right: Bulk Uploader, Supabase Hub, Return to Website & Exit */}
         <div className="flex items-center space-x-2">
+          <button
+            onClick={() => {
+              setBulkUploaderProjectId(undefined);
+              setIsBulkUploaderOpen(true);
+            }}
+            className="px-3 py-1 rounded-lg bg-[#C5A06B] hover:bg-[#EBD2AC] text-[#140508] text-xs transition-all flex items-center space-x-1.5 cursor-pointer font-bold uppercase shadow-md"
+            title="Bulk Compress (150-200 KB) & Upload Project Photos to Supabase"
+          >
+            <UploadCloud size={13} />
+            <span>Bulk Photo Uploader (150–200 KB)</span>
+          </button>
+
+          <button
+            onClick={() => setIsSupabaseModalOpen(true)}
+            className="px-3 py-1 rounded-lg bg-[#C5A06B]/15 hover:bg-[#C5A06B]/25 border border-[#C5A06B]/50 text-xs text-[#EBD2AC] hover:text-white transition-all flex items-center space-x-1.5 cursor-pointer font-semibold"
+            title="Supabase Project-Wise Photo Storage & SQL Script"
+          >
+            <Database size={12} className="text-[#C5A06B]" />
+            <span>Supabase &amp; SQL Script</span>
+          </button>
+
           <button
             onClick={onClose}
             className="px-3 py-1 rounded-lg border border-white/15 hover:border-[#C5A06B] text-xs text-[#D8C7B5] hover:text-white transition-all flex items-center space-x-1"
@@ -380,6 +493,21 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
           >
             <Globe size={13} className={activeTab === 'website' ? 'text-[#C5A06B]' : 'text-[#D8C7B5]/60'} />
             <span>Website Selected Works ({websiteProjects.length})</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab('team');
+              setSelectedOngoingProjectId(null);
+            }}
+            className={`px-3.5 py-2.5 font-medium border-b-2 transition-all cursor-pointer whitespace-nowrap flex items-center space-x-1.5 ${
+              activeTab === 'team'
+                ? 'border-[#C5A06B] text-white font-semibold'
+                : 'border-transparent text-[#D8C7B5] hover:text-white'
+            }`}
+          >
+            <Users size={13} className={activeTab === 'team' ? 'text-[#C5A06B]' : 'text-[#D8C7B5]/60'} />
+            <span>Studio Team &amp; Founder</span>
           </button>
 
           <button
@@ -461,6 +589,16 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
             </button>
           )}
 
+          {activeTab === 'team' && (
+            <button
+              onClick={() => setIsNewTeamMemberModalOpen(true)}
+              className="px-3 py-1.5 rounded-lg bg-[#C5A06B] text-[#140508] text-xs font-bold uppercase flex items-center space-x-1 cursor-pointer hover:bg-[#d6b07a] transition-all"
+            >
+              <UserPlus size={13} />
+              <span>Add Team Member</span>
+            </button>
+          )}
+
           {activeTab === 'ongoing' && !selectedOngoingProjectId && (
             <button
               onClick={() => setIsNewProjectModalOpen(true)}
@@ -494,13 +632,34 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
                   </p>
                 </div>
 
-                <button
-                  onClick={() => setIsUploadWebsiteModalOpen(true)}
-                  className="px-4 py-2 rounded-lg bg-[#C5A06B] text-[#140508] text-xs font-bold uppercase flex items-center space-x-1.5 self-start sm:self-auto cursor-pointer"
-                >
-                  <Plus size={14} />
-                  <span>Upload New Work</span>
-                </button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setBulkUploaderProjectId(undefined);
+                      setIsBulkUploaderOpen(true);
+                    }}
+                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#C5A06B] via-[#EBD2AC] to-[#C5A06B] text-[#140508] text-xs font-bold uppercase flex items-center space-x-1.5 cursor-pointer shadow-lg hover:brightness-110 transition-all"
+                  >
+                    <UploadCloud size={14} />
+                    <span>Bulk Photo Uploader (150–200 KB)</span>
+                  </button>
+
+                  <button
+                    onClick={() => setIsSupabaseModalOpen(true)}
+                    className="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-[#EBD2AC] border border-[#C5A06B]/40 text-xs font-semibold uppercase flex items-center space-x-1.5 cursor-pointer"
+                  >
+                    <Database size={13} className="text-[#C5A06B]" />
+                    <span>Supabase &amp; SQL Script</span>
+                  </button>
+
+                  <button
+                    onClick={() => setIsUploadWebsiteModalOpen(true)}
+                    className="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white border border-white/20 text-xs font-semibold uppercase flex items-center space-x-1.5 cursor-pointer"
+                  >
+                    <Plus size={14} />
+                    <span>New Project</span>
+                  </button>
+                </div>
               </div>
 
               {/* Projects Grid */}
@@ -546,16 +705,34 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
                     {/* Footer Actions */}
                     <div className="p-4 pt-2 border-t border-white/5 flex items-center justify-between text-xs">
                       <span className="text-[11px] text-[#D8C7B5]/70">
-                        Index: #{proj.catalogIndex || idx + 1}
+                        #{proj.catalogIndex || idx + 1} · {getProjectGallery(proj.id, proj).length} Photos
                       </span>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-1.5">
+                        <button
+                          onClick={() => {
+                            setBulkUploaderProjectId(proj.id);
+                            setIsBulkUploaderOpen(true);
+                          }}
+                          className="px-2.5 py-1 rounded-lg bg-[#C5A06B] hover:bg-[#EBD2AC] text-[#140508] text-xs font-bold flex items-center space-x-1 transition-colors cursor-pointer"
+                          title="Bulk Compress (150-200 KB) & Upload Photos for this Project"
+                        >
+                          <UploadCloud size={12} />
+                          <span>Bulk Upload</span>
+                        </button>
+                        <button
+                          onClick={() => setManagingPhotosProject(proj)}
+                          className="px-2.5 py-1 rounded-lg bg-[#C5A06B]/15 hover:bg-[#C5A06B] text-[#EBD2AC] hover:text-[#140508] border border-[#C5A06B]/30 text-xs font-semibold flex items-center space-x-1 transition-colors cursor-pointer"
+                          title="Manage Existing Project Photos"
+                        >
+                          <Camera size={12} />
+                          <span>Photos</span>
+                        </button>
                         <button
                           onClick={() => setEditingWebsiteProject(proj)}
-                          className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-[#C5A06B] hover:text-[#140508] text-white text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer"
+                          className="px-2 py-1 rounded-lg bg-white/10 hover:bg-[#C5A06B] hover:text-[#140508] text-white text-xs font-semibold flex items-center space-x-1 transition-colors cursor-pointer"
                           title="Edit Project Details for Website"
                         >
                           <Edit3 size={12} />
-                          <span>Edit</span>
                         </button>
                         <button
                           onClick={() => handleDeleteWebsiteProject(proj.id)}
@@ -568,6 +745,217 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* ===================================================================== */}
+          {/* TAB: STUDIO TEAM & FOUNDER (Edit Muddassir Haque & Lead Architects) */}
+          {/* ===================================================================== */}
+          {activeTab === 'team' && (
+            <div className="space-y-8">
+              {/* Header Bar */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
+                <div>
+                  <h2 className="font-serif-display text-xl text-white font-semibold uppercase">
+                    Studio Team &amp; Founder Management
+                  </h2>
+                  <p className="text-xs text-[#D8C7B5] font-light mt-0.5">
+                    Live editor for Muddassir Haque profile, discipline leads, portraits, credentials, and practice statistics visible on the website.
+                  </p>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={handleResetTeamToDefault}
+                    className="px-3 py-1.5 rounded-lg border border-white/20 hover:border-white/40 text-xs text-[#D8C7B5] hover:text-white transition-all flex items-center space-x-1.5 cursor-pointer"
+                    title="Reset to initial studio data"
+                  >
+                    <RefreshCw size={12} />
+                    <span>Reset Defaults</span>
+                  </button>
+
+                  <button
+                    onClick={() => setIsNewTeamMemberModalOpen(true)}
+                    className="px-3.5 py-1.5 rounded-lg bg-[#C5A06B] text-[#140508] text-xs font-bold uppercase flex items-center space-x-1.5 cursor-pointer hover:bg-[#d6b07a] transition-all"
+                  >
+                    <UserPlus size={13} />
+                    <span>Add Member</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* SECTION 1: FOUNDER & PRINCIPAL ARCHITECT */}
+              <div className="rounded-2xl border border-[#C5A06B]/30 bg-white/[0.02] p-5 sm:p-7 space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                  <div className="flex items-center space-x-2.5">
+                    <span className="px-2 py-0.5 rounded-full bg-[#C5A06B]/20 text-[#EBD2AC] text-[10px] font-bold uppercase tracking-wider border border-[#C5A06B]/40">
+                      LEAD ARCHITECT
+                    </span>
+                    <h3 className="font-serif-display text-lg text-white uppercase font-medium">
+                      Founder Profile · {founderData.name}
+                    </h3>
+                  </div>
+
+                  <button
+                    onClick={() => setIsEditFounderModalOpen(true)}
+                    className="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-[#C5A06B] hover:text-[#140508] text-white text-xs font-semibold uppercase flex items-center space-x-1.5 transition-all cursor-pointer border border-white/20 self-start sm:self-auto"
+                  >
+                    <Edit3 size={13} />
+                    <span>Edit Muddassir's Profile &amp; Photo</span>
+                  </button>
+                </div>
+
+                {/* Founder Current Overview Card */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                  <div className="md:col-span-4 lg:col-span-3">
+                    <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-white/20 bg-black/40 shadow-lg group">
+                      <img
+                        src={founderData.image}
+                        alt={founderData.name}
+                        className="w-full h-full object-cover filter contrast-[1.05]"
+                      />
+                      <button
+                        onClick={() => setIsEditFounderModalOpen(true)}
+                        className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-xs font-semibold space-y-1 transition-opacity cursor-pointer"
+                      >
+                        <Camera size={20} className="text-[#C5A06B]" />
+                        <span>Change Photo</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-8 lg:col-span-9 space-y-4 text-xs">
+                    <div>
+                      <div className="text-[#C5A06B] text-[11px] font-bold uppercase tracking-wider">
+                        {founderData.role}
+                      </div>
+                      <div className="text-xl sm:text-2xl font-serif-display text-white uppercase mt-0.5">
+                        {founderData.name}
+                      </div>
+                      <div className="text-[#D8C7B5] mt-1 text-xs">
+                        {founderData.credentials}
+                      </div>
+                    </div>
+
+                    <div className="p-3 rounded-lg bg-black/30 border-l-2 border-[#C5A06B] italic text-[#F7F2EC]">
+                      “{founderData.quote}”
+                    </div>
+
+                    <p className="text-[#D8C7B5] leading-relaxed">
+                      {founderData.statement}
+                    </p>
+
+                    {/* Stats pills */}
+                    <div>
+                      <div className="text-[10px] text-[#C5A06B] uppercase font-bold tracking-wider mb-1.5">
+                        Practice Metrics (Visible on Website)
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        {founderData.stats.map((st, i) => (
+                          <div key={i} className="p-2.5 rounded-lg bg-white/5 border border-white/10">
+                            <div className="text-base font-serif-display text-[#C5A06B] font-bold">
+                              {st.value}
+                            </div>
+                            <div className="text-[9px] uppercase tracking-wider text-[#D8C7B5]">
+                              {st.label}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 2: STUDIO TEAM MEMBERS */}
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2">
+                  <div>
+                    <h3 className="font-serif-display text-base text-white uppercase font-semibold">
+                      Discipline Leads &amp; Architects ({teamMembers.length})
+                    </h3>
+                    <p className="text-[11px] text-[#D8C7B5] font-light">
+                      Click edit to update role, photo, experience tag, bio, or featured projects.
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setIsNewTeamMemberModalOpen(true)}
+                    className="px-3 py-1.5 rounded-lg bg-[#C5A06B] text-[#140508] text-xs font-bold uppercase flex items-center space-x-1 cursor-pointer self-start sm:self-auto"
+                  >
+                    <Plus size={13} />
+                    <span>Add Lead Architect</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {teamMembers.map((member) => (
+                    <div
+                      key={member.id}
+                      className="border border-white/10 rounded-xl overflow-hidden bg-white/[0.02] hover:border-[#C5A06B]/50 transition-all flex flex-col justify-between group"
+                    >
+                      <div>
+                        {/* Member Photo thumbnail */}
+                        <div className="h-44 w-full bg-black/40 overflow-hidden relative">
+                          <img
+                            src={member.image}
+                            alt={member.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-black/70 border border-white/15 text-[10px] text-[#C5A06B] font-bold uppercase">
+                            {member.tag || member.code}
+                          </div>
+                          <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-[#2A0E15] border border-[#C5A06B]/40 text-[10px] text-[#EBD2AC] font-semibold">
+                            {member.experience}
+                          </div>
+                        </div>
+
+                        {/* Member Details */}
+                        <div className="p-4 space-y-2 text-xs">
+                          <div>
+                            <h4 className="font-serif-display text-sm text-white uppercase font-semibold">
+                              {member.name}
+                            </h4>
+                            <span className="text-[11px] text-[#C5A06B] block">
+                              {member.role}
+                            </span>
+                            <span className="text-[10px] text-[#D8C7B5]/80 block mt-0.5">
+                              {member.education}
+                            </span>
+                          </div>
+
+                          <p className="text-[11px] text-[#D8C7B5] line-clamp-2 font-light leading-relaxed">
+                            {member.bio}
+                          </p>
+
+                          <div className="pt-2 border-t border-white/10 text-[10px] text-[#D8C7B5]">
+                            <span className="text-[#C5A06B] uppercase font-bold">Focus:</span> {member.signatureProject}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Footer Actions */}
+                      <div className="p-3 border-t border-white/10 bg-black/20 flex items-center justify-between text-xs">
+                        <button
+                          onClick={() => setEditingTeamMember(member)}
+                          className="px-3 py-1 rounded-md bg-white/10 hover:bg-[#C5A06B] hover:text-[#140508] text-white transition-all flex items-center space-x-1 cursor-pointer font-medium"
+                        >
+                          <Edit3 size={12} />
+                          <span>Edit Details &amp; Photo</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteTeamMember(member.id)}
+                          className="p-1.5 rounded-md text-[#D8C7B5]/60 hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
+                          title="Remove from website"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -1260,6 +1648,58 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
       </main>
 
       {/* ========================================================================= */}
+      {/* 3B. MODALS: EDIT FOUNDER & TEAM MEMBERS */}
+      {/* ========================================================================= */}
+      <EditFounderModal
+        isOpen={isEditFounderModalOpen}
+        onClose={() => setIsEditFounderModalOpen(false)}
+        founder={founderData}
+        onSave={handleSaveFounder}
+      />
+
+      <EditTeamMemberModal
+        isOpen={isNewTeamMemberModalOpen || Boolean(editingTeamMember)}
+        onClose={() => {
+          setIsNewTeamMemberModalOpen(false);
+          setEditingTeamMember(null);
+        }}
+        initialMember={editingTeamMember}
+        onSave={handleSaveTeamMember}
+      />
+
+      {/* Supabase Cloud Hub, Bulk Compressor Uploader & Project-Wise Photo Manager Modals */}
+      <OperatorBulkPhotoUploader
+        isOpen={isBulkUploaderOpen}
+        onClose={() => setIsBulkUploaderOpen(false)}
+        projects={websiteProjects}
+        initialProjectId={bulkUploaderProjectId}
+        onProjectsUpdated={(updated) => saveWebsiteProjects(updated)}
+        onShowToast={showToast}
+      />
+
+      <OperatorSupabaseModal
+        isOpen={isSupabaseModalOpen}
+        onClose={() => setIsSupabaseModalOpen(false)}
+        projects={websiteProjects}
+        onProjectsUpdated={(updated) => saveWebsiteProjects(updated)}
+        onShowToast={showToast}
+      />
+
+      <ProjectPhotosManagerModal
+        project={managingPhotosProject}
+        onClose={() => setManagingPhotosProject(null)}
+        onSaveProjectGallery={(updatedProj, updatedGallery) => {
+          saveStoredProjectGallery(updatedProj.id, updatedGallery);
+          const nextProjects = websiteProjects.map(p =>
+            p.id === updatedProj.id ? updatedProj : p
+          );
+          saveWebsiteProjects(nextProjects);
+          showToast(`Saved ${updatedGallery.length} photos for "${updatedProj.title}"!`);
+        }}
+        onShowToast={showToast}
+      />
+
+      {/* ========================================================================= */}
       {/* 4. MODAL: UPLOAD NEW PROJECT TO WEBSITE (Selected Works) */}
       {/* ========================================================================= */}
       {isUploadWebsiteModalOpen && (
@@ -1309,8 +1749,9 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
 
               const updated = [newWork, ...websiteProjects];
               saveWebsiteProjects(updated);
+              upsertProjectToSupabase(newWork);
               setIsUploadWebsiteModalOpen(false);
-              showToast(`Uploaded "${title}" to website Selected Works!`);
+              showToast(`Uploaded "${title}" to website & Supabase!`);
             }}
             className="w-full max-w-lg rounded-2xl bg-[#1C080C] border border-[#C5A06B]/50 p-6 space-y-4 text-white shadow-2xl relative text-xs max-h-[90vh] overflow-y-auto"
           >
@@ -1454,8 +1895,12 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
               });
 
               saveWebsiteProjects(updatedWebsiteProjects);
+              const editedObj = updatedWebsiteProjects.find(p => p.id === editingWebsiteProject.id);
+              if (editedObj) {
+                upsertProjectToSupabase(editedObj);
+              }
               setEditingWebsiteProject(null);
-              showToast(`Saved changes to "${title}" on website!`);
+              showToast(`Saved changes to "${title}" on website & Supabase!`);
             }}
             className="w-full max-w-xl rounded-2xl bg-[#1C080C] border border-[#C5A06B]/50 p-6 space-y-4 text-white shadow-2xl relative text-xs max-h-[90vh] overflow-y-auto"
           >

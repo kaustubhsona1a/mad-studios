@@ -31,11 +31,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             
             {/* Left: Direct Call to Action */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full liquid-glass-pill text-[10px] sm:text-[11px] font-sans tracking-[0.2em] text-[#C5A06B] uppercase font-semibold">
-                <Sparkles size={12} className="text-[#C5A06B]" />
-                <span>GET IN TOUCH · 08</span>
-              </div>
-
               <h2 className="font-serif-display text-2xl sm:text-4xl lg:text-5xl text-white uppercase tracking-wide leading-tight break-words">
                 Let's Design Something <span className="text-[#EBD2AC] block sm:inline">Beautiful.</span>
               </h2>
@@ -47,9 +42,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             {/* Right: Booking Liquid Glass Card */}
             <div className="lg:col-span-5 p-6 sm:p-8 rounded-2xl liquid-glass-burgundy border border-white/20 flex flex-col justify-between space-y-5 shadow-2xl relative overflow-hidden backdrop-blur-xl">
               <div className="space-y-2">
-                <span className="text-xs font-sans text-[#C5A06B] uppercase tracking-wider block font-semibold">
-                  FREE CONSULTATION
-                </span>
                 <h3 className="font-serif-display text-xl sm:text-2xl text-white uppercase tracking-wide">
                   Talk To Our Architects
                 </h3>

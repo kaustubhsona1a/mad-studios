@@ -42,24 +42,18 @@
     cursor: pointer;
   }
 
-  /* Custom Luxury Architectural Scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  /* Completely Hide Scrollbars Everywhere (Preserving Full Smooth Scrolling) */
+  html, body, #root, * {
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
   }
 
-  ::-webkit-scrollbar-track {
-    background: #260E12;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #542A33;
-    border: 1px solid rgba(197, 160, 107, 0.3);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #62323D;
-    border-color: #C5A06B;
+  ::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0px !important;
+    height: 0px !important;
+    background: transparent !important;
   }
 }
 

@@ -1,4 +1,4 @@
-import { getProjectPhoto } from './projectImages';
+import { getProjectPhoto, getProjectGallery, ProjectGalleryImage } from './projectImages';
 
 export interface MaterialItem {
   name: string;
@@ -55,6 +55,7 @@ export interface Project {
   dossierId?: string;
   dossier?: ProjectDossier;
   imageUrl?: string;
+  gallery?: ProjectGalleryImage[];
 }
 
 export const PROJECTS_DATA: Project[] = [
@@ -585,10 +586,13 @@ export const PROJECTS_DATA: Project[] = [
   }
 ];
 
-// Populate real high-class aesthetic property photos for all projects
+// Populate real high-class aesthetic property photos and galleries for all projects
 PROJECTS_DATA.forEach(p => {
   if (!p.imageUrl) {
     p.imageUrl = getProjectPhoto(p.id);
+  }
+  if (!p.gallery || p.gallery.length === 0) {
+    p.gallery = getProjectGallery(p.id, p);
   }
 });
 
