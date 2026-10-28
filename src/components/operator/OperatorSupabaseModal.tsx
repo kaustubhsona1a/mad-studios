@@ -1,447 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import {
-  getStoredConfig,
-  updateSupabaseCredentials,
-  SUPABASE_STORAGE_BUCKET
-} from '../../lib/supabaseClient';
-import {
-  syncAllProjectsAndPhotosToSupabase,
   uploadProjectPhotoToSupabase,
   upsertProjectToSupabase
 } from '../../lib/supabaseProjectsService';
-import { generateSupabaseSqlScript } from '../../data/supabaseSqlScript';
-import { Project, getProjectSqFt } from '../../data/projects';
+import { Project } from '../../data/projects';
 import { getProjectGallery, ProjectGalleryImage } from '../../data/projectImages';
 import {
-  Database,
-  X,
-  Copy,
-  Check,
-  Download,
   UploadCloud,
-  RefreshCw,
-  FolderGit2,
-  Image as ImageIcon,
+  X,
   Plus,
   Trash2,
   Star,
-  CheckCircle2,
-  AlertCircle,
-  Code2
+  Image as ImageIcon
 } from 'lucide-react';
 
-interface OperatorSupabaseModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  projects: Project[];
-  onProjectsUpdated: (updated: Project[]) => void;
-  onShowToast: (msg: string) => void;
-}
-
-export const OperatorSupabaseModal: React.FC<OperatorSupabaseModalProps> = ({
-  isOpen,
-  onClose,
-  projects,
-  onProjectsUpdated,
-  onShowToast
-}) => {
-  const [activeSubTab, setActiveSubTab] = useState<'sync' | 'sql' | 'inventory'>('sync');
-  const [supabaseUrl, setSupabaseUrl] = useState('');
-  const [supabaseKey, setSupabaseKey] = useState('');
-  const [isConfigured, setIsConfigured] = useState(false);
-
-  const [mirrorToStorage, setMirrorToStorage] = useState(true);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [syncProgress, setSyncProgress] = useState('');
-  const [syncResult, setSyncResult] = useState<{
-    success: boolean;
-    message: string;
-  } | null>(null);
-  const [copiedSql, setCopiedSql] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      const cfg = getStoredConfig();
-      setSupabaseUrl(cfg.url);
-      setSupabaseKey(cfg.key);
-      setIsConfigured(cfg.isConfigured);
-      setSyncResult(null);
-      setSyncProgress('');
-    }
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
-  const sqlScript = generateSupabaseSqlScript(projects);
-
-  const handleSaveCredentials = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateSupabaseCredentials(supabaseUrl.trim(), supabaseKey.trim());
-    const cfg = getStoredConfig();
-    setIsConfigured(cfg.isConfigured);
-    onShowToast(
-      cfg.isConfigured
-        ? 'Supabase credentials saved & connected!'
-        : 'Cleared custom Supabase credentials.'
-    );
-  };
-
-  const handleRunCloudSync = async () => {
-    if (supabaseUrl.trim() && supabaseKey.trim()) {
-      updateSupabaseCredentials(supabaseUrl.trim(), supabaseKey.trim());
-      setIsConfigured(true);
-    }
-
-    setIsSyncing(true);
-    setSyncResult(null);
-    setSyncProgress('Connecting to Supabase...');
-
-    const result = await syncAllProjectsAndPhotosToSupabase(projects, {
-      mirrorPhotosToStorage: mirrorToStorage,
-      onProgress: (msg) => setSyncProgress(msg)
-    });
-
-    setIsSyncing(false);
-    setSyncProgress('');
-    setSyncResult({
-      success: result.success,
-      message: result.message
-    });
-
-    if (result.success) {
-      onShowToast(result.message);
-    }
-  };
-
-  const handleCopySql = async () => {
-    try {
-      await navigator.clipboard.writeText(sqlScript);
-      setCopiedSql(true);
-      onShowToast('Copied complete SQL Schema & Seed script to clipboard!');
-      setTimeout(() => setCopiedSql(false), 2500);
-    } catch {
-      onShowToast('Could not copy automatically — please select and copy.');
-    }
-  };
-
-  const handleDownloadSql = () => {
-    const blob = new Blob([sqlScript], { type: 'text/sql;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'schema_and_seed.sql';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    onShowToast('Downloaded schema_and_seed.sql');
-  };
-
-  const totalPhotosCount = projects.reduce(
-    (acc, p) => acc + getProjectGallery(p.id, p).length,
-    0
-  );
-
-  return (
-    <div className="fixed inset-0 z-[130] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6">
-      <div className="w-full max-w-4xl rounded-2xl bg-[#1A070B] border border-[#C5A06B]/45 text-[#F7F2EC] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden text-xs">
-        {/* Header */}
-        <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-[#22090E]">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-[#C5A06B]/15 border border-[#C5A06B]/40 text-[#C5A06B]">
-              <Database size={18} />
-            </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <h3 className="font-serif-display text-base sm:text-lg text-white uppercase font-semibold">
-                  Supabase Project-Wise Photo &amp; Dossier Hub
-                </h3>
-                <span
-                  className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                    isConfigured
-                      ? 'bg-green-950/80 text-green-300 border border-green-500/40'
-                      : 'bg-amber-950/80 text-amber-200 border border-amber-500/40'
-                  }`}
-                >
-                  {isConfigured ? 'Connected' : 'Ready to Connect'}
-                </span>
-              </div>
-              <p className="text-[11px] text-[#D8C7B5] font-light">
-                Structured storage for {projects.length} projects &amp; {totalPhotosCount} site photos in{' '}
-                <code className="text-[#EBD2AC]">public.projects</code>,{' '}
-                <code className="text-[#EBD2AC]">public.project_photos</code> &amp; bucket{' '}
-                <code className="text-[#EBD2AC]">{SUPABASE_STORAGE_BUCKET}/&lt;project_id&gt;/</code>
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-          >
-            <X size={16} />
-          </button>
-        </div>
-
-        {/* Sub-Navigation Tabs */}
-        <div className="px-5 bg-[#150508] border-b border-white/10 flex items-center space-x-2 overflow-x-auto no-scrollbar">
-          <button
-            onClick={() => setActiveSubTab('sync')}
-            className={`px-3.5 py-2.5 border-b-2 font-medium flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
-              activeSubTab === 'sync'
-                ? 'border-[#C5A06B] text-white font-semibold'
-                : 'border-transparent text-[#D8C7B5] hover:text-white'
-            }`}
-          >
-            <UploadCloud size={13} className="text-[#C5A06B]" />
-            <span>1. Connect &amp; Sync to Supabase</span>
-          </button>
-
-          <button
-            onClick={() => setActiveSubTab('sql')}
-            className={`px-3.5 py-2.5 border-b-2 font-medium flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
-              activeSubTab === 'sql'
-                ? 'border-[#C5A06B] text-white font-semibold'
-                : 'border-transparent text-[#D8C7B5] hover:text-white'
-            }`}
-          >
-            <Code2 size={13} className="text-[#C5A06B]" />
-            <span>2. SQL Schema &amp; Seed Script (supabase/schema_and_seed.sql)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveSubTab('inventory')}
-            className={`px-3.5 py-2.5 border-b-2 font-medium flex items-center space-x-1.5 transition-all cursor-pointer whitespace-nowrap ${
-              activeSubTab === 'inventory'
-                ? 'border-[#C5A06B] text-white font-semibold'
-                : 'border-transparent text-[#D8C7B5] hover:text-white'
-            }`}
-          >
-            <FolderGit2 size={13} className="text-[#C5A06B]" />
-            <span>3. Project-Wise Folder Structure ({projects.length})</span>
-          </button>
-        </div>
-
-        {/* Body */}
-        <div className="p-5 overflow-y-auto space-y-5 flex-1">
-          {activeSubTab === 'sync' && (
-            <div className="space-y-5">
-              {/* Credentials Form */}
-              <form
-                onSubmit={handleSaveCredentials}
-                className="p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-3.5"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-serif-display text-sm uppercase text-[#EBD2AC] font-semibold">
-                    Supabase Project Credentials
-                  </span>
-                  <span className="text-[10px] text-[#D8C7B5]/70">
-                    Bucket: <strong className="text-[#C5A06B]">{SUPABASE_STORAGE_BUCKET}</strong>
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[10px] text-[#C5A06B] uppercase font-semibold block mb-1">
-                      Supabase Project URL
-                    </label>
-                    <input
-                      type="url"
-                      value={supabaseUrl}
-                      onChange={(e) => setSupabaseUrl(e.target.value)}
-                      placeholder="https://your-project-id.supabase.co"
-                      className="w-full bg-black/40 border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[10px] text-[#C5A06B] uppercase font-semibold block mb-1">
-                      Supabase Anon / Public Key
-                    </label>
-                    <input
-                      type="password"
-                      value={supabaseKey}
-                      onChange={(e) => setSupabaseKey(e.target.value)}
-                      placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                      className="w-full bg-black/40 border border-white/15 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-[11px] text-[#D8C7B5]/80">
-                    Tip: First run the SQL Script in Tab 2 inside your Supabase SQL Editor to create tables &amp; bucket policies.
-                  </span>
-                  <button
-                    type="submit"
-                    className="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-[#C5A06B] hover:text-[#140508] text-white font-semibold transition-all cursor-pointer shrink-0"
-                  >
-                    Save Credentials
-                  </button>
-                </div>
-              </form>
-
-              {/* One-Click Cloud Seed & Storage Upload */}
-              <div className="p-5 rounded-xl bg-gradient-to-br from-[#2B0E14] to-[#19060A] border border-[#C5A06B]/40 space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div>
-                    <h4 className="font-serif-display text-base text-white uppercase font-semibold">
-                      One-Click Project-Wise Database &amp; Photo Storage Sync
-                    </h4>
-                    <p className="text-xs text-[#D8C7B5] font-light mt-0.5">
-                      Pushes all {projects.length} projects (specs, area sq.ft., location, materials, floor plans) and all{' '}
-                      {totalPhotosCount} site photos organized project-by-project into Supabase.
-                    </p>
-                  </div>
-
-                  <button
-                    type="button"
-                    disabled={isSyncing}
-                    onClick={handleRunCloudSync}
-                    className="px-5 py-2.5 rounded-xl bg-[#C5A06B] hover:bg-[#EBD2AC] disabled:opacity-50 text-[#140508] font-bold uppercase tracking-wider flex items-center space-x-2 cursor-pointer transition-all shrink-0 shadow-lg"
-                  >
-                    <RefreshCw size={14} className={isSyncing ? 'animate-spin' : ''} />
-                    <span>{isSyncing ? 'Syncing to Supabase...' : 'Sync All Projects & Photos Now'}</span>
-                  </button>
-                </div>
-
-                <label className="flex items-center space-x-2.5 cursor-pointer select-none pt-1">
-                  <input
-                    type="checkbox"
-                    checked={mirrorToStorage}
-                    onChange={(e) => setMirrorToStorage(e.target.checked)}
-                    className="rounded border-white/30 text-[#C5A06B] focus:ring-[#C5A06B]"
-                  />
-                  <span className="text-xs text-[#EBD2AC]">
-                    Also upload &amp; store all photo files directly inside Supabase Storage bucket{' '}
-                    <code className="px-1.5 py-0.5 rounded bg-black/40 text-[#C5A06B]">
-                      {SUPABASE_STORAGE_BUCKET}/&lt;project_id&gt;/&lt;01-photo&gt;.jpg
-                    </code>
-                  </span>
-                </label>
-
-                {syncProgress && (
-                  <div className="p-3 rounded-lg bg-black/40 border border-[#C5A06B]/30 text-[#EBD2AC] flex items-center space-x-2">
-                    <RefreshCw size={13} className="animate-spin text-[#C5A06B] shrink-0" />
-                    <span>{syncProgress}</span>
-                  </div>
-                )}
-
-                {syncResult && (
-                  <div
-                    className={`p-3.5 rounded-xl border flex items-start space-x-2.5 ${
-                      syncResult.success
-                        ? 'bg-green-950/40 border-green-500/40 text-green-200'
-                        : 'bg-red-950/40 border-red-500/40 text-red-200'
-                    }`}
-                  >
-                    {syncResult.success ? (
-                      <CheckCircle2 size={16} className="text-green-400 shrink-0 mt-0.5" />
-                    ) : (
-                      <AlertCircle size={16} className="text-red-400 shrink-0 mt-0.5" />
-                    )}
-                    <div className="space-y-1">
-                      <p className="font-medium">{syncResult.message}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {activeSubTab === 'sql' && (
-            <div className="space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-white/[0.03] p-3.5 rounded-xl border border-white/10">
-                <div>
-                  <h4 className="font-serif-display text-sm text-white uppercase font-semibold">
-                    Complete Structured SQL Script (<code className="text-[#C5A06B]">supabase/schema_and_seed.sql</code>)
-                  </h4>
-                  <p className="text-[11px] text-[#D8C7B5]">
-                    Creates the <code className="text-[#EBD2AC]">{SUPABASE_STORAGE_BUCKET}</code> storage bucket,{' '}
-                    <code className="text-[#EBD2AC]">public.projects</code> &amp;{' '}
-                    <code className="text-[#EBD2AC]">public.project_photos</code> tables, RLS policies, and seeds all{' '}
-                    {projects.length} projects + {totalPhotosCount} photos.
-                  </p>
-                </div>
-
-                <div className="flex items-center space-x-2 shrink-0">
-                  <button
-                    onClick={handleCopySql}
-                    className="px-3.5 py-2 rounded-lg bg-[#C5A06B] hover:bg-[#EBD2AC] text-[#140508] font-bold uppercase flex items-center space-x-1.5 cursor-pointer transition-all"
-                  >
-                    {copiedSql ? <Check size={13} /> : <Copy size={13} />}
-                    <span>{copiedSql ? 'Copied SQL!' : 'Copy SQL Script'}</span>
-                  </button>
-
-                  <button
-                    onClick={handleDownloadSql}
-                    className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold flex items-center space-x-1.5 cursor-pointer transition-all"
-                  >
-                    <Download size={13} />
-                    <span>Download .sql</span>
-                  </button>
-                </div>
-              </div>
-
-              <pre className="p-4 rounded-xl bg-black/70 border border-white/15 text-[11px] font-mono text-[#EBD2AC] overflow-x-auto max-h-[50vh] leading-relaxed select-all">
-                {sqlScript}
-              </pre>
-            </div>
-          )}
-
-          {activeSubTab === 'inventory' && (
-            <div className="space-y-3">
-              <div className="border border-white/10 rounded-xl overflow-hidden">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-[#22090E] text-[#C5A06B] uppercase text-[10px] border-b border-white/10">
-                    <tr>
-                      <th className="py-2.5 px-3">#</th>
-                      <th className="py-2.5 px-3">Project ID &amp; Storage Folder</th>
-                      <th className="py-2.5 px-3">Title &amp; Location</th>
-                      <th className="py-2.5 px-3">Category</th>
-                      <th className="py-2.5 px-3">Area</th>
-                      <th className="py-2.5 px-3 text-right">Site Photos</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5">
-                    {projects.map((p, idx) => {
-                      const gal = getProjectGallery(p.id, p);
-                      return (
-                        <tr key={p.id} className="hover:bg-white/[0.02]">
-                          <td className="py-2.5 px-3 text-[#C5A06B] font-bold">
-                            {String(p.catalogIndex || idx + 1).padStart(2, '0')}
-                          </td>
-                          <td className="py-2.5 px-3 font-mono text-[11px] text-[#EBD2AC]">
-                            {SUPABASE_STORAGE_BUCKET}/{p.id}/
-                          </td>
-                          <td className="py-2.5 px-3">
-                            <span className="text-white font-semibold block">{p.title}</span>
-                            <span className="text-[11px] text-[#D8C7B5]/80">{p.location}</span>
-                          </td>
-                          <td className="py-2.5 px-3 uppercase text-[10px] text-[#D8C7B5]">
-                            {p.category}
-                          </td>
-                          <td className="py-2.5 px-3 text-[#EBD2AC]">{getProjectSqFt(p)}</td>
-                          <td className="py-2.5 px-3 text-right font-semibold text-white">
-                            {gal.length} photos
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ============================================================================
-// PROJECT-WISE SITE PHOTOS MANAGER MODAL (Upload & Organize Photos per Project)
-// ============================================================================
 interface ProjectPhotosManagerModalProps {
   project: Project | null;
   onClose: () => void;
@@ -484,7 +56,6 @@ export const ProjectPhotosManagerModal: React.FC<ProjectPhotosManagerModalProps>
         file.name.replace(/\.[^/.]+$/, '').replace(/[-_]+/g, ' ');
 
       try {
-        // Auto-compresses to ~150-200 KB & uploads to Supabase Storage under `<project.id>/<filename>`
         const uploaded = await uploadProjectPhotoToSupabase(project.id, file, {
           title: defaultTitle,
           category: newPhotoCategory,
@@ -493,7 +64,6 @@ export const ProjectPhotosManagerModal: React.FC<ProjectPhotosManagerModalProps>
         });
         addedPhotos.push(uploaded);
       } catch {
-        // Fallback to compressed Data URL if Supabase is not connected yet
         const { compressArchitecturalImage } = await import('../../lib/imageCompression');
         const compressed = await compressArchitecturalImage(file);
         const dataUrl = await new Promise<string>((resolve) => {
@@ -580,7 +150,7 @@ export const ProjectPhotosManagerModal: React.FC<ProjectPhotosManagerModalProps>
         <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-[#240A10]">
           <div>
             <span className="text-[10px] font-mono-tech uppercase tracking-widest text-[#C5A06B] block">
-              PROJECT-WISE PHOTO STORAGE (150–200 KB AUTO-COMPRESS) · {SUPABASE_STORAGE_BUCKET}/{project.id}/
+              PROJECT-WISE PHOTO STORAGE (150–200 KB AUTO-COMPRESS) · {project.id}/
             </span>
             <h3 className="font-serif-display text-base sm:text-lg text-white uppercase font-semibold">
               Manage Site Photos — {project.title}
@@ -632,13 +202,12 @@ export const ProjectPhotosManagerModal: React.FC<ProjectPhotosManagerModalProps>
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
-              {/* Direct File Upload to Supabase Bucket */}
               <label className="inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg bg-[#C5A06B] hover:bg-[#EBD2AC] text-[#140508] font-bold uppercase cursor-pointer transition-all shrink-0">
                 <UploadCloud size={14} />
                 <span>{isUploadingFile ? 'Compressing (150–200 KB) & Uploading...' : 'Upload & Compress Photo(s)'}</span>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/*,.heic,.heif"
                   multiple
                   disabled={isUploadingFile}
                   onChange={handleFileUpload}
@@ -764,7 +333,7 @@ export const ProjectPhotosManagerModal: React.FC<ProjectPhotosManagerModalProps>
             onClick={handleSaveAll}
             className="px-5 py-2 rounded-lg bg-[#C5A06B] hover:bg-[#EBD2AC] text-[#140508] font-bold uppercase cursor-pointer transition-all"
           >
-            {isSaving ? 'Saving to Supabase...' : 'Save Project Photos'}
+            {isSaving ? 'Saving Photos...' : 'Save Project Photos'}
           </button>
         </div>
       </div>

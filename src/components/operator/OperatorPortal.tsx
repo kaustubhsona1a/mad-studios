@@ -27,7 +27,7 @@ import {
   saveStoredTeam 
 } from '../../data/team';
 import { EditFounderModal, EditTeamMemberModal } from './OperatorTeamModals';
-import { OperatorSupabaseModal, ProjectPhotosManagerModal } from './OperatorSupabaseModal';
+import { ProjectPhotosManagerModal } from './OperatorSupabaseModal';
 import { OperatorBulkPhotoUploader } from './OperatorBulkPhotoUploader';
 import { getProjectGallery, ProjectGalleryImage, saveStoredProjectGallery } from '../../data/projectImages';
 import {
@@ -122,7 +122,6 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
   const [isUploadWebsiteModalOpen, setIsUploadWebsiteModalOpen] = useState(false);
   const [editingWebsiteProject, setEditingWebsiteProject] = useState<Project | null>(null);
   const [managingPhotosProject, setManagingPhotosProject] = useState<Project | null>(null);
-  const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState(false);
   const [isBulkUploaderOpen, setIsBulkUploaderOpen] = useState(false);
   const [bulkUploaderProjectId, setBulkUploaderProjectId] = useState<string | undefined>(undefined);
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
@@ -354,7 +353,7 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
       const updated = websiteProjects.filter(p => p.id !== projectId);
       saveWebsiteProjects(updated);
       deleteProjectFromSupabase(projectId);
-      showToast('Project removed from website & Supabase');
+      showToast('Project removed from website');
     }
   };
 
@@ -434,7 +433,7 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
           </span>
         </div>
 
-        {/* Right: Bulk Uploader, Supabase Hub, Return to Website & Exit */}
+        {/* Right: Bulk Uploader, Return to Website & Exit */}
         <div className="flex items-center space-x-2">
           <button
             onClick={() => {
@@ -442,19 +441,10 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
               setIsBulkUploaderOpen(true);
             }}
             className="px-3 py-1 rounded-lg bg-[#C5A06B] hover:bg-[#EBD2AC] text-[#140508] text-xs transition-all flex items-center space-x-1.5 cursor-pointer font-bold uppercase shadow-md"
-            title="Bulk Compress (150-200 KB) & Upload Project Photos to Supabase"
+            title="Bulk Compress (150-200 KB) & Upload Project Photos"
           >
             <UploadCloud size={13} />
             <span>Bulk Photo Uploader (150–200 KB)</span>
-          </button>
-
-          <button
-            onClick={() => setIsSupabaseModalOpen(true)}
-            className="px-3 py-1 rounded-lg bg-[#C5A06B]/15 hover:bg-[#C5A06B]/25 border border-[#C5A06B]/50 text-xs text-[#EBD2AC] hover:text-white transition-all flex items-center space-x-1.5 cursor-pointer font-semibold"
-            title="Supabase Project-Wise Photo Storage & SQL Script"
-          >
-            <Database size={12} className="text-[#C5A06B]" />
-            <span>Supabase &amp; SQL Script</span>
           </button>
 
           <button
@@ -642,14 +632,6 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
                   >
                     <UploadCloud size={14} />
                     <span>Bulk Photo Uploader (150–200 KB)</span>
-                  </button>
-
-                  <button
-                    onClick={() => setIsSupabaseModalOpen(true)}
-                    className="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-[#EBD2AC] border border-[#C5A06B]/40 text-xs font-semibold uppercase flex items-center space-x-1.5 cursor-pointer"
-                  >
-                    <Database size={13} className="text-[#C5A06B]" />
-                    <span>Supabase &amp; SQL Script</span>
                   </button>
 
                   <button
@@ -1667,20 +1649,12 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
         onSave={handleSaveTeamMember}
       />
 
-      {/* Supabase Cloud Hub, Bulk Compressor Uploader & Project-Wise Photo Manager Modals */}
+      {/* Bulk Compressor Uploader & Project-Wise Photo Manager Modals */}
       <OperatorBulkPhotoUploader
         isOpen={isBulkUploaderOpen}
         onClose={() => setIsBulkUploaderOpen(false)}
         projects={websiteProjects}
         initialProjectId={bulkUploaderProjectId}
-        onProjectsUpdated={(updated) => saveWebsiteProjects(updated)}
-        onShowToast={showToast}
-      />
-
-      <OperatorSupabaseModal
-        isOpen={isSupabaseModalOpen}
-        onClose={() => setIsSupabaseModalOpen(false)}
-        projects={websiteProjects}
         onProjectsUpdated={(updated) => saveWebsiteProjects(updated)}
         onShowToast={showToast}
       />
@@ -1751,7 +1725,7 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
               saveWebsiteProjects(updated);
               upsertProjectToSupabase(newWork);
               setIsUploadWebsiteModalOpen(false);
-              showToast(`Uploaded "${title}" to website & Supabase!`);
+              showToast(`Uploaded "${title}" to website!`);
             }}
             className="w-full max-w-lg rounded-2xl bg-[#1C080C] border border-[#C5A06B]/50 p-6 space-y-4 text-white shadow-2xl relative text-xs max-h-[90vh] overflow-y-auto"
           >
@@ -1900,7 +1874,7 @@ export const OperatorPortal: React.FC<OperatorPortalProps> = ({
                 upsertProjectToSupabase(editedObj);
               }
               setEditingWebsiteProject(null);
-              showToast(`Saved changes to "${title}" on website & Supabase!`);
+              showToast(`Saved changes to "${title}" on website!`);
             }}
             className="w-full max-w-xl rounded-2xl bg-[#1C080C] border border-[#C5A06B]/50 p-6 space-y-4 text-white shadow-2xl relative text-xs max-h-[90vh] overflow-y-auto"
           >

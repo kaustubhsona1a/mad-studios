@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Project, getProjectSqFt } from '../../data/projects';
-import { getProjectGallery, ProjectGalleryImage, saveStoredProjectGallery } from '../../data/projectImages';
-import {
-  getStoredConfig,
-  updateSupabaseCredentials,
-  SUPABASE_STORAGE_BUCKET
-} from '../../lib/supabaseClient';
+import { Project } from '../../data/projects';
+import { getProjectGallery, saveStoredProjectGallery } from '../../data/projectImages';
 import {
   BulkUploadQueueItem,
   uploadCompressedBatchToSupabase
@@ -16,22 +11,16 @@ import {
   isSupportedImageFile,
   CompressionOptions
 } from '../../lib/imageCompression';
-import { generateSupabaseSqlScript } from '../../data/supabaseSqlScript';
 import {
   UploadCloud,
   X,
-  Check,
-  Copy,
-  Sparkles,
   Trash2,
   Star,
   FolderPlus,
-  Database,
   RefreshCw,
   CheckCircle2,
   AlertCircle,
   Sliders,
-  Image as ImageIcon,
   FileCheck2,
   Zap
 } from 'lucide-react';
@@ -64,13 +53,6 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
   onProjectsUpdated,
   onShowToast
 }) => {
-  // Supabase Credentials State
-  const [supabaseUrl, setSupabaseUrl] = useState('');
-  const [supabaseKey, setSupabaseKey] = useState('');
-  const [isSupabaseConnected, setIsSupabaseConnected] = useState(false);
-  const [showCredentialsPanel, setShowCredentialsPanel] = useState(false);
-  const [copiedSql, setCopiedSql] = useState(false);
-
   // Selected Project State
   const [selectedProjectId, setSelectedProjectId] = useState<string>(
     initialProjectId || projects[0]?.id || 'casa-sylva'
@@ -106,11 +88,6 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
 
   useEffect(() => {
     if (isOpen) {
-      const cfg = getStoredConfig();
-      setSupabaseUrl(cfg.url);
-      setSupabaseKey(cfg.key);
-      setIsSupabaseConnected(cfg.isConfigured);
-      setShowCredentialsPanel(!cfg.isConfigured);
       if (initialProjectId) {
         setSelectedProjectId(initialProjectId);
       } else if (projects.length > 0 && !projects.some(p => p.id === selectedProjectId)) {
@@ -124,31 +101,6 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
 
   const activeProject = projects.find(p => p.id === selectedProjectId) || projects[0];
   const existingPhotosCount = activeProject ? getProjectGallery(activeProject.id, activeProject).length : 0;
-
-  const handleSaveCredentials = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateSupabaseCredentials(supabaseUrl.trim(), supabaseKey.trim());
-    const cfg = getStoredConfig();
-    setIsSupabaseConnected(cfg.isConfigured);
-    if (cfg.isConfigured) {
-      setShowCredentialsPanel(false);
-      onShowToast('Supabase connected! Ready to upload compressed photos.');
-    } else {
-      onShowToast('Cleared Supabase credentials.');
-    }
-  };
-
-  const handleCopySqlScript = async () => {
-    const sql = generateSupabaseSqlScript(projects);
-    try {
-      await navigator.clipboard.writeText(sql);
-      setCopiedSql(true);
-      onShowToast('Copied Supabase SQL Setup Script! Paste & Run in your Supabase SQL Editor.');
-      setTimeout(() => setCopiedSql(false), 3000);
-    } catch {
-      onShowToast('Could not copy automatically.');
-    }
-  };
 
   const handleCreateNewProjectInline = (e: React.FormEvent) => {
     e.preventDefault();
@@ -206,7 +158,7 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
     setNewProjLocation('');
     setNewProjHighlight('');
     setNewProjDescription('');
-    onShowToast(`Created project "${newProj.title}" (${SUPABASE_STORAGE_BUCKET}/${newProj.id}/)`);
+    onShowToast(`Created project "${newProj.title}"`);
   };
 
   /**
@@ -339,14 +291,8 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
     });
   };
 
-  const handleUploadAllToSupabase = async () => {
+  const handleUploadAllPhotos = async () => {
     if (!activeProject || queue.length === 0) return;
-
-    // Save credentials if typed
-    if (supabaseUrl.trim() && supabaseKey.trim()) {
-      updateSupabaseCredentials(supabaseUrl.trim(), supabaseKey.trim());
-      setIsSupabaseConnected(true);
-    }
 
     setIsUploadingBatch(true);
     setUploadResultBanner(null);
@@ -375,18 +321,9 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
     setIsUploadingBatch(false);
     setBatchProgressText('');
 
-    if (res.uploadedToCloudCount > 0 && res.success) {
-      const msg = `Uploaded ${res.uploadedToCloudCount} compressed photos (150–200 KB each) to Supabase bucket "${SUPABASE_STORAGE_BUCKET}/${activeProject.id}/" and updated "${activeProject.title}"!`;
-      setUploadResultBanner({ success: true, message: msg });
-      onShowToast(msg);
-    } else if (!isSupabaseConnected) {
-      const msg = `Compressed & saved ${queue.length} photos locally for "${activeProject.title}". Connect your Supabase URL & Anon Key above to push them to your Supabase bucket!`;
-      setUploadResultBanner({ success: true, message: msg });
-      onShowToast(msg);
-    } else {
-      const msg = `Saved ${queue.length} compressed photos locally. Supabase note: ${res.error || 'Ensure you have run the SQL Setup Script in your Supabase SQL Editor.'}`;
-      setUploadResultBanner({ success: false, message: msg });
-    }
+    const msg = `Published ${queue.length} compressed photos to "${activeProject.title}"!`;
+    setUploadResultBanner({ success: true, message: msg });
+    onShowToast(msg);
   };
 
   // Aggregate stats for the queue
@@ -416,43 +353,19 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
             <div>
               <div className="flex items-center space-x-2">
                 <h2 className="font-serif-display text-base sm:text-xl text-white uppercase font-semibold tracking-wide">
-                  Bulk Project Photo Compressor &amp; Supabase Uploader
+                  Bulk Project Photo Compressor &amp; Uploader
                 </h2>
                 <span className="px-2.5 py-0.5 rounded-full bg-[#C5A06B]/20 text-[#EBD2AC] border border-[#C5A06B]/40 text-[10px] font-bold uppercase">
                   150–200 KB Auto-Engine
                 </span>
               </div>
               <p className="text-[11px] text-[#D8C7B5] font-light">
-                Drop raw photos from your 3.76 GB archive — automatically compresses each to ~150–200 KB and uploads project-wise to{' '}
-                <code className="text-[#EBD2AC]">{SUPABASE_STORAGE_BUCKET}/&lt;project-id&gt;/</code>
+                Drop raw photos (JPG, PNG, WEBP, iPhone HEIC) — automatically compresses each to ~150–200 KB and organizes them project-wise.
               </p>
             </div>
           </div>
 
           <div className="flex items-center space-x-2">
-            <button
-              type="button"
-              onClick={handleCopySqlScript}
-              className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-[#C5A06B] hover:text-[#140508] text-[#EBD2AC] border border-[#C5A06B]/30 text-[11px] font-semibold flex items-center space-x-1.5 transition-all cursor-pointer"
-              title="Copy the complete SQL Schema & Storage Bucket script for Supabase SQL Editor"
-            >
-              {copiedSql ? <Check size={13} /> : <Copy size={13} />}
-              <span>{copiedSql ? 'Copied SQL Script!' : 'Copy Supabase SQL Script'}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setShowCredentialsPanel(prev => !prev)}
-              className={`px-3 py-1.5 rounded-lg border text-[11px] font-semibold flex items-center space-x-1.5 transition-all cursor-pointer ${
-                isSupabaseConnected
-                  ? 'bg-green-950/60 border-green-500/40 text-green-300'
-                  : 'bg-amber-950/60 border-amber-500/40 text-amber-200'
-              }`}
-            >
-              <Database size={12} />
-              <span>{isSupabaseConnected ? 'Supabase Connected' : 'Connect Supabase'}</span>
-            </button>
-
             <button
               type="button"
               onClick={onClose}
@@ -468,65 +381,7 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
         {/* ===================================================================== */}
         <div className="p-5 overflow-y-auto space-y-5 flex-1">
           
-          {/* 1. COLLAPSIBLE SUPABASE CREDENTIALS & QUICK SQL SETUP */}
-          {showCredentialsPanel && (
-            <form
-              onSubmit={handleSaveCredentials}
-              className="p-4 rounded-xl bg-[#240B11] border border-[#C5A06B]/40 space-y-3"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <span className="font-serif-display text-sm text-[#EBD2AC] uppercase font-semibold block">
-                    Step 1: Connect Your Supabase Account
-                  </span>
-                  <span className="text-[11px] text-[#D8C7B5]">
-                    1. Click <strong>"Copy Supabase SQL Script"</strong> in the top right and run it once in your Supabase Dashboard → SQL Editor. 2. Paste your Project URL &amp; Anon Key below:
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
-                <div className="sm:col-span-5">
-                  <label className="text-[10px] text-[#C5A06B] uppercase font-semibold block mb-1">
-                    Supabase Project URL
-                  </label>
-                  <input
-                    type="url"
-                    required
-                    value={supabaseUrl}
-                    onChange={(e) => setSupabaseUrl(e.target.value)}
-                    placeholder="https://xyzcompany.supabase.co"
-                    className="w-full bg-black/50 border border-white/20 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]"
-                  />
-                </div>
-
-                <div className="sm:col-span-5">
-                  <label className="text-[10px] text-[#C5A06B] uppercase font-semibold block mb-1">
-                    Supabase Anon / Public Key
-                  </label>
-                  <input
-                    type="password"
-                    required
-                    value={supabaseKey}
-                    onChange={(e) => setSupabaseKey(e.target.value)}
-                    placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    className="w-full bg-black/50 border border-white/20 rounded-lg p-2.5 text-xs text-white outline-none focus:border-[#C5A06B]"
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <button
-                    type="submit"
-                    className="w-full py-2.5 px-3 rounded-lg bg-[#C5A06B] hover:bg-[#EBD2AC] text-[#140508] font-bold uppercase cursor-pointer transition-all"
-                  >
-                    Connect
-                  </button>
-                </div>
-              </div>
-            </form>
-          )}
-
-          {/* 2. PROJECT SELECTOR & COMPRESSION TARGET BAR */}
+          {/* 1. PROJECT SELECTOR & COMPRESSION TARGET BAR */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             
             {/* Left: Target Project Selection */}
@@ -562,9 +417,9 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
                   {activeProject && (
                     <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#D8C7B5] pt-1">
                       <div>
-                        Storage Path:{' '}
+                        Project Folder:{' '}
                         <code className="px-1.5 py-0.5 rounded bg-black/50 text-[#EBD2AC] font-mono">
-                          {SUPABASE_STORAGE_BUCKET}/{activeProject.id}/
+                          {activeProject.id}/
                         </code>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -732,7 +587,7 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
 
           </div>
 
-          {/* 3. DRAG & DROP BULK UPLOAD ZONE */}
+          {/* 2. DRAG & DROP BULK UPLOAD ZONE */}
           <div
             onDragOver={(e) => {
               e.preventDefault();
@@ -775,13 +630,13 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
                 Drop All Photos for <span className="text-[#EBD2AC]">{activeProject?.title}</span> Here, or Click to Browse
               </div>
               <p className="text-xs text-[#D8C7B5] max-w-xl font-light">
-                Select 10, 25, or 50+ high-res photos from your unzipped 3.76 GB folder. Every photo is automatically compressed in your browser to{' '}
-                <strong className="text-[#EBD2AC]">~150–200 KB</strong> before uploading to Supabase Storage.
+                Select 10, 25, or 50+ high-res photos from your project folder. Every photo is automatically compressed in your browser to{' '}
+                <strong className="text-[#EBD2AC]">~150–200 KB</strong> before publishing.
               </p>
             </div>
           </div>
 
-          {/* 4. COMPRESSION & UPLOAD QUEUE */}
+          {/* 3. COMPRESSION & UPLOAD QUEUE */}
           {queue.length > 0 && (
             <div className="space-y-3">
               {/* Queue Stats Bar */}
@@ -827,7 +682,14 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
                 <div className="flex items-center space-x-2">
                   <button
                     type="button"
-                    onClick={() => setQueue([])}
+                    onClick={() => {
+                      queue.forEach(q => {
+                        if (q.compressed?.previewUrl) {
+                          URL.revokeObjectURL(q.compressed.previewUrl);
+                        }
+                      });
+                      setQueue([]);
+                    }}
                     disabled={isUploadingBatch}
                     className="px-3 py-1.5 rounded-lg border border-white/15 hover:border-red-400/50 text-[#D8C7B5] hover:text-red-300 text-xs cursor-pointer transition-colors"
                   >
@@ -837,13 +699,13 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
                   <button
                     type="button"
                     disabled={isUploadingBatch || readyCount === 0}
-                    onClick={handleUploadAllToSupabase}
+                    onClick={handleUploadAllPhotos}
                     className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#C5A06B] via-[#EBD2AC] to-[#C5A06B] hover:brightness-110 disabled:opacity-50 text-[#140508] font-bold uppercase tracking-wider flex items-center space-x-2 cursor-pointer shadow-lg transition-all"
                   >
                     <Zap size={14} />
                     <span>
                       {isUploadingBatch
-                        ? 'Uploading to Supabase...'
+                        ? 'Publishing Photos...'
                         : `Upload All ${queue.length} Photos to ${activeProject?.title}`}
                     </span>
                   </button>
@@ -856,7 +718,7 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
                   <div className="flex items-center justify-between text-xs text-[#EBD2AC]">
                     <span className="flex items-center space-x-2">
                       <RefreshCw size={13} className="animate-spin text-[#C5A06B]" />
-                      <span>{batchProgressText || 'Uploading compressed photos...'}</span>
+                      <span>{batchProgressText || 'Publishing compressed photos...'}</span>
                     </span>
                     <span className="font-mono font-bold">{batchProgressPercent}%</span>
                   </div>
@@ -889,7 +751,7 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
 
               {/* Grid of Queued Photos */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {queue.map((item, idx) => {
+                {queue.map((item) => {
                   const comp = item.compressed;
                   return (
                     <div
@@ -1041,7 +903,7 @@ export const OperatorBulkPhotoUploader: React.FC<OperatorBulkPhotoUploaderProps>
               <button
                 type="button"
                 disabled={isUploadingBatch || readyCount === 0}
-                onClick={handleUploadAllToSupabase}
+                onClick={handleUploadAllPhotos}
                 className="px-5 py-2 rounded-lg bg-[#C5A06B] hover:bg-[#EBD2AC] disabled:opacity-50 text-[#140508] font-bold uppercase cursor-pointer transition-all"
               >
                 {isUploadingBatch ? 'Uploading...' : `Upload ${queue.length} Compressed Photos`}
